@@ -1,0 +1,9 @@
+﻿﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="NavBar.ascx.cs" Inherits="MovieDB.Web.Core.Controls.NavBar" %>
+
+<div id="navbar">
+    <ul>
+    {% for button in nav_buttons %}
+        <li><a href="{{ button.url }}" Text={{ button.text }} /></li>
+    {% endfor %}
+    </ul>
+</div>

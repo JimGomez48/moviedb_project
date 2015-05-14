@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<navbar>
+  <item>
+    <text>Home</text>
+    <tooltip>Navigate to the home page</tooltip>
+    <url>Web/Default.aspx</url>
+  </item>
+  <item>
+    <text>Bowse Actor</text>
+    <tooltip>Browse the database by actor</tooltip>
+    <url>Web/BrowseActor.aspx</url>
+  </item>
+  <item>
+    <text>Browse Movie</text>
+    <tooltip>Browse the database by movie</tooltip>
+    <url>Web/BrowseMovie.aspx</url>
+  </item>  
+  <item>
+    <text>Add Actor/Director</text>
+    <tooltip>Add an actor or director to the database</tooltip>
+    <url>Web/AddActorDirector.aspx</url>
+  </item>
+  <item>
+    <text>Add Movie</text>
+    <tooltip>Add a movie to the database</tooltip>
+    <url>Web/AddMovie.aspx</url>
+  </item>
+  <item>
+    <text>Add Actor to Movie</text>
+    <tooltip>Add an actor to a movie</tooltip>
+    <url>Web/AddActorMovie.aspx</url>
+  </item>
+  <item>
+    <text>Add Director to Movie</text>
+    <tooltip>Add a director to a movie</tooltip>
+    <url>Web/AddDirectorMovie.aspx</url>
+  </item>  
+  <item>
+    <text>Write Review</text>
+    <tooltip>Write a movie review</tooltip>
+    <url>Web/AddReview.aspx</url>
+  </item>  
+</navbar>

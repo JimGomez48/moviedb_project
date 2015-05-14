@@ -3,6 +3,7 @@ from django.conf.urls import url
 import views
 
 urlpatterns = [
+    url(r'^Base/$', views.BaseView.as_view(), name='base'),
     url(r'^$', views.index, name='index'),
     url(r'^BrowseMovie/$', views.browse_movie, name='BrowseMovie'),
     url(r'^BrowseActor/$', views.browse_actor, name='BrowseActor'),

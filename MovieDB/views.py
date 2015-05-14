@@ -1,4 +1,37 @@
+import os
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.generic import View
+import xml.etree.ElementTree as ET
+
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+class BaseView(View):
+    class NavItem(object):
+        def __init__(self, text, tooltip, url):
+            self.text = text
+            self.tooltip = tooltip
+            self.url = url
+
+    def get(self, request):
+        nav_items = self.get_navbar_items()
+        context = {
+            'nav_items': nav_items
+        }
+        return render(request, 'base.html', context)
+        # return HttpResponse('hello base')
+
+    def get_navbar_items(self):
+        items = []
+        tree = ET.parse(PROJECT_ROOT + '/data/navbar.xml')
+        root = tree.getroot()
+        for item in root:
+            text = item.find('text')
+            tooltip = item.find('tooltip')
+            url = item.find('url')
+            items.append(self.NavItem(text, tooltip, url))
+
 
 def index(request):
     title = 'MovieDB index'
@@ -7,7 +40,7 @@ def index(request):
         'title': title,
         'mlist': mlist
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def browse_movie(request, movie_id=None):
@@ -15,7 +48,7 @@ def browse_movie(request, movie_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def browse_actor(request, actor_id=None):
@@ -23,7 +56,7 @@ def browse_actor(request, actor_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def add_movie(request, movie_id=None):
@@ -31,7 +64,7 @@ def add_movie(request, movie_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def add_actor_director(request, person_id=None):
@@ -39,7 +72,7 @@ def add_actor_director(request, person_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def add_actor_movie(request, actor_id=None, movie_id=None):
@@ -47,7 +80,7 @@ def add_actor_movie(request, actor_id=None, movie_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def add_director_movie(request, director_id=None, movie_id=None):
@@ -55,7 +88,7 @@ def add_director_movie(request, director_id=None, movie_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)
 
 
 def write_review(request, movie_id=None):
@@ -63,4 +96,4 @@ def write_review(request, movie_id=None):
     context = {
         'title': title
     }
-    return render(request, 'MovieDB/index.html', context)
+    return render(request, 'index.html', context)

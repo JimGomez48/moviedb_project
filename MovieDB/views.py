@@ -1,4 +1,5 @@
 import os
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
@@ -15,22 +16,23 @@ class BaseView(View):
             self.url = url
 
     def get(self, request):
-        nav_items = self.get_navbar_items()
+        nav_items = self.__get_navbar_items()
         context = {
             'nav_items': nav_items
         }
         return render(request, 'base.html', context)
         # return HttpResponse('hello base')
 
-    def get_navbar_items(self):
+    def __get_navbar_items(self):
         items = []
         tree = ET.parse(PROJECT_ROOT + '/data/navbar.xml')
         root = tree.getroot()
         for item in root:
-            text = item.find('text')
-            tooltip = item.find('tooltip')
-            url = item.find('url')
+            text = item.find('text').text
+            tooltip = item.find('tooltip').text
+            url = reverse(str(item.find('viewname').text))
             items.append(self.NavItem(text, tooltip, url))
+        return items
 
 
 def index(request):

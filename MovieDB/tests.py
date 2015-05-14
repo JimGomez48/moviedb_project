@@ -5,6 +5,15 @@ import xmltodict
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+class TestBasePage(TestCase):
+    def test_uses_base_template(self):
+        response = self.client.get(reverse('base'))
+        self.assertTemplateUsed(response, 'base.html')
+
+    def test_uses_correct_css(self):
+        pass
+
+
 class TestIndexPage(TestCase):
     def test_uses_index_template(self):
         response = self.client.get(reverse('index'))

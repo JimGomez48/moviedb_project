@@ -63,15 +63,15 @@ class Review(models.Model):
 #
 class MovieActor(models.Model):
     id = models.AutoField(primary_key=True, default=1)
-    mid = models.ForeignKey(Movie, default=-1)
-    aid = models.ForeignKey(Actor, default=-1)
+    movie = models.ForeignKey(Movie, default=-1)
+    actor = models.ForeignKey(Actor, default=-1)
     role = models.CharField(max_length=50, null=False, default='')
 
 #
 class MovieDirector(models.Model):
     id = models.AutoField(primary_key=True, default=1)
-    mid = models.ForeignKey(Movie, default=-1)
-    did = models.ForeignKey(Director, default=-1)
+    movie = models.ForeignKey(Movie, default=-1)
+    director = models.ForeignKey(Director, default=-1)
 
 #
 class MovieGenre(models.Model):
@@ -97,7 +97,7 @@ class MovieGenre(models.Model):
         ('Western', 'Western'),
     )
     id = models.AutoField(primary_key=True, default=1)
-    mid = models.ForeignKey(Movie, default=-1)
+    movie = models.ForeignKey(Movie, default=-1)
     genre = models.CharField(max_length=20, null=False, default='', choices=GENRE_CHOICES)
 
 class MaxPersonID(models.Model):

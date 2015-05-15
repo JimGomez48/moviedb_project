@@ -59,16 +59,16 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(default=1, primary_key=True, serialize=False)),
                 ('role', models.CharField(default=b'', max_length=50)),
-                ('aid', models.ForeignKey(default=-1, to='MovieDB.Actor')),
-                ('mid', models.ForeignKey(default=-1, to='MovieDB.Movie')),
+                ('actor', models.ForeignKey(default=-1, to='MovieDB.Actor')),
+                ('movie', models.ForeignKey(default=-1, to='MovieDB.Movie')),
             ],
         ),
         migrations.CreateModel(
             name='MovieDirector',
             fields=[
                 ('id', models.AutoField(default=1, primary_key=True, serialize=False)),
-                ('did', models.ForeignKey(default=-1, to='MovieDB.Director')),
-                ('mid', models.ForeignKey(default=-1, to='MovieDB.Movie')),
+                ('director', models.ForeignKey(default=-1, to='MovieDB.Director')),
+                ('movie', models.ForeignKey(default=-1, to='MovieDB.Movie')),
             ],
         ),
         migrations.CreateModel(
@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(default=1, primary_key=True, serialize=False)),
                 ('genre', models.CharField(choices=[(b'Action', b'Action'), (b'Adult', b'Adult'), (b'Adventure', b'Adventure'), (b'Animation', b'Animation'), (b'Crime', b'Crime'), (b'Comedy', b'Comedy'), (b'Documentary', b'Documentary'), (b'Drama', b'Drama'), (b'Family', b'Family'), (b'Fantasy', b'Fantasy'), (b'Horror', b'Horror'), (b'Musical', b'Musical'), (b'Mystery', b'Mystery'), (b'Romance', b'Romance'), (b'Sci-Fi', b'Sci-Fi'), (b'Short', b'Short'), (b'Thriller', b'Thriller'), (b'War', b'War'), (b'Western', b'Western')], default=b'', max_length=20)),
-                ('mid', models.ForeignKey(default=-1, to='MovieDB.Movie')),
+                ('movie', models.ForeignKey(default=-1, to='MovieDB.Movie')),
             ],
         ),
         migrations.CreateModel(

@@ -8,12 +8,12 @@ LOAD DATA LOCAL INFILE './seed_data/director.del' INTO TABLE MovieDB_director FI
 
 LOAD DATA LOCAL INFILE './seed_data/movie.del' INTO TABLE MovieDB_movie FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"';
 
-LOAD DATA LOCAL INFILE './seed_data/movieactor1.del' INTO TABLE MovieDB_movieactor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"';
-LOAD DATA LOCAL INFILE './seed_data/movieactor2.del' INTO TABLE MovieDB_movieactor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"';
+LOAD XML LOCAL INFILE './seed_data/movieactor1.xml' INTO TABLE MovieDB_movieactor;
+LOAD XML LOCAL INFILE './seed_data/movieactor2.xml' INTO TABLE MovieDB_movieactor;
 
-LOAD DATA LOCAL INFILE './seed_data/moviedirector.del' INTO TABLE MovieDB_moviedirector FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"';
+LOAD XML LOCAL INFILE './seed_data/moviedirector.xml' INTO TABLE MovieDB_moviedirector;
 
-LOAD DATA LOCAL INFILE './seed_data/moviegenre.del' INTO TABLE MovieDB_moviegenre FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"';
+LOAD XML LOCAL INFILE './seed_data/moviegenre.xml' INTO TABLE MovieDB_moviegenre;
 
- INSERT INTO MovieDB_MaxPersonID VALUES (69000);
- INSERT INTO MovieDB_MaxMovieID VALUES (4750);
+INSERT INTO MovieDB_maxpersonid VALUES (69000);
+INSERT INTO MovieDB_maxmovieid VALUES (4750);

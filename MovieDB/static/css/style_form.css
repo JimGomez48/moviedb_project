@@ -1,0 +1,49 @@
+#main form {
+    min-width: 400px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    /*background-color: #DDDDDD;*/
+    padding: 10px;
+}
+#main form input, select, label {
+    margin: 5px;
+}
+.form_table {
+    width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: none;
+    border-style: none;
+    outline: none;
+    background-color: none;
+}
+/*.form_table th, tr, td{
+    border-collapse:  collapse;
+    border: none;
+    outline: none;
+}*/
+.form_table .left, .right {
+    padding: 5px;
+    text-transform: capitalize;
+    vertical-align: top;
+}
+.form_table .left {
+    width: 30%;
+    text-align: right;
+    font-weight: bold;
+}
+.form_table .right {
+    width: 70%;
+    text-align: left;
+}
+.checkbox_table tr, td{
+    height: 20px;
+    padding: 0px;
+}
+.submit {
+    text-align: right;
+}
+.submit input {
+    padding: 5px;
+}

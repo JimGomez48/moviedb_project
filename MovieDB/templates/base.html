@@ -25,14 +25,16 @@
             </div>
             <div>
                 <ul class="nav navbar-nav">
-                {% for item in nav_items %}
-                    <li><a href="{{ item.url }}">{{ item.text }}</a></li>
-                {% endfor %}
+                    {% for item in nav_items %}
+                        <li><a href="{{ item.url }}">{{ item.text }}</a></li>
+                    {% endfor %}
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a> </li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a> </li>
-                </ul>
+                <form class="navbar-form navbar-right" role="form">
+                    <div class="form-group">
+                        <input type="text" id="search_input" class="form-control" placeholder="Search..." maxlength="200">
+                    </div>
+                    <button id="search_submit_button" type="submit" class="btn btn-primary">Search</button>
+                </form>
             </div>
         </div>
     </nav>

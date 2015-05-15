@@ -60,17 +60,48 @@ class Review(models.Model):
 ##########################
 # model relation entities
 ##########################
+#
 class MovieActor(models.Model):
-    pass
+    id = models.AutoField(primary_key=True, default=1)
+    mid = models.ForeignKey(Movie, default=-1)
+    aid = models.ForeignKey(Actor, default=-1)
+    role = models.CharField(max_length=50, null=False, default='')
 
+#
 class MovieDirector(models.Model):
-    pass
+    id = models.AutoField(primary_key=True, default=1)
+    mid = models.ForeignKey(Movie, default=-1)
+    did = models.ForeignKey(Director, default=-1)
 
+#
 class MovieGenre(models.Model):
-    pass
+    GENRE_CHOICES = (
+        ('Action', 'Action'),
+        ('Adult', 'Adult'),
+        ('Adventure', 'Adventure'),
+        ('Animation', 'Animation'),
+        ('Crime', 'Crime'),
+        ('Comedy', 'Comedy'),
+        ('Documentary', 'Documentary'),
+        ('Drama', 'Drama'),
+        ('Family', 'Family'),
+        ('Fantasy', 'Fantasy'),
+        ('Horror', 'Horror'),
+        ('Musical', 'Musical'),
+        ('Mystery', 'Mystery'),
+        ('Romance', 'Romance'),
+        ('Sci-Fi', 'Sci-Fi'),
+        ('Short', 'Short'),
+        ('Thriller', 'Thriller'),
+        ('War', 'War'),
+        ('Western', 'Western'),
+    )
+    id = models.AutoField(primary_key=True, default=1)
+    mid = models.ForeignKey(Movie, default=-1)
+    genre = models.CharField(max_length=20, null=False, default='', choices=GENRE_CHOICES)
 
 class MaxPersonID(models.Model):
-    pass
+    id = models.IntegerField(primary_key=True)
 
 class MaxMovieID(models.Model):
-    pass
+    id = models.IntegerField(primary_key=True)

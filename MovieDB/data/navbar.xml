@@ -2,43 +2,31 @@
 
 <navbar>
   <item>
-    <text>Home</text>
-    <tooltip>Navigate to the home page</tooltip>
-    <viewname>index</viewname>
-  </item>
-  <item>
-    <text>Bowse Actor</text>
-    <tooltip>Browse the database by actor</tooltip>
+    <text>Browse Actors</text>
     <viewname>BrowseActor</viewname>
   </item>
   <item>
-    <text>Browse Movie</text>
-    <tooltip>Browse the database by movie</tooltip>
+    <text>Browse Movies</text>
     <viewname>BrowseMovie</viewname>
   </item>  
   <item>
-    <text>Add Actor/Director</text>
-    <tooltip>Add an actor or director to the database</tooltip>
+    <text>Add People</text>
     <viewname>AddActorDirector</viewname>
   </item>
   <item>
-    <text>Add Movie</text>
-    <tooltip>Add a movie to the database</tooltip>
+    <text>Add Movies</text>
     <viewname>AddMovie</viewname>
   </item>
   <item>
-    <text>Add Actor to Movie</text>
-    <tooltip>Add an actor to a movie</tooltip>
+    <text>Add Actors to Movies</text>
     <viewname>AddActorMovie</viewname>
   </item>
   <item>
-    <text>Add Director to Movie</text>
-    <tooltip>Add a director to a movie</tooltip>
+    <text>Add Directors to Movies</text>
     <viewname>AddDirectorMovie</viewname>
   </item>  
   <item>
-    <text>Write Review</text>
-    <tooltip>Write a movie review</tooltip>
+    <text>Review</text>
     <viewname>WriteReview</viewname>
   </item>  
 </navbar>

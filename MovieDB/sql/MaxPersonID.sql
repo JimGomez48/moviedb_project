@@ -1,1 +1,0 @@
-INSERT INTO MovieDB_maxpersonid VALUES (69000);

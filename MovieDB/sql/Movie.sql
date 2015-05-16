@@ -1,1 +1,0 @@
-LOAD XML LOCAL INFILE './seed_data/xml/movie.xml' INTO TABLE MovieDB_movie;

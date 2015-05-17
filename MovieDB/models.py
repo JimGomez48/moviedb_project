@@ -1,4 +1,5 @@
 import datetime
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -10,20 +11,34 @@ class Actor(models.Model):
         ('male', 'male'),
         ('male', 'female'),
     )
-    id = models.IntegerField(primary_key=True, default=-1)
-    last = models.CharField(max_length=20, null=False, default='')
-    first = models.CharField(max_length=20, null=False, default='')
-    sex = models.CharField(max_length=6, null=False, default='', choices=SEX_CHOICES)
-    dob = models.DateField(null=False, default=datetime.date(1800, 1, 1), blank=True)
-    dod = models.DateField(null=True, blank=True)
+    id = models.IntegerField(primary_key=True)
+    last = models.CharField(max_length=20)
+    first = models.CharField(max_length=20)
+    sex = models.CharField(max_length=6, choices=SEX_CHOICES)
+    dob = models.DateField()
+    dod = models.DateField(null=True, default=None)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.dod and self.dod < self.dob:
+            raise ValidationError('dod cannot be less than dod')
+        if not self.sex in self.SEX_CHOICES:
+            raise ValidationError('invalid value for sex')
+        super(Actor, self).save(force_insert, force_update, using, update_fields)
 
 
 class Director(models.Model):
-    id = models.IntegerField(primary_key=True, default=-1)
-    last = models.CharField(max_length=20, null=False, default='')
-    first = models.CharField(max_length=20, null=False, default='')
-    dob = models.DateField(null=False, default=datetime.date(1800, 1, 1), blank=True)
+    id = models.IntegerField(primary_key=True)
+    last = models.CharField(max_length=20)
+    first = models.CharField(max_length=20)
+    dob = models.DateField()
     dod = models.DateField(null=True, default=None)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.dod and self.dod < self.dob:
+            raise ValidationError('Director.dod cannot be less than Director.dob')
+        super(Director, self).save(force_insert, force_update, using, update_fields)
 
 
 class Movie(models.Model):
@@ -35,11 +50,19 @@ class Movie(models.Model):
         ('G', 'G'),
         ('surrendere', 'surrendere'),
     )
-    id = models.IntegerField(primary_key=True, default=-1)
-    title = models.CharField(max_length=100, null=False, default='')
-    year = models.IntegerField(null=True)
-    rating = models.CharField(max_length=10, null=False, default='', choices=MPAA_RATINGS)
-    company = models.CharField(max_length=50, null=True)
+    id = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=100)
+    year = models.IntegerField(blank=True, default='')
+    rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
+    company = models.CharField(max_length=50)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.year < 1800 or self.year > datetime.datetime.now().year:
+            raise ValidationError('Invalid year value')
+        if not self.rating in self.MPAA_RATINGS:
+            raise ValidationError('Invalid rating value')
+        super(Movie, self).save(force_insert, force_update, using, update_fields)
 
 
 class Review(models.Model):
@@ -50,28 +73,33 @@ class Review(models.Model):
         (4, '4-star'),
         (5, '5-star'),
     )
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=20, null=False, default='')
-    time = models.DateTimeField(null=False, default=datetime.datetime(1800, 1, 1), blank=True)
-    mid = models.IntegerField(null=False, default=-1)
-    rating = models.IntegerField(null=False, default=-1, choices=RATING_RANGE)
-    comment = models.CharField(max_length=500, null=True)
+    id = models.AutoField(primary_key=True, editable=False)
+    time = models.DateTimeField(auto_now=True, editable=False)
+    name = models.CharField(max_length=20)
+    movie = models.ForeignKey(Movie)
+    rating = models.IntegerField(choices=RATING_RANGE)
+    comment = models.CharField(max_length=500, blank=True, default='')
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.rating < 1 or self.rating > 5:
+            raise ValidationError('Review.rating cannot be outside the range [1,5]')
+        super(Review, self).save(force_insert, force_update, using, update_fields)
 ##########################
 # model relation entities
 ##########################
 #
 class MovieActor(models.Model):
-    id = models.AutoField(primary_key=True, default=1)
-    movie = models.ForeignKey(Movie, default=-1)
-    actor = models.ForeignKey(Actor, default=-1)
-    role = models.CharField(max_length=50, null=False, default='')
+    id = models.AutoField(primary_key=True, editable=False)
+    movie = models.ForeignKey(Movie)
+    actor = models.ForeignKey(Actor)
+    role = models.CharField(max_length=50)
 
 #
 class MovieDirector(models.Model):
-    id = models.AutoField(primary_key=True, default=1)
-    movie = models.ForeignKey(Movie, default=-1)
-    director = models.ForeignKey(Director, default=-1)
+    id = models.AutoField(primary_key=True, editable=False)
+    movie = models.ForeignKey(Movie)
+    director = models.ForeignKey(Director)
 
 #
 class MovieGenre(models.Model):
@@ -96,9 +124,15 @@ class MovieGenre(models.Model):
         ('War', 'War'),
         ('Western', 'Western'),
     )
-    id = models.AutoField(primary_key=True, default=1)
-    movie = models.ForeignKey(Movie, default=-1)
-    genre = models.CharField(max_length=20, null=False, default='', choices=GENRE_CHOICES)
+    id = models.AutoField(primary_key=True, editable=False)
+    movie = models.ForeignKey(Movie)
+    genre = models.CharField(max_length=20, choices=GENRE_CHOICES)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if not self.genre in self.GENRE_CHOICES:
+            raise ValidationError('Invalid genre value')
+        super(MovieGenre, self).save(force_insert, force_update, using, update_fields)
 
 class MaxPersonID(models.Model):
     id = models.IntegerField(primary_key=True)

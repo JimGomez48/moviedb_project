@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% block main_block %}
-    {% for result in search_results %}
-        <p>{{ result }}</p>
-    {% endfor %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Movies</h1>
+            {% for movie in movie_results %}
+                <p>{{ movie.title }}</p>
+            {% endfor %}
+            <h1>Actors</h1>
+            {% for actor in actor_results %}
+                <p>{{ actor.first }} {{ actor.last }}</p>
+            {% endfor %}
+            <h1>Directors</h1>
+            {% for director in director_results %}
+                <p>{{ director.first }} {{ director.last }}</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

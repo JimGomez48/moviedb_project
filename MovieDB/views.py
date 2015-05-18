@@ -1,11 +1,12 @@
 import os
 from django.core.urlresolvers import reverse, NoReverseMatch
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
-
+from MovieDB.models import *
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -72,9 +73,36 @@ class SearchResultsView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
         context['page_header'] = 'Search Results'
-        search_results = str(request.GET['search_term']).split(' ')
-        context['search_results'] = search_results
+        search_terms = str(request.GET['search_term']).split(' ')
+        movies = self.get_movie_results(search_terms)
+        actors = self.get_actor_results(search_terms)
+        directors = self.get_director_results(search_terms)
+        context['movie_results'] = movies
+        context['actor_results'] = actors
+        context['director_results'] = directors
+        print movies, actors, directors
         return render(request, 'search_results.html', context)
+
+    def get_movie_results(self, search_terms):
+        movies = []
+        for term in search_terms:
+            results = Movie.objects.filter(title__icontains=term)
+            movies.extend([item for item in results])
+        return movies
+
+    def get_actor_results(self, search_terms):
+        actors = []
+        for term in search_terms:
+            results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            actors.extend([item for item in results])
+        return actors
+
+    def get_director_results(self, search_terms):
+        directors = []
+        for term in search_terms:
+            results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            directors.extend([item for item in results])
+        return directors
 
 
 class BrowseMovieView(BaseView):

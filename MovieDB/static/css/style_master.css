@@ -1,14 +1,10 @@
 html, body {
     width: 100%;
-    min-width: 1200px;
+    min-width: 800px;
     overflow-x: auto;
     height: 100%;
     margin: 0;
     padding: 0;
-}
-
-#master_form {
-    height: 100%;
 }
 
 #master_container {
@@ -18,10 +14,11 @@ html, body {
     background-color: #f6f6f6;
 }
 #main {
-    padding: 20px;
+    /*padding: 20px;*/
+    padding-top: 50px;
     padding-bottom: 100px;
     text-align: center;
-    font-size: small;
+    /*font-size: small;*/
 }
 
 .error {

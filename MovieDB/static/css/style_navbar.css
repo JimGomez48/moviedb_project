@@ -1,4 +1,4 @@
-/*#navbar {*/
+#navbar {
     /*text-align: center;*/
     /*font-size: medium;*/
     /*text-transform: capitalize;*/
@@ -8,7 +8,8 @@
     /*background-color: #ffffff;*/
     /*box-shadow: 0px 3px 3px #c8c8c8;*/
     /*flex: 1;*/
-/*}*/
+    /*min-width: 800px;*/
+}
 
 /*#navbar ul {*/
     /*list-style-type: none;*/

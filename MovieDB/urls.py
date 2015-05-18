@@ -4,6 +4,7 @@ import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    # url(r'^$', views.SearchResultsView.as_view(), name='SearchResults'),
     url(r'^BrowseMovie/$', views.BrowseMovieView.as_view(), name='BrowseMovie'),
     url(r'^BrowseActor/$', views.BrowseActorView.as_view(), name='BrowseActor'),
     url(r'^AddMovie/$', views.AddMovieView.as_view(), name='AddMovie'),

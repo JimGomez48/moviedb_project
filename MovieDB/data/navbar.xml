@@ -1,32 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <navbar>
-  <item>
-    <text>Browse Actors</text>
-    <viewname>BrowseActor</viewname>
-  </item>
-  <item>
-    <text>Browse Movies</text>
-    <viewname>BrowseMovie</viewname>
-  </item>  
-  <item>
-    <text>Add People</text>
-    <viewname>AddActorDirector</viewname>
-  </item>
-  <item>
-    <text>Add Movies</text>
-    <viewname>AddMovie</viewname>
-  </item>
-  <item>
-    <text>Add Actors to Movies</text>
-    <viewname>AddActorMovie</viewname>
-  </item>
-  <item>
-    <text>Add Directors to Movies</text>
-    <viewname>AddDirectorMovie</viewname>
-  </item>  
-  <item>
-    <text>Review</text>
-    <viewname>WriteReview</viewname>
-  </item>  
+    <dropdown name="Browse">
+        <item>
+            <text>Browse Movies</text>
+            <viewname>BrowseMovie</viewname>
+        </item>
+        <item>
+            <text>Browse Actors</text>
+            <viewname>BrowseActor</viewname>
+        </item>
+        <item>
+            <text>Browse Directors</text>
+            <viewname>BrowseDirector</viewname>
+        </item>
+    </dropdown>
+    <dropdown name="Add">
+        <item>
+            <text>Add Movies</text>
+            <viewname>AddMovie</viewname>
+        </item>
+        <item>
+            <text>Add Actors/Directors</text>
+            <viewname>AddActorDirector</viewname>
+        </item>
+        <item>
+            <text>Add Actors to Movies</text>
+            <viewname>AddActorMovie</viewname>
+        </item>
+        <item>
+            <text>Add Directors to Movies</text>
+            <viewname>AddDirectorMovie</viewname>
+        </item>
+    </dropdown>
+    <dropdown name="Reviews">
+        <item>
+            <text>View Movie Reviews</text>
+            <viewname>ViewReview</viewname>
+        </item>
+        <item>
+            <text>Write a Movie Review</text>
+            <viewname>WriteReview</viewname>
+        </item>
+    </dropdown>
 </navbar>

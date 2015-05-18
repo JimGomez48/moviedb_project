@@ -2,7 +2,7 @@ import os
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import View
+from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
 
@@ -72,7 +72,9 @@ class SearchResultsView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
         context['page_header'] = 'Search Results'
-        return render(request, 'index.html', context)
+        search_results = str(request.GET['search_term']).split(' ')
+        context['search_results'] = search_results
+        return render(request, 'search_results.html', context)
 
 
 class BrowseMovieView(BaseView):

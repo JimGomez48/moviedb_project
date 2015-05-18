@@ -1,8 +1,8 @@
 import os
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
@@ -70,38 +70,55 @@ class IndexView(BaseView):
 
 
 class SearchResultsView(BaseView):
+    RESULTS_PER_PAGE = 20
+
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
         context['page_header'] = 'Search Results'
+        context['search_term'] = request.GET['search_term']
         search_terms = str(request.GET['search_term']).split(' ')
+        # if not search_terms:
+        #     return redirect(request.)
+        request.session['search_terms'] = search_terms
         movies = self.get_movie_results(search_terms)
         actors = self.get_actor_results(search_terms)
         directors = self.get_director_results(search_terms)
         context['movie_results'] = movies
         context['actor_results'] = actors
         context['director_results'] = directors
-        print movies, actors, directors
-        return render(request, 'search_results.html', context)
+        return render(request, 'search_results_all.html', context)
 
     def get_movie_results(self, search_terms):
         movies = []
+        total_count = 0
         for term in search_terms:
             results = Movie.objects.filter(title__icontains=term)
+            total_count += results.count()
             movies.extend([item for item in results])
+            if total_count >= self.RESULTS_PER_PAGE:
+                return movies[0: self.RESULTS_PER_PAGE]
         return movies
 
     def get_actor_results(self, search_terms):
         actors = []
+        total_count = 0
         for term in search_terms:
             results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            total_count += results.count()
             actors.extend([item for item in results])
+            if total_count >= self.RESULTS_PER_PAGE:
+                return actors[0: self.RESULTS_PER_PAGE]
         return actors
 
     def get_director_results(self, search_terms):
         directors = []
+        total_count = 0
         for term in search_terms:
-            results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            results = Director.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            total_count += results.count()
             directors.extend([item for item in results])
+            if total_count >= self.RESULTS_PER_PAGE:
+                return directors[0: self.RESULTS_PER_PAGE]
         return directors
 
 

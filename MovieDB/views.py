@@ -62,6 +62,10 @@ class BaseView(TemplateView):
         return navbar
 
 
+def Error404(request):
+    return render(request, '404.html')
+
+
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(IndexView, self).get_context_data()

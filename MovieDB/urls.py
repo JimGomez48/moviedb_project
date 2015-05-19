@@ -3,6 +3,7 @@ from django.conf.urls import url
 import views
 
 urlpatterns = [
+    url(r'^404/$', views.Error404, name='Error404'),
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^SearchResults/$', views.SearchResultsView.as_view(), name='SearchResults'),
     url(r'^BrowseMovie/$', views.BrowseMovieView.as_view(), name='BrowseMovie'),

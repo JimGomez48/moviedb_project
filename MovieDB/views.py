@@ -10,6 +10,11 @@ from MovieDB.models import *
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+
+def Error404(request):
+    return render(request, '404.html')
+
+
 class BaseView(TemplateView):
     class NavElement(object):
         DROPDOWN = 'dropdown'
@@ -60,10 +65,6 @@ class BaseView(TemplateView):
         return navbar
 
 
-def Error404(request):
-    return render(request, '404.html')
-
-
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(IndexView, self).get_context_data()
@@ -76,19 +77,18 @@ class SearchResultsView(BaseView):
 
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
-        context['page_header'] = 'Search Results'
-        context['search_term'] = request.GET['search_term']
+        context['page_header'] = 'Search Results for "' + request.GET['search_term'] + '"'
         search_terms = str(request.GET['search_term']).split(' ')
-        # if not search_terms:
-        #     return redirect(request.)
-        request.session['search_terms'] = search_terms
+        # save search term in GET to pass to browse pages
+        # request.session['search_terms'] = search_terms
+        # request.GET['search_terms'] = search_terms
         movies = self.get_movie_results(search_terms)
         actors = self.get_actor_results(search_terms)
         directors = self.get_director_results(search_terms)
         context['movie_results'] = movies
         context['actor_results'] = actors
         context['director_results'] = directors
-        return render(request, 'search_results_all.html', context)
+        return render(request, 'search_results.html', context)
 
     def get_movie_results(self, search_terms):
         movies = []
@@ -137,6 +137,33 @@ class BrowseActorView(BaseView):
         context['page_header'] = 'Browse Actors'
         return render(request, 'browse.html', context)
 
+class BrowseDirectorView(BaseView):
+    def get(self, request, *args, **kwargs):
+        context = super(BrowseDirectorView, self).get_context_data()
+        context['page_header'] = 'Browse Directors'
+        return render(request, 'browse.html', context)
+
+
+class MovieDetailView(BaseView):
+    def get(self, request, *args, **kwargs):
+        context = super(MovieDetailView, self).get_context_data()
+        context['page_header'] = 'Movie Details'
+        return render(request, 'detail.html', context)
+
+
+class ActorDetailView(BaseView):
+    def get(self, request, *args, **kwargs):
+        context = super(ActorDetailView, self).get_context_data()
+        context['page_header'] = 'Actor Details'
+        return render(request, 'detail.html', context)
+
+
+class DirectorDetailView(BaseView):
+    def get(self, request, *args, **kwargs):
+        context = super(DirectorDetailView, self).get_context_data()
+        context['page_header'] = 'Director Details'
+        return render(request, 'detail.html', context)
+
 
 class AddMovieView(BaseView):
     def get(self, request, *args, **kwargs):
@@ -170,4 +197,11 @@ class WriteReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(WriteReviewView, self).get_context_data()
         context['page_header'] = 'Write a Movie Review'
+        return render(request, 'browse.html', context)
+
+
+class ViewReviewView(BaseView):
+    def get(self, request, *args, **kwargs):
+        context = super(ViewReviewView, self).get_context_data()
+        context['page_header'] = 'View Movie Reviews'
         return render(request, 'browse.html', context)

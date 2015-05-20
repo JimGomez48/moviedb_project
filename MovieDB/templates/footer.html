@@ -1,0 +1,23 @@
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <a class="" href="{% url 'index' %}">
+                    <h3><span class="glyphicon glyphicon-home"></span> MovieDB</h3>
+                </a>
+            </div>
+            {% for top_item in nav_items %}
+                <div class="col-md-3">
+                    {% if top_item.type == 'item' %}
+                        <a href="{{ top_item.url }}"><p>{{ top_item.text }}</p></a>
+                    {% elif top_item.type == 'dropdown' %}
+                        <h4 class="text-primary">{{ top_item.text }}</h4>
+                        {% for sub_item in top_item.children %}
+                            <a href="{{ sub_item.url }}">{{ sub_item.text }}</a></br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

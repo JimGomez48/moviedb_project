@@ -1,0 +1,80 @@
+html, body {
+    height: 100%;
+    min-width: 600px;
+    /* will appear as footer bg-color */
+    background-color: #424242;
+}
+
+#master_container {
+    min-height: 100%;
+    height: auto;
+    width: 100%;
+    /* Negative indent footer by its height */
+    margin: 0 auto -200px;
+    /* Pad bottom by footer height */
+    /*padding: 0 0 200px;*/
+
+    /* push full bottom */
+    position: relative;
+}
+
+#navbar {
+    /*NONE*/
+}
+
+#main {
+    text-align: center;
+}
+
+#footer {
+    width: 100%;
+    height: auto;
+    padding-bottom: 40px;
+
+    /* push full bottom */
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    /*left: 0;*/
+}
+
+#footer h4 {
+    /*color: cornflowerblue;*/
+}
+
+#footer p, a {
+    color: #A0A0A0;
+    /*color: gray;*/
+}
+
+.error {
+    color: red;
+    text-transform: none;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+}

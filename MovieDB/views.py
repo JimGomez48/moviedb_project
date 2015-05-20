@@ -28,10 +28,8 @@ class BaseView(TemplateView):
 
     def get_context_data(self, **kwargs):
         nav_items = self.__get_navbar_elements()
-        home_url = reverse('index')
         context = {
             'title': 'MovieDB',
-            'home_url': home_url,
             'nav_items': nav_items,
         }
         return context

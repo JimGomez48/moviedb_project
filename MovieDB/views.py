@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
@@ -78,10 +79,8 @@ class SearchResultsView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
         context['page_header'] = 'Search Results for "' + request.GET['search_term'] + '"'
+        context['search_term'] = request.GET['search_term']
         search_terms = str(request.GET['search_term']).split(' ')
-        # save search term in GET to pass to browse pages
-        # request.session['search_terms'] = search_terms
-        # request.GET['search_terms'] = search_terms
         movies = self.get_movie_results(search_terms)
         actors = self.get_actor_results(search_terms)
         directors = self.get_director_results(search_terms)
@@ -128,6 +127,10 @@ class BrowseMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(BrowseMovieView, self).get_context_data()
         context['page_header'] = 'Browse Movies'
+        try:
+            search_term = request.GET['search_term']
+        except MultiValueDictKeyError:
+            search_term = None
         return render(request, 'browse.html', context)
 
 
@@ -135,12 +138,20 @@ class BrowseActorView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(BrowseActorView, self).get_context_data()
         context['page_header'] = 'Browse Actors'
+        try:
+            search_term = request.GET['search_term']
+        except MultiValueDictKeyError:
+            search_term = None
         return render(request, 'browse.html', context)
 
 class BrowseDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(BrowseDirectorView, self).get_context_data()
         context['page_header'] = 'Browse Directors'
+        try:
+            search_term = request.GET['search_term']
+        except MultiValueDictKeyError:
+            search_term = None
         return render(request, 'browse.html', context)
 
 

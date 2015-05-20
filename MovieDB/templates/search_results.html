@@ -14,9 +14,11 @@
                     <div class="panel-heading"><h3>Movies</h3></div>
                     <ul class="list-group">
                         {% for movie in movie_results %}
-                            <a class="list-group-item" href={% url 'MovieDetail' %}>{{ movie.title }} ({{ movie.year }}, {{ movie.rating }})</a>
+                        <a class="list-group-item" href={% url 'MovieDetail' %}?id={{ movie.id }}>
+                            {{ movie.title }} ({{ movie.year }})
+                        </a>
                         {% endfor %}
-                        <a class="list-group-item" href={% url 'BrowseMovie' %}>
+                        <a class="list-group-item" href="{% url 'BrowseMovie' %}?search_term={{ search_term }}">
                             <span class="glyphicon glyphicon-zoom-in"></span>
                         </a>
                     </ul>
@@ -28,9 +30,11 @@
                     <div class="panel-heading"><h3>Actors</h3></div>
                     <ul class="list-group">
                         {% for actor in actor_results %}
-                            <a class="list-group-item" href={% url 'ActorDetail' %}>{{ actor.first }} {{ actor.last }} ({{ actor.dob }})</a>
+                        <a class="list-group-item" href={% url 'ActorDetail' %}?id={{ actor.id }}>
+                            {{ actor.first }} {{ actor.last }} ({{ actor.dob }})
+                        </a>
                         {% endfor %}
-                        <a class="list-group-item" href="{% url 'BrowseActor' %}">
+                        <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}">
                             <span class="glyphicon glyphicon-zoom-in"></span>
                         </a>
                     </ul>
@@ -42,9 +46,11 @@
                     <div class="panel-heading"><h3>Directors</h3></div>
                     <ul class="list-group">
                         {% for director in director_results %}
-                            <a class="list-group-item" href={% url 'DirectorDetail' %}>{{ director.first }} {{ director.last }} ({{ director.dob }})</a>
+                        <a class="list-group-item" href={% url 'DirectorDetail' %}?id={{ director.id }}>
+                            {{ director.first }} {{ director.last }} ({{ director.dob }})
+                        </a>
                         {% endfor %}
-                        <a class="list-group-item" href="{% url 'BrowseDirector' %}">
+                        <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}">
                             <span class="glyphicon glyphicon-zoom-in"></span>
                         </a>
                     </ul>

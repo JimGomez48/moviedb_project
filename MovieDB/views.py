@@ -74,7 +74,7 @@ class IndexView(BaseView):
 
 
 class SearchResultsView(BaseView):
-    RESULTS_PER_PAGE = 20
+    RESULTS_PER_PAGE = 15
 
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
@@ -93,7 +93,7 @@ class SearchResultsView(BaseView):
         movies = []
         total_count = 0
         for term in search_terms:
-            results = Movie.objects.filter(title__icontains=term)
+            results = Movie.objects.filter(title__icontains=term).values('id', 'title', 'year')
             total_count += results.count()
             movies.extend([item for item in results])
             if total_count >= self.RESULTS_PER_PAGE:
@@ -104,7 +104,7 @@ class SearchResultsView(BaseView):
         actors = []
         total_count = 0
         for term in search_terms:
-            results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
             total_count += results.count()
             actors.extend([item for item in results])
             if total_count >= self.RESULTS_PER_PAGE:
@@ -115,7 +115,7 @@ class SearchResultsView(BaseView):
         directors = []
         total_count = 0
         for term in search_terms:
-            results = Director.objects.filter(Q(first__icontains=term) | Q(last__icontains=term))
+            results = Director.objects.filter(Q(first__icontains=term) | Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
             total_count += results.count()
             directors.extend([item for item in results])
             if total_count >= self.RESULTS_PER_PAGE:
@@ -128,10 +128,19 @@ class BrowseMovieView(BaseView):
         context = super(BrowseMovieView, self).get_context_data()
         context['page_header'] = 'Browse Movies'
         try:
-            search_term = request.GET['search_term']
+            search_terms = str(request.GET['search_term']).split(' ')
         except MultiValueDictKeyError:
-            search_term = None
-        return render(request, 'browse.html', context)
+            search_terms = None
+        context['movies'] = self.get_movie_results(search_terms)
+        return render(request, 'browse_movie.html', context)
+
+    def get_movie_results(self, search_terms):
+        if search_terms is None:
+            return Movie.objects.all().values()
+        q_objects = Q()
+        for term in search_terms:
+            q_objects |= Q(title__icontains=term)
+        return Movie.objects.filter(q_objects).values()
 
 
 class BrowseActorView(BaseView):
@@ -139,20 +148,41 @@ class BrowseActorView(BaseView):
         context = super(BrowseActorView, self).get_context_data()
         context['page_header'] = 'Browse Actors'
         try:
-            search_term = request.GET['search_term']
+            search_terms = request.GET['search_term'].split(' ')
         except MultiValueDictKeyError:
-            search_term = None
-        return render(request, 'browse.html', context)
+            search_terms = None
+        context['actors'] = self.get_actor_results(search_terms)
+        return render(request, 'browse_actor.html', context)
+
+    def get_actor_results(self, search_terms):
+        if search_terms is None:
+            return Actor.objects.all().values()
+        q_objects = Q()
+        for term in search_terms:
+            q_objects |= Q(first__icontains=term)
+            q_objects |= Q(last__icontains=term)
+        return Actor.objects.filter(q_objects).values()
+
 
 class BrowseDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(BrowseDirectorView, self).get_context_data()
         context['page_header'] = 'Browse Directors'
         try:
-            search_term = request.GET['search_term']
+            search_terms = request.GET['search_term'].split(' ')
         except MultiValueDictKeyError:
-            search_term = None
-        return render(request, 'browse.html', context)
+            search_terms = None
+        context['directors'] = self.get_director_results(search_terms)
+        return render(request, 'browse_director.html', context)
+
+    def get_director_results(self, search_terms):
+        if search_terms is None:
+            return Director.objects.all().values()
+        q_objects = Q()
+        for term in search_terms:
+            q_objects |= Q(first__icontains=term)
+            q_objects |= Q(last__icontains=term)
+        return Director.objects.filter(q_objects).values()
 
 
 class MovieDetailView(BaseView):
@@ -180,39 +210,39 @@ class AddMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddMovieView, self).get_context_data()
         context['page_header'] = 'Add Movies'
-        return render(request, 'browse.html', context)
+        return render(request, 'browse_movie.html', context)
 
 
 class AddActorDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddActorDirectorView, self).get_context_data()
         context['page_header'] = 'Add Actors and Directors'
-        return render(request, 'browse.html', context)
+        return render(request, 'browse_movie.html', context)
 
 
 class AddActorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddActorToMovieView, self).get_context_data()
         context['page_header'] = 'Add an Actor to a Movie'
-        return render(request, 'browse.html', context)
+        return render(request, 'browse_movie.html', context)
 
 
 class AddDirectorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddDirectorToMovieView, self).get_context_data()
         context['page_header'] = 'Add a Director to a Movie'
-        return render(request, 'browse.html', context)
+        return render(request, 'browse_movie.html', context)
 
 
 class WriteReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(WriteReviewView, self).get_context_data()
         context['page_header'] = 'Write a Movie Review'
-        return render(request, 'browse.html', context)
+        return render(request, 'browse_movie.html', context)
 
 
 class ViewReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(ViewReviewView, self).get_context_data()
         context['page_header'] = 'View Movie Reviews'
-        return render(request, 'browse.html', context)
+        return render(request, 'browse_movie.html', context)

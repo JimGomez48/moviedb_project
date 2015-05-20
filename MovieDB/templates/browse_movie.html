@@ -13,7 +13,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3>{{ page_header }}</h3></div>
                     <ul class="list-group">
-                        {% for movie in movie_results %}
+                        {% for movie in movies %}
                             <a class="list-group-item" href={% url 'MovieDetail' %}>{{ movie.title }} ({{ movie.year }}, {{ movie.rating }})</a>
                         {% endfor %}
                     </ul>

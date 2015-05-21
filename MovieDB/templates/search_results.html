@@ -14,7 +14,7 @@
                     <div class="panel-heading"><h3>Movies</h3></div>
                     <ul class="list-group">
                         {% for movie in movie_results %}
-                        <a class="list-group-item" href={% url 'MovieDetail' %}?id={{ movie.id }}>
+                        <a class="list-group-item text-left" href={% url 'MovieDetail' %}?id={{ movie.id }}>
                             {{ movie.title }} ({{ movie.year }})
                         </a>
                         {% endfor %}
@@ -30,7 +30,7 @@
                     <div class="panel-heading"><h3>Actors</h3></div>
                     <ul class="list-group">
                         {% for actor in actor_results %}
-                        <a class="list-group-item" href={% url 'ActorDetail' %}?id={{ actor.id }}>
+                        <a class="list-group-item text-left" href={% url 'ActorDetail' %}?id={{ actor.id }}>
                             {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
                         </a>
                         {% endfor %}
@@ -46,7 +46,7 @@
                     <div class="panel-heading"><h3>Directors</h3></div>
                     <ul class="list-group">
                         {% for director in director_results %}
-                        <a class="list-group-item" href={% url 'DirectorDetail' %}?id={{ director.id }}>
+                        <a class="list-group-item text-left" href={% url 'DirectorDetail' %}?id={{ director.id }}>
                             {{ director.last }}, {{ director.first }} ({{ director.dob }})
                         </a>
                         {% endfor %}

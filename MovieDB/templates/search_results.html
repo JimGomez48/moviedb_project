@@ -13,14 +13,18 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3>Movies</h3></div>
                     <ul class="list-group">
-                        {% for movie in movie_results %}
-                        <a class="list-group-item text-left" href={% url 'MovieDetail' %}?id={{ movie.id }}>
-                            {{ movie.title }} ({{ movie.year }})
-                        </a>
-                        {% endfor %}
-                        <a class="list-group-item" href="{% url 'BrowseMovie' %}?search_term={{ search_term }}">
-                            <span class="glyphicon glyphicon-zoom-in"></span>
-                        </a>
+                        {% if movie_results %}
+                            {% for movie in movie_results %}
+                            <a class="list-group-item text-left" href={% url 'MovieDetail' %}?id={{ movie.id }}>
+                                {{ movie.title }} ({{ movie.year }})
+                            </a>
+                            {% endfor %}
+                            <a class="list-group-item" href="{% url 'BrowseMovie' %}?search_term={{ search_term }}">
+                                <span class="glyphicon glyphicon-zoom-in"></span>
+                            </a>
+                        {% else %}
+                            <p class="list-group-item text-danger"><i>No matching movie results</i></p>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -29,14 +33,18 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3>Actors</h3></div>
                     <ul class="list-group">
-                        {% for actor in actor_results %}
-                        <a class="list-group-item text-left" href={% url 'ActorDetail' %}?id={{ actor.id }}>
-                            {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
-                        </a>
-                        {% endfor %}
-                        <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}">
-                            <span class="glyphicon glyphicon-zoom-in"></span>
-                        </a>
+                        {% if actor_results %}
+                            {% for actor in actor_results %}
+                            <a class="list-group-item text-left" href={% url 'ActorDetail' %}?id={{ actor.id }}>
+                                {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
+                            </a>
+                            {% endfor %}
+                            <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}">
+                                <span class="glyphicon glyphicon-zoom-in"></span>
+                            </a>
+                        {% else %}
+                            <p class="list-group-item text-danger"><i>No matching actor results</i></p>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -45,14 +53,18 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3>Directors</h3></div>
                     <ul class="list-group">
-                        {% for director in director_results %}
-                        <a class="list-group-item text-left" href={% url 'DirectorDetail' %}?id={{ director.id }}>
-                            {{ director.last }}, {{ director.first }} ({{ director.dob }})
-                        </a>
-                        {% endfor %}
-                        <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}">
-                            <span class="glyphicon glyphicon-zoom-in"></span>
-                        </a>
+                        {% if director_results %}
+                            {% for director in director_results %}
+                            <a class="list-group-item text-left" href={% url 'DirectorDetail' %}?id={{ director.id }}>
+                                {{ director.last }}, {{ director.first }} ({{ director.dob }})
+                            </a>
+                            {% endfor %}
+                            <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}">
+                                <span class="glyphicon glyphicon-zoom-in"></span>
+                            </a>
+                        {% else %}
+                            <p class="list-group-item text-danger"><i>No matching director results</i></p>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

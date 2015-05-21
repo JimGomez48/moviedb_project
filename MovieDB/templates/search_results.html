@@ -31,7 +31,7 @@
                     <ul class="list-group">
                         {% for actor in actor_results %}
                         <a class="list-group-item" href={% url 'ActorDetail' %}?id={{ actor.id }}>
-                            {{ actor.first }} {{ actor.last }} ({{ actor.dob }})
+                            {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
                         </a>
                         {% endfor %}
                         <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}">
@@ -47,7 +47,7 @@
                     <ul class="list-group">
                         {% for director in director_results %}
                         <a class="list-group-item" href={% url 'DirectorDetail' %}?id={{ director.id }}>
-                            {{ director.first }} {{ director.last }} ({{ director.dob }})
+                            {{ director.last }}, {{ director.first }} ({{ director.dob }})
                         </a>
                         {% endfor %}
                         <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}">

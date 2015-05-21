@@ -4,7 +4,7 @@
         <div class="panel-heading"><h3>{{ results_header }}</h3></div>
         <ul class="list-group">
             {% for director in page %}
-                <a class="list-group-item" href={% url 'DirectorDetail' %}>{{ director.first }} {{ director.last }} ({{ director.dob }})</a>
+                <a class="list-group-item" href={% url 'DirectorDetail' %}>{{ director.last }}, {{ director.first}} ({{ director.dob }})</a>
             {% endfor %}
         </ul>
     </div>

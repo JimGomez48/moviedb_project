@@ -39,11 +39,11 @@ html, body {
 
 #footer h4 {
     /*color: cornflowerblue;*/
+    color: whitesmoke;
 }
 
 #footer p, a {
     color: #A0A0A0;
-    /*color: gray;*/
 }
 
 .error {

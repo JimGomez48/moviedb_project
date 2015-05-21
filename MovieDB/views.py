@@ -1,4 +1,5 @@
 import os
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q, Count
 from django.http import HttpResponse
@@ -123,40 +124,98 @@ class SearchResultsView(BaseView):
         return directors
 
 
-class BrowseMovieView(BaseView):
-    def get(self, request, *args, **kwargs):
+class PaginatedView(BaseView):
+    MAX_SHOWN_PAGES = 9
+
+    def get_visible_page_range(self, paginator, current_page_num):
+        if paginator.num_pages < self.MAX_SHOWN_PAGES:
+            pages = range(1, paginator.num_pages + 1)
+        else:
+            if current_page_num <= (self.MAX_SHOWN_PAGES // 2) + 1:
+                start = 1
+            else:
+                start = current_page_num - (self.MAX_SHOWN_PAGES // 2)
+            end = min(paginator.num_pages, start + self.MAX_SHOWN_PAGES - 1)
+            pages = range(start, end + 1)
+        return pages
+
+    def build_query_string(self, args):
+        querystring = ''
+        for arg in args:
+            if not querystring:
+                querystring = '?'
+            else:
+                querystring += '&'
+            querystring += str(arg.key) + '=' + str(arg.value)
+        return querystring
+
+
+class BrowseMovieView(PaginatedView):
+    RESULTS_PER_PAGE = 20
+
+    def get(self, request, *get_args, **kwargs):
         context = super(BrowseMovieView, self).get_context_data()
         context['page_header'] = 'Browse Movies'
+        context['results_header'] = 'Movies'
+        # get the search terms and page num
         try:
-            search_terms = str(request.GET['search_term']).split(' ')
+            search_term = request.GET['search_term']
+            search_terms = str(search_term).split(' ')
         except MultiValueDictKeyError:
+            search_term = None
             search_terms = None
-        context['movies'] = self.get_movie_results(search_terms)
+        try:
+            page_num = int(request.GET['page'])
+        except MultiValueDictKeyError:
+            page_num = 1
+        # get the movie results that match the search terms and paginate results
+        movies = self.__get_movie_results(search_terms)
+        paginator = Paginator(movies, self.RESULTS_PER_PAGE)
+        try:
+            page = paginator.page(page_num)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        context['page_range'] = self.get_visible_page_range(paginator, page_num)
+        context['page'] = page
+        context['page_url'] = reverse('BrowseMovie')
+        # query_string = self.build_query_string({
+        #     'search_term': search_term,
+        #     'page': page.number
+        # })
+        # context['query_string'] = query_string
+        if search_term:
+            context['search_term'] = 'search_term=' + search_term + '&'
         return render(request, 'browse_movie.html', context)
 
-    def get_movie_results(self, search_terms):
+    def __get_movie_results(self, search_terms):
         if search_terms is None:
-            return Movie.objects.all().values()
+            return Movie.objects.all().order_by('title', 'year').values()
         q_objects = Q()
         for term in search_terms:
             q_objects |= Q(title__icontains=term)
         return Movie.objects.filter(q_objects).values()
 
 
-class BrowseActorView(BaseView):
+class BrowseActorView(PaginatedView):
     def get(self, request, *args, **kwargs):
         context = super(BrowseActorView, self).get_context_data()
         context['page_header'] = 'Browse Actors'
+        context['results_header'] = 'Actors'
         try:
             search_terms = request.GET['search_term'].split(' ')
         except MultiValueDictKeyError:
             search_terms = None
-        context['actors'] = self.get_actor_results(search_terms)
+        context['actors'] = self.__get_actor_results(search_terms)
+        context['pages'] = self.get_visible_page_range(paginator, page)
+        context['current_page'] = page
+        context['page_url'] = reverse('BrowseMovie')
         return render(request, 'browse_actor.html', context)
 
-    def get_actor_results(self, search_terms):
+    def __get_actor_results(self, search_terms):
         if search_terms is None:
-            return Actor.objects.all().values()
+            return Actor.objects.all().order_by('last', 'first').values()
         q_objects = Q()
         for term in search_terms:
             q_objects |= Q(first__icontains=term)
@@ -164,20 +223,24 @@ class BrowseActorView(BaseView):
         return Actor.objects.filter(q_objects).values()
 
 
-class BrowseDirectorView(BaseView):
+class BrowseDirectorView(PaginatedView):
     def get(self, request, *args, **kwargs):
         context = super(BrowseDirectorView, self).get_context_data()
         context['page_header'] = 'Browse Directors'
+        context['results_header'] = 'Directors'
         try:
             search_terms = request.GET['search_term'].split(' ')
         except MultiValueDictKeyError:
             search_terms = None
-        context['directors'] = self.get_director_results(search_terms)
+        context['directors'] = self.__get_director_results(search_terms)
+        context['pages'] = self.get_visible_page_range(paginator, page)
+        context['current_page'] = page
+        context['page_url'] = reverse('BrowseMovie')
         return render(request, 'browse_director.html', context)
 
-    def get_director_results(self, search_terms):
+    def __get_director_results(self, search_terms):
         if search_terms is None:
-            return Director.objects.all().values()
+            return Director.objects.all().order_by('last', 'first').values()
         q_objects = Q()
         for term in search_terms:
             q_objects |= Q(first__icontains=term)

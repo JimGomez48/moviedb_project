@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-lg-12">
+        <nav>
+            <ul class="pagination">
+
+                {# beginning #}
+                {% if page.has_previous %}
+                    <li><a href="{{ page_url }}?{{ search_term }}page=1" >
+                {% else %}
+                    <li class="disabled"> <a href="#">
+                {% endif %}
+                    <span class="fa fa-angle-double-left"></span></a></li>
+
+                {# previous #}
+                {% if page.has_previous %}
+                    <li><a href="{{ page_url }}?{{ search_term }}page={{ page.previous_page_number }}">
+                {% else %}
+                    <li class="disabled"><a href="#">
+                {% endif %}
+                    <span class="fa fa-angle-left" ></span></a></li>
+
+                {# page numbers #}
+                {% for num in page_range %}
+                    {% if num == page.number %}
+                        <li class="active"><a href="{{ page_url }}?{{ search_term }}page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                        <li ><a href="{{ page_url }}?{{ search_term }}page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {# next #}
+                {% if page.has_next %}
+                    <li><a href="{{ page_url }}?{{ search_term }}page={{ page.next_page_number }}" >
+                {% else %}
+                    <li class="disabled"> <a href="#">
+                {% endif %}
+                    <span class="fa fa-angle-right"></span></a></li>
+
+                {# end #}
+                {% if page.has_next %}
+                    <li><a href="{{ page_url }}?{{ search_term }}page={{ page.paginator.num_pages }}" >
+                {% else %}
+                    <li class="disabled"> <a href="#">
+                {% endif %}
+                    <span class="fa fa-angle-double-right"></span></a></li>
+
+            </ul>
+        </nav>
+    </div>
+</div>

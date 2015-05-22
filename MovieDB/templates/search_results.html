@@ -11,61 +11,85 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3>Movies</h3></div>
-                    <ul class="list-group">
+                    <div class="panel-heading">
+                        <h3><span class="glyphicon glyphicon-film"></span> Movies</h3>
+                    </div>
+                    <div class="list-group">
                         {% if movie_results %}
                             {% for movie in movie_results %}
                             <a class="list-group-item text-left" href={% url 'MovieDetail' %}?id={{ movie.id }}>
-                                {{ movie.title }} ({{ movie.year }})
+                                <div class="media-left">
+                                    <span class="glyphicon glyphicon-film"></span>
+                                </div>
+                                <div class="media-body">
+                                    {{ movie.title }} ({{ movie.year }})
+                                </div>
                             </a>
                             {% endfor %}
-                            <a class="list-group-item" href="{% url 'BrowseMovie' %}?search_term={{ search_term }}">
+                            <a class="list-group-item" href="{% url 'BrowseMovie' %}?search_term={{ search_term }}"
+                               data-toggle="tooltip" data-placement="bottom" title="Browse full movie results">
                                 <span class="glyphicon glyphicon-zoom-in"></span>
                             </a>
                         {% else %}
-                            <p class="list-group-item text-danger"><i>No matching movie results</i></p>
+                            <p class="list-group-item text-muted"><i>No matching movie results</i></p>
                         {% endif %}
-                    </ul>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3>Actors</h3></div>
-                    <ul class="list-group">
+                    <div class="panel-heading">
+                        <h3><span class="glyphicon glyphicon-user"></span> Actors</h3>
+                    </div>
+                    <div class="list-group">
                         {% if actor_results %}
                             {% for actor in actor_results %}
                             <a class="list-group-item text-left" href={% url 'ActorDetail' %}?id={{ actor.id }}>
-                                {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
+                                <div class="media-left">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </div>
+                                <div class="media-body">
+                                    {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
+                                </div>
                             </a>
                             {% endfor %}
-                            <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}">
+                            <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}"
+                               data-toggle="tooltip" data-placement="bottom" title="Browse full actor results">
                                 <span class="glyphicon glyphicon-zoom-in"></span>
                             </a>
                         {% else %}
-                            <p class="list-group-item text-danger"><i>No matching actor results</i></p>
+                            <p class="list-group-item text-muted"><i>No matching actor results</i></p>
                         {% endif %}
-                    </ul>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3>Directors</h3></div>
-                    <ul class="list-group">
+                    <div class="panel-heading">
+                        <h3><span class="glyphicon glyphicon-bullhorn"></span> Directors</h3>
+                    </div>
+                    <div class="list-group">
                         {% if director_results %}
                             {% for director in director_results %}
                             <a class="list-group-item text-left" href={% url 'DirectorDetail' %}?id={{ director.id }}>
-                                {{ director.last }}, {{ director.first }} ({{ director.dob }})
+                                <div class="media-left">
+                                    <span class="glyphicon glyphicon-bullhorn"></span>
+                                </div>
+                                <div class="media-body">
+                                    {{ director.last }}, {{ director.first }} ({{ director.dob }})
+                                </div>
                             </a>
                             {% endfor %}
-                            <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}">
+                            <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}"
+                                data-toggle="tooltip" data-placement="bottom" title="Browse full directors results">
                                 <span class="glyphicon glyphicon-zoom-in"></span>
                             </a>
                         {% else %}
-                            <p class="list-group-item text-danger"><i>No matching director results</i></p>
+                            <p class="list-group-item text-muted"><i>No matching director results</i></p>
                         {% endif %}
-                    </ul>
+                    </div>
                 </div>
             </div>
         </div>

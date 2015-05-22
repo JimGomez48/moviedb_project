@@ -5,7 +5,7 @@
         <div class="panel-heading">
             <h2><span class="glyphicon glyphicon-user"></span> {{ results_header }}</h2>
         </div>
-        <ul class="list-group">
+        <div class="list-group">
             {% for actor in page %}
                 <a class="list-group-item" href={% url 'ActorDetail' %}>
                     <div class="row">
@@ -21,6 +21,6 @@
                     </div>
                 </a>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 {% endblock %}

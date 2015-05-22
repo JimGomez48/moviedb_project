@@ -3,9 +3,9 @@
 {% block paged_content %}
     <div class="panel panel-default text-left">
         <div class="panel-heading">
-            <h3><span class="glyphicon glyphicon-bullhorn"></span> {{ results_header }}</h3>
+            <h2><span class="glyphicon glyphicon-bullhorn"></span> {{ results_header }}</h2>
         </div>
-        <ul class="list-group">
+        <div class="list-group">
             {% for director in page %}
                 <a class="list-group-item" href={% url 'DirectorDetail' %}>
                     <div class="row">
@@ -21,6 +21,6 @@
                     </div>
                 </a>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 {% endblock %}

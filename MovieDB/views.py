@@ -261,60 +261,62 @@ class MovieDetailView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(MovieDetailView, self).get_context_data()
         context['page_header'] = 'Movie Details'
-        return render(request, 'detail.html', context)
+        # return render(request, 'detail.html', context)
+        return redirect('Error404')
 
 
 class ActorDetailView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(ActorDetailView, self).get_context_data()
         context['page_header'] = 'Actor Details'
-        return render(request, 'detail.html', context)
-
+        # return render(request, 'detail.html', context)
+        return redirect('Error404')
 
 class DirectorDetailView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(DirectorDetailView, self).get_context_data()
         context['page_header'] = 'Director Details'
-        return render(request, 'detail.html', context)
-
+        # return render(request, 'detail.html', context)
+        return redirect('Error404')
 
 class AddMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddMovieView, self).get_context_data()
         context['page_header'] = 'Add Movies'
-        return render(request, 'browse_movie.html', context)
-
+        # return render(request, 'browse_movie.html', context)
+        return redirect('Error404')
 
 class AddActorDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddActorDirectorView, self).get_context_data()
         context['page_header'] = 'Add Actors and Directors'
-        return render(request, 'browse_movie.html', context)
-
+        # return render(request, 'browse_movie.html', context)
+        return redirect('Error404')
 
 class AddActorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddActorToMovieView, self).get_context_data()
         context['page_header'] = 'Add an Actor to a Movie'
-        return render(request, 'browse_movie.html', context)
-
+        # return render(request, 'browse_movie.html', context)
+        return redirect('Error404')
 
 class AddDirectorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddDirectorToMovieView, self).get_context_data()
         context['page_header'] = 'Add a Director to a Movie'
-        return render(request, 'browse_movie.html', context)
-
+        # return render(request, 'browse_movie.html', context)
+        return redirect('Error404')
 
 class WriteReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(WriteReviewView, self).get_context_data()
         context['page_header'] = 'Write a Movie Review'
-        return render(request, 'browse_movie.html', context)
-
+        # return render(request, 'browse_movie.html', context)
+        return redirect('Error404')
 
 class ViewReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(ViewReviewView, self).get_context_data()
         context['page_header'] = 'View Movie Reviews'
-        return render(request, 'browse_movie.html', context)
+        # return render(request, 'browse_movie.html', context)
+        return redirect('Error404')

@@ -261,6 +261,8 @@ class MovieDetailView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(MovieDetailView, self).get_context_data()
         context['page_header'] = 'Movie Details'
+        # return render(request, 'detail.html', context)
+        return redirect('Error404')
         context['movie_title'] = None
         context['poster_img'] = None
         context['release_date'] = None

@@ -7,7 +7,7 @@
                 {% if page.has_previous %}
                     <li><a href="{{ page_url }}?{{ search_term }}page=1" >
                 {% else %}
-                    <li class="disabled"> <a href="#">
+                    <li class="disabled">
                 {% endif %}
                     <span class="fa fa-angle-double-left"></span></a></li>
 
@@ -15,7 +15,7 @@
                 {% if page.has_previous %}
                     <li><a href="{{ page_url }}?{{ search_term }}page={{ page.previous_page_number }}">
                 {% else %}
-                    <li class="disabled"><a href="#">
+                    <li class="disabled">
                 {% endif %}
                     <span class="fa fa-angle-left" ></span></a></li>
 
@@ -32,7 +32,7 @@
                 {% if page.has_next %}
                     <li><a href="{{ page_url }}?{{ search_term }}page={{ page.next_page_number }}" >
                 {% else %}
-                    <li class="disabled"> <a href="#">
+                    <li class="disabled">
                 {% endif %}
                     <span class="fa fa-angle-right"></span></a></li>
 
@@ -40,7 +40,7 @@
                 {% if page.has_next %}
                     <li><a href="{{ page_url }}?{{ search_term }}page={{ page.paginator.num_pages }}" >
                 {% else %}
-                    <li class="disabled"> <a href="#">
+                    <li class="disabled">
                 {% endif %}
                     <span class="fa fa-angle-double-right"></span></a></li>
 

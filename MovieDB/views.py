@@ -2,8 +2,8 @@ import os
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q, Count
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
@@ -258,16 +258,12 @@ class BrowseDirectorView(BrowseBaseView):
 
 
 class MovieDetailView(BaseView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, mid):
         context = super(MovieDetailView, self).get_context_data()
         context['page_header'] = 'Movie Details'
-        # return render(request, 'detail.html', context)
-        return redirect('Error404')
-        context['movie_title'] = None
-        context['poster_img'] = None
-        context['release_date'] = None
-        context['mpaa_rating'] = None
-        context['company'] = None
+        movie = get_object_or_404(Movie, id=mid)
+        context['movie'] = movie
+        context['genres'] = None
         context['actors'] = None
         context['directors'] = None
         context['avg_user_rating'] = None
@@ -275,57 +271,58 @@ class MovieDetailView(BaseView):
 
 
 class ActorDetailView(BaseView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, aid):
         context = super(ActorDetailView, self).get_context_data()
         context['page_header'] = 'Actor Details'
         # return render(request, 'detail.html', context)
-        return redirect('Error404')
+        # return redirect('Error404')
+        raise Http404()
 
 class DirectorDetailView(BaseView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, did):
         context = super(DirectorDetailView, self).get_context_data()
         context['page_header'] = 'Director Details'
         # return render(request, 'detail.html', context)
-        return redirect('Error404')
+        raise Http404()
 
 class AddMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddMovieView, self).get_context_data()
         context['page_header'] = 'Add Movies'
         # return render(request, 'browse_movie.html', context)
-        return redirect('Error404')
+        raise Http404()
 
 class AddActorDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddActorDirectorView, self).get_context_data()
         context['page_header'] = 'Add Actors and Directors'
         # return render(request, 'browse_movie.html', context)
-        return redirect('Error404')
+        raise Http404()
 
 class AddActorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddActorToMovieView, self).get_context_data()
         context['page_header'] = 'Add an Actor to a Movie'
         # return render(request, 'browse_movie.html', context)
-        return redirect('Error404')
+        raise Http404()
 
 class AddDirectorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(AddDirectorToMovieView, self).get_context_data()
         context['page_header'] = 'Add a Director to a Movie'
         # return render(request, 'browse_movie.html', context)
-        return redirect('Error404')
+        raise Http404()
 
 class WriteReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(WriteReviewView, self).get_context_data()
         context['page_header'] = 'Write a Movie Review'
         # return render(request, 'browse_movie.html', context)
-        return redirect('Error404')
+        raise Http404()
 
 class ViewReviewView(BaseView):
     def get(self, request, *args, **kwargs):
         context = super(ViewReviewView, self).get_context_data()
         context['page_header'] = 'View Movie Reviews'
         # return render(request, 'browse_movie.html', context)
-        return redirect('Error404')
+        raise Http404()

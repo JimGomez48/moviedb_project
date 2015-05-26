@@ -6,18 +6,55 @@
 
         <div class="panel panel-default text-left">
             <div class="panel-heading">
-                <h2>Movie Title Goes Here</h2>
+                <h2 class="">{{ movie.title }}</h2>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
+            <div class="list-group">
+                <div class="list-group-item">
                     <div class="media">
-                        <div class="media-left">
-                            <img class="media-object" src="img/default_movie.png">
+                        <div class="media-left media-top">
+                            <img class="media-object" src="{% static 'img/default_movie.png' %}">
                         </div>
                         <div class="media-body">
-                            <h2 class="text-primary">something</h2>
+                            <h3 class="text-primary text-capitalize">
+                                Details</h3>
+                            <dl class="dl-horizontal">
+                                <dt>Year</dt>
+                                <dd>{{ movie.year }}</dd>
+                                <dt>Company</dt>
+                                <dd>{{ movie.company }}</dd>
+                                <dt>Rating</dt>
+                                <dd>{{ movie.rating }}</dd>
+                                <dt>Genres</dt>
+                                {% for genre in genres %}
+                                    <dd>{{ genre }}</dd>
+                                {% endfor %}
+                            </dl>
                         </div>
                     </div>
+                </div>
+
+                <div class="list-group-item">
+                    <h3 class="text-primary text-capitalize">Cast & Crew</h3>
+                    <dl class="dl-horizontal">
+                        <dt>Directors</dt>
+                        <dd>{{ movie.year }}</dd>
+                        <dt>Actors</dt>
+                        <dd>{{ movie.company }}</dd>
+                        <dt>Rating</dt>
+                        <dd>{{ movie.rating }}</dd>
+                    </dl>
+                </div>
+
+                <div class="list-group-item">
+                    <h3 class="text-primary text-capitalize">Reviews</h3>
+                    <dl class="dl-horizontal">
+                        <dt>Directors</dt>
+                        <dd>{{ movie.year }}</dd>
+                        <dt>Actors</dt>
+                        <dd>{{ movie.company }}</dd>
+                        <dt>Rating</dt>
+                        <dd>{{ movie.rating }}</dd>
+                    </dl>
                 </div>
             </div>
         </div>

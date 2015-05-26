@@ -14,8 +14,11 @@ urlpatterns = [
     url(r'^BrowseDirector/$', views.BrowseDirectorView.as_view(), name='BrowseDirector'),
     # Detail
     url(r'^MovieDetail/$', views.MovieDetailView.as_view(), name='MovieDetail'),
+    url(r'^MovieDetail/(?P<mid>[0-9]{1,})/$', views.MovieDetailView.as_view(), name='MovieDetail'),
     url(r'^ActorDetail/$', views.ActorDetailView.as_view(), name='ActorDetail'),
+    url(r'^ActorDetail/(?P<aid>[0-9]{1,})/$', views.ActorDetailView.as_view(), name='ActorDetail'),
     url(r'^DirectorDetail/$', views.DirectorDetailView.as_view(), name='DirectorDetail'),
+    url(r'^DirectorDetail/(?P<did>[0-9]{1,})/$', views.DirectorDetailView.as_view(), name='DirectorDetail'),
     # Add
     url(r'^AddMovie/$', views.AddMovieView.as_view(), name='AddMovie'),
     url(r'^AddActorDirector/$', views.AddActorDirectorView.as_view(), name='AddActorDirector'),

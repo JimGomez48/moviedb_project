@@ -15,17 +15,11 @@ def main():
     root = tree.getroot()
     i = 0
     for row in root:
-        print row.tag, row.attrib
+        print row.find('id').text, row.find('last').text, row.find('first').text, row.find('sex').text, row.find('dob').text, row.find('dod').text
         i += 1
         if i > 10:
             break
-        # actor = Actor()
-        # actor.id = row.find('id')
-        # actor.last =
-        # actor.first =
-        # actor.sex =
-        # actor.dob =
-        # actor.dod =
+
 
 
 if __name__ == '__main__':

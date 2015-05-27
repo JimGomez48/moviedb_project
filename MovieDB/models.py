@@ -18,6 +18,10 @@ class Actor(models.Model):
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
 
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first, self.last)
+        return full_name
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         if self.dod and self.dod < self.dob:
@@ -33,6 +37,10 @@ class Director(models.Model):
     first = models.CharField(max_length=20)
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first, self.last)
+        return full_name
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

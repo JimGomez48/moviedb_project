@@ -9,6 +9,7 @@ from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
 from MovieDB.models import *
+from MovieDB.managers import *
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -263,9 +264,9 @@ class MovieDetailView(BaseView):
         context['page_header'] = 'Movie Details'
         movie = get_object_or_404(Movie, id=mid)
         context['movie'] = movie
-        context['genres'] = None
-        context['actors'] = None
-        context['directors'] = None
+        context['genres'] = MovieManager.get_movie_genres(mid)
+        context['actors'] = MovieManager.get_movie_actors(mid)
+        context['directors'] = MovieManager.get_movie_directors(mid)
         context['avg_user_rating'] = None
         return render(request, 'movie_detail.html', context)
 

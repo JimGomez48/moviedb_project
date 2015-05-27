@@ -9,7 +9,7 @@ from django.db import models
 class Actor(models.Model):
     SEX_CHOICES = (
         ('male', 'male'),
-        ('male', 'female'),
+        ('female', 'female'),
     )
     id = models.IntegerField(primary_key=True)
     last = models.CharField(max_length=20)

@@ -18,6 +18,12 @@ class Actor(models.Model):
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
 
+    def __init__(self):
+        super(Actor, self).__init__()
+
+    def __init__(self, id, last, first, sex, dob, dod):
+        self.__in
+
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
         return full_name
@@ -99,15 +105,15 @@ class Review(models.Model):
 #
 class MovieActor(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    movie = models.ForeignKey(Movie)
-    actor = models.ForeignKey(Actor)
+    mid = models.ForeignKey(Movie, db_column='mid')
+    aid = models.ForeignKey(Actor, db_column='aid')
     role = models.CharField(max_length=50)
 
 #
 class MovieDirector(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    movie = models.ForeignKey(Movie)
-    director = models.ForeignKey(Director)
+    mid = models.ForeignKey(Movie, db_column='mid')
+    did = models.ForeignKey(Director, db_column='did')
 
 #
 class MovieGenre(models.Model):
@@ -133,7 +139,7 @@ class MovieGenre(models.Model):
         ('Western', 'Western'),
     )
     id = models.AutoField(primary_key=True, editable=False)
-    movie = models.ForeignKey(Movie)
+    mid = models.ForeignKey(Movie, db_column='mid')
     genre = models.CharField(max_length=20, choices=GENRE_CHOICES)
 
     def save(self, force_insert=False, force_update=False, using=None,

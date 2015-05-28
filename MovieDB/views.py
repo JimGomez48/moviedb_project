@@ -10,8 +10,9 @@ from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
 from MovieDB.models import *
 from MovieDB.managers import *
+from moviedb_project.settings import BASE_DIR
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = BASE_DIR
 
 
 def Error404(request):
@@ -41,7 +42,8 @@ class BaseView(TemplateView):
     def __get_navbar_elements(self):
         # parse navbar.xml to get the navbar information
         navbar = []
-        tree = ET.parse(PROJECT_ROOT + '/data/navbar.xml')
+        path = os.path.join(PROJECT_ROOT, 'MovieDB/static/data/navbar.xml')
+        tree = ET.parse(path)
         root = tree.getroot()
         for element in root:
             if element.tag == 'dropdown':

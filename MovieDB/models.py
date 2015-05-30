@@ -90,7 +90,7 @@ class Review(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=20)
-    movie = models.ForeignKey(Movie)
+    mid = models.ForeignKey(Movie, db_column='mid')
     rating = models.IntegerField(choices=RATING_RANGE)
     comment = models.CharField(max_length=500, blank=True, default='')
 

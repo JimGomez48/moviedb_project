@@ -2,6 +2,7 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+import managers
 
 # ############################
 # # standalone model entities
@@ -17,6 +18,10 @@ class Actor(models.Model):
     sex = models.CharField(max_length=6, choices=SEX_CHOICES)
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
+
+    def __init__(self):
+        super(Actor, self).__init__()
+        self.objects = managers.ActorManager()
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
@@ -64,13 +69,17 @@ class Movie(models.Model):
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
     company = models.CharField(max_length=50)
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        if self.year < 1800 or self.year > datetime.datetime.now().year:
-            raise ValidationError('Invalid year value')
-        if not self.rating in self.MPAA_RATINGS:
-            raise ValidationError('Invalid rating value')
-        super(Movie, self).save(force_insert, force_update, using, update_fields)
+    def __init__(self):
+        super(Movie, self).__init__()
+        self.objects = managers.MovieManager()
+
+def save(self, force_insert=False, force_update=False, using=None,
+         update_fields=None):
+    if self.year < 1800 or self.year > datetime.datetime.now().year:
+        raise ValidationError('Invalid year value')
+    if not self.rating in self.MPAA_RATINGS:
+        raise ValidationError('Invalid rating value')
+    super(Movie, self).save(force_insert, force_update, using, update_fields)
 
 
 class Review(models.Model):
@@ -93,6 +102,8 @@ class Review(models.Model):
         if self.rating < 1 or self.rating > 5:
             raise ValidationError('Review.rating cannot be outside the range [1,5]')
         super(Review, self).save(force_insert, force_update, using, update_fields)
+
+
 ##########################
 # model relation entities
 ##########################
@@ -103,11 +114,13 @@ class MovieActor(models.Model):
     aid = models.ForeignKey(Actor, db_column='aid')
     role = models.CharField(max_length=50)
 
+
 #
 class MovieDirector(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     mid = models.ForeignKey(Movie, db_column='mid')
     did = models.ForeignKey(Director, db_column='did')
+
 
 #
 class MovieGenre(models.Model):
@@ -142,8 +155,10 @@ class MovieGenre(models.Model):
             raise ValidationError('Invalid genre value')
         super(MovieGenre, self).save(force_insert, force_update, using, update_fields)
 
+
 class MaxPersonID(models.Model):
     id = models.IntegerField(primary_key=True)
+
 
 class MaxMovieID(models.Model):
     id = models.IntegerField(primary_key=True)

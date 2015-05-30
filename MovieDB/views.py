@@ -266,9 +266,10 @@ class MovieDetailView(BaseView):
         context['page_header'] = 'Movie Details'
         movie = get_object_or_404(Movie, id=mid)
         context['movie'] = movie
-        context['genres'] = MovieManager.get_movie_genres(mid)
-        context['actors'] = MovieManager.get_movie_actors(mid)
-        context['directors'] = MovieManager.get_movie_directors(mid)
+        manager = Movie.objects
+        context['genres'] = manager.get_movie_genres(mid)
+        context['actors'] = manager.get_movie_actors(mid)
+        context['directors'] = manager.get_movie_directors(mid)
         context['avg_user_rating'] = None
         return render(request, 'movie_detail.html', context)
 

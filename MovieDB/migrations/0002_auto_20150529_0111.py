@@ -17,5 +17,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.RunSQL(load_seed_data_sql())
+        migrations.RunSQL(load_seed_data_sql())
     ]

@@ -18,12 +18,6 @@ class Actor(models.Model):
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
 
-    def __init__(self):
-        super(Actor, self).__init__()
-
-    def __init__(self, id, last, first, sex, dob, dod):
-        self.__in
-
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
         return full_name

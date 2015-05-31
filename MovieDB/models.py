@@ -22,6 +22,9 @@ class Actor(models.Model):
     dod = models.DateField(null=True, default=None)
     objects = ActorManager()
 
+    def __unicode__(self):
+        return '%s: %s, %s' % (self.id, self.last, self.first)
+
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
         return full_name
@@ -45,6 +48,9 @@ class Director(models.Model):
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
     objects = DirectorManager()
+
+    def __unicode__(self):
+        return '%s: %s, %s' % (self.id, self.last, self.first)
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
@@ -73,7 +79,7 @@ class Movie(models.Model):
 
         def get_movie_average_user_rating(self, movie_id):
             manager = Review.objects
-            return None
+            return manager.filter(mid=movie_id).aggregate(models.Avg('rating'))['rating__avg']
 
         def get_movie_details_full(self, movie_id):
             return None
@@ -92,6 +98,9 @@ class Movie(models.Model):
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
     company = models.CharField(max_length=50)
     objects = MovieManager()
+
+    def __unicode__(self):
+        return '%s: %s (%s)' % (self.id, self.title, self.year)
 
 def save(self, force_insert=False, force_update=False, using=None,
          update_fields=None):

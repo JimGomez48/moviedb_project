@@ -3,8 +3,6 @@ from django.conf.urls import url
 import views
 
 urlpatterns = [
-    # Error
-    url(r'^404/$', views.Error404, name='Error404'),
     # Base
     url(r'^$', views.IndexView.as_view(), name='Index'),
     url(r'^SearchResults/$', views.SearchResultsView.as_view(), name='SearchResults'),

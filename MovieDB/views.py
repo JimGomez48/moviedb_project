@@ -5,12 +5,13 @@ from django.db.models import Q, Count
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
-from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 import xml.etree.cElementTree as ET
-from MovieDB.models import *
-from MovieDB.managers import *
+
 from moviedb_project.settings import BASE_DIR
+from MovieDB import models
+from MovieDB import services
+
 
 PROJECT_ROOT = BASE_DIR
 
@@ -20,66 +21,17 @@ def Error404(request):
 
 
 class BaseView(TemplateView):
-    class NavElement(object):
-        DROPDOWN = 'dropdown'
-        ITEM = 'item'
-        def __init__(self, type):
-            self.type = type
-            self.children = None
-            self.text = None
-            self.url = None
-
-        def add_child(self, child):
-            if child:
-                if not self.children:
-                    self.children = []
-                self.children.append(child)
-
     def __init__(self):
         super(BaseView, self).__init__()
         self.__context = None
 
-    def __get_navbar_elements(self):
-        # parse navbar.xml to get the navbar information
-        navbar = []
-        path = os.path.join(PROJECT_ROOT, 'MovieDB/static/data/navbar.xml')
-        tree = ET.parse(path)
-        root = tree.getroot()
-        for element in root:
-            if element.tag == 'dropdown':
-                dropdown = self.NavElement(type=self.NavElement.DROPDOWN)
-                dropdown.text = element.attrib['name']
-                for sub_element in element:
-                    nav_item = self.NavElement(type=self.NavElement.ITEM)
-                    nav_item.text = sub_element.find('text').text
-                    try:
-                        nav_item.url = reverse(str(sub_element.find('viewname').text))
-                    except NoReverseMatch:
-                        nav_item.url = ''
-                    dropdown.add_child(nav_item)
-                navbar.append(dropdown)
-            elif element.tag == 'item':
-                nav_item = self.NavElement(type=self.NavElement.ITEM)
-                nav_item.text = element.find('text').text
-                nav_item.url = reverse(str(element.find('viewname').text))
-                navbar.append(nav_item)
-        return navbar
-
     def get_context_data(self, **kwargs):
         if not self.__context:
             self.__context = super(BaseView, self).get_context_data(**kwargs)
-        nav_items = self.__get_navbar_elements()
+        nav_items = services.get_navbar_data()
         self.__context['title'] = 'MovieDB'
         self.__context['nav_items'] = nav_items
         return self.__context
-
-    def add_context_data_item(self, item):
-        if not self.__context:
-            self.__context = super(BaseView, self).get_context_data()
-            nav_items = self.__get_navbar_elements()
-            self.__context['title'] = 'MovieDB'
-            self.__context['nav_items'] = nav_items
-        self.__context[item.key] = item.value
 
 
 class IndexView(BaseView):
@@ -109,7 +61,7 @@ class SearchResultsView(BaseView):
         movies = []
         total_count = 0
         for term in search_terms:
-            results = Movie.objects.filter(title__icontains=term).values('id', 'title', 'year')
+            results = models.Movie.objects.filter(title__icontains=term).values('id', 'title', 'year')
             total_count += results.count()
             movies.extend([item for item in results])
             if total_count >= self.RESULTS_PER_PAGE:
@@ -120,7 +72,9 @@ class SearchResultsView(BaseView):
         actors = []
         total_count = 0
         for term in search_terms:
-            results = Actor.objects.filter(Q(first__icontains=term) | Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
+            results = models.Actor.objects.filter(
+                Q(first__icontains=term) |
+                Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
             total_count += results.count()
             actors.extend([item for item in results])
             if total_count >= self.RESULTS_PER_PAGE:
@@ -131,7 +85,9 @@ class SearchResultsView(BaseView):
         directors = []
         total_count = 0
         for term in search_terms:
-            results = Director.objects.filter(Q(first__icontains=term) | Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
+            results = models.Director.objects.filter(
+                Q(first__icontains=term) |
+                Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
             total_count += results.count()
             directors.extend([item for item in results])
             if total_count >= self.RESULTS_PER_PAGE:
@@ -193,11 +149,11 @@ class BrowseMovieView(BrowseBaseView):
 
     def __get_movie_results(self, search_terms):
         if search_terms is None:
-            return Movie.objects.all().order_by('title', 'year').values()
+            return models.Movie.objects.all().order_by('title', 'year').values()
         q_objects = Q()
         for term in search_terms:
             q_objects |= Q(title__icontains=term)
-        return Movie.objects.filter(q_objects).order_by('title', 'year').values()
+        return models.Movie.objects.filter(q_objects).order_by('title', 'year').values()
 
 
 class BrowseActorView(BrowseBaseView):
@@ -222,12 +178,12 @@ class BrowseActorView(BrowseBaseView):
 
     def __get_actor_results(self, search_terms):
         if search_terms is None:
-            return Actor.objects.all().order_by('last', 'first').values()
+            return models.Actor.objects.all().order_by('last', 'first').values()
         q_objects = Q()
         for term in search_terms:
             q_objects |= Q(first__icontains=term)
             q_objects |= Q(last__icontains=term)
-        return Actor.objects.filter(q_objects).order_by('last', 'first').values()
+        return models.Actor.objects.filter(q_objects).order_by('last', 'first').values()
 
 
 class BrowseDirectorView(BrowseBaseView):
@@ -252,25 +208,25 @@ class BrowseDirectorView(BrowseBaseView):
 
     def __get_director_results(self, search_terms):
         if search_terms is None:
-            return Director.objects.all().order_by('last', 'first').values()
+            return models.Director.objects.all().order_by('last', 'first').values()
         q_objects = Q()
         for term in search_terms:
             q_objects |= Q(first__icontains=term)
             q_objects |= Q(last__icontains=term)
-        return Director.objects.filter(q_objects).order_by('last', 'first').values()
+        return models.objects.filter(q_objects).order_by('last', 'first').values()
 
 
 class MovieDetailView(BaseView):
     def get(self, request, mid):
         context = super(MovieDetailView, self).get_context_data()
         context['page_header'] = 'Movie Details'
-        movie = get_object_or_404(Movie, id=mid)
+        movie = get_object_or_404(models.Movie, id=mid)
         context['movie'] = movie
-        manager = Movie.objects
+        manager = models.Movie.objects
         context['genres'] = manager.get_movie_genres(mid)
         context['actors'] = manager.get_movie_actors(mid)
         context['directors'] = manager.get_movie_directors(mid)
-        context['avg_user_rating'] = None
+        context['avg_user_rating'] = manager.get_movie_average_user_rating(mid)
         return render(request, 'movie_detail.html', context)
 
 

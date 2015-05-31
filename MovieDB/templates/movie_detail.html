@@ -37,9 +37,13 @@
                     <h3 class="text-primary text-capitalize">Cast & Crew</h3>
                     <dl class="dl-horizontal">
                         <dt>Directors</dt>
-                        <dd>{{ movie.year }}</dd>
+                        {% for director in directors %}
+                            <dd>{{ director.first }} {{ director.last }}</dd>
+                        {% endfor %}
                         <dt>Actors</dt>
-                        <dd>{{ movie.company }}</dd>
+                        {% for actor in actors %}
+                            <dd>{{ actor.first }} {{ actor.last }}</dd>
+                        {% endfor %}
                         <dt>Rating</dt>
                         <dd>{{ movie.rating }}</dd>
                     </dl>
@@ -47,14 +51,7 @@
 
                 <div class="list-group-item">
                     <h3 class="text-primary text-capitalize">Reviews</h3>
-                    <dl class="dl-horizontal">
-                        <dt>Directors</dt>
-                        <dd>{{ movie.year }}</dd>
-                        <dt>Actors</dt>
-                        <dd>{{ movie.company }}</dd>
-                        <dt>Rating</dt>
-                        <dd>{{ movie.rating }}</dd>
-                    </dl>
+
                 </div>
             </div>
         </div>

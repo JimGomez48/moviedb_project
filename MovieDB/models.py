@@ -2,12 +2,14 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-import managers
 
 # ############################
 # # standalone model entities
 # ############################
 class Actor(models.Model):
+    class ActorManager(models.Manager):
+        pass
+
     SEX_CHOICES = (
         ('male', 'male'),
         ('female', 'female'),
@@ -18,10 +20,7 @@ class Actor(models.Model):
     sex = models.CharField(max_length=6, choices=SEX_CHOICES)
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
-
-    def __init__(self):
-        super(Actor, self).__init__()
-        self.objects = managers.ActorManager()
+    objects = ActorManager()
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
@@ -37,11 +36,15 @@ class Actor(models.Model):
 
 
 class Director(models.Model):
+    class DirectorManager(models.Manager):
+        pass
+
     id = models.IntegerField(primary_key=True)
     last = models.CharField(max_length=20)
     first = models.CharField(max_length=20)
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
+    objects = DirectorManager()
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first, self.last)
@@ -55,6 +58,26 @@ class Director(models.Model):
 
 
 class Movie(models.Model):
+    class MovieManager(models.Manager):
+        def get_movie_genres(self, movie_id):
+            manager = MovieGenre.objects
+            return manager.filter(mid=movie_id).values_list('genre', flat='True')
+
+        def get_movie_actors(self, movie_id):
+            manager = Actor.objects
+            return manager.filter(movieactor__mid=movie_id)
+
+        def get_movie_directors(self, movie_id):
+            manager = Director.objects
+            return manager.filter(moviedirector__mid=movie_id)
+
+        def get_movie_average_user_rating(self, movie_id):
+            manager = Review.objects
+            return None
+
+        def get_movie_details_full(self, movie_id):
+            return None
+
     MPAA_RATINGS = (
         ('NC-17', 'NC-17'),
         ('R', 'R'),
@@ -68,10 +91,7 @@ class Movie(models.Model):
     year = models.IntegerField(blank=True, default='')
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
     company = models.CharField(max_length=50)
-
-    def __init__(self):
-        super(Movie, self).__init__()
-        self.objects = managers.MovieManager()
+    objects = MovieManager()
 
 def save(self, force_insert=False, force_update=False, using=None,
          update_fields=None):

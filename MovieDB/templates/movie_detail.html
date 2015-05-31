@@ -22,8 +22,8 @@
                                 <dd>{{ movie.year }}</dd>
                                 <dt>Company</dt>
                                 <dd>{{ movie.company }}</dd>
-                                <dt>Avg. User Rating</dt>
-                                <dd>{{ avg_user_rating }}</dd>
+                                <dt>MPAA Rating</dt>
+                                <dd>{{ movie.rating }}</dd>
                                 <dt>Genres</dt>
                                 {% for genre in genres %}
                                     <dd>{{ genre }}</dd>
@@ -37,21 +37,30 @@
                     <h3 class="text-primary text-capitalize">Cast & Crew</h3>
                     <dl class="dl-horizontal">
                         <dt>Directors</dt>
-                        {% for director in directors %}
-                            <dd>{{ director.first }} {{ director.last }}</dd>
-                        {% endfor %}
+                        {% if directors %}
+                            {% for director in directors %}
+                                <dd>{{ director.get_full_name }}</dd>
+                            {% endfor %}
+                        {% else %}
+                            <dd>N/A</dd>
+                        {% endif %}
                         <dt>Actors</dt>
                         {% for actor in actors %}
-                            <dd>{{ actor.first }} {{ actor.last }}</dd>
+                            <dd>{{ actor.get_full_name }}
                         {% endfor %}
-                        <dt>Rating</dt>
-                        <dd>{{ movie.rating }}</dd>
                     </dl>
                 </div>
 
                 <div class="list-group-item">
                     <h3 class="text-primary text-capitalize">Reviews</h3>
-
+                    <dl class="dl-horizontal">
+                        <dt>Avg. User Rating</dt>
+                        {% if avg_user_rating %}
+                            <dd>{{ avg_user_rating }}</dd>
+                        {% else %}
+                            <dd>This movie has not yet been reviewed</dd>
+                        {% endif %}
+                    </dl>
                 </div>
             </div>
         </div>

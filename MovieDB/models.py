@@ -26,8 +26,7 @@ class Actor(models.Model):
         return '%s: %s, %s' % (self.id, self.last, self.first)
 
     def get_full_name(self):
-        full_name = '%s %s' % (self.first, self.last)
-        return full_name
+        return '%s %s' % (self.first, self.last)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -53,8 +52,7 @@ class Director(models.Model):
         return '%s: %s, %s' % (self.id, self.last, self.first)
 
     def get_full_name(self):
-        full_name = '%s %s' % (self.first, self.last)
-        return full_name
+        return '%s %s' % (self.first, self.last)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -126,6 +124,9 @@ class Review(models.Model):
     rating = models.IntegerField(choices=RATING_RANGE)
     comment = models.CharField(max_length=500, blank=True, default='')
 
+    def __unicode__(self):
+        return 'mid:%s user:%s time:%s' % (self.mid, self.name, self.time)
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         if self.rating < 1 or self.rating > 5:
@@ -143,13 +144,16 @@ class MovieActor(models.Model):
     aid = models.ForeignKey(Actor, db_column='aid')
     role = models.CharField(max_length=50)
 
-
+    def __unicode__(self):
+        return 'mid:%s aid:%s' % (self.mid, self.aid)
 #
 class MovieDirector(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     mid = models.ForeignKey(Movie, db_column='mid')
     did = models.ForeignKey(Director, db_column='did')
 
+    def __unicode__(self):
+        return 'mid:%s aid:%s' % (self.mid, self.did)
 
 #
 class MovieGenre(models.Model):
@@ -178,6 +182,9 @@ class MovieGenre(models.Model):
     mid = models.ForeignKey(Movie, db_column='mid')
     genre = models.CharField(max_length=20, choices=GENRE_CHOICES)
 
+    def __unicode__(self):
+        return 'id:%s mid:%s genre:%s' % (self.id, self.mid, self.genre)
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         if not self.genre in self.GENRE_CHOICES:
@@ -188,6 +195,12 @@ class MovieGenre(models.Model):
 class MaxPersonID(models.Model):
     id = models.IntegerField(primary_key=True)
 
+    def __unicode__(self):
+        return 'MaxPersonID: %s' % (self.id)
+
 
 class MaxMovieID(models.Model):
     id = models.IntegerField(primary_key=True)
+
+    def __unicode__(self):
+        return 'MaxPersonID: %s' % (self.id)

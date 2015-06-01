@@ -15,8 +15,7 @@
                             <img class="media-object" src="{% static 'img/default_movie.png' %}">
                         </div>
                         <div class="media-body">
-                            <h3 class="text-primary text-capitalize">
-                                Details</h3>
+                            <h3 class="text-primary text-capitalize">Details</h3>
                             <dl class="dl-horizontal">
                                 <dt>Year</dt>
                                 <dd>{{ movie.year }}</dd>
@@ -28,6 +27,13 @@
                                 {% for genre in genres %}
                                     <dd>{{ genre }}</dd>
                                 {% endfor %}
+                                <dt>Avg. User Rating</dt>
+                                {% if avg_user_rating %}
+                                    <dd>{{ avg_user_rating }}</dd>
+                                {% else %}
+                                    <dd>This movie has not yet been reviewed
+                                    </dd>
+                                {% endif %}
                             </dl>
                         </div>
                     </div>
@@ -54,12 +60,16 @@
                 <div class="list-group-item">
                     <h3 class="text-primary text-capitalize">Reviews</h3>
                     <dl class="dl-horizontal">
-                        <dt>Avg. User Rating</dt>
-                        {% if avg_user_rating %}
-                            <dd>{{ avg_user_rating }}</dd>
-                        {% else %}
-                            <dd>This movie has not yet been reviewed</dd>
-                        {% endif %}
+                        {% for review in reviews %}
+                            <dt>User:</dt>
+                            <dd>{{ review.user_name }}</dd>
+                            <dt>Time:</dt>
+                            <dd>{{ review.time }}</dd>
+                            <dt>Rating:</dt>
+                            <dd>{{ review.rating }}</dd>
+                            <dt>Comment:</dt>
+                            <dd>{{ review.comment }}</dd>
+                        {% endfor %}
                     </dl>
                 </div>
             </div>

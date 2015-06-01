@@ -222,11 +222,18 @@ class MovieDetailView(BaseView):
         context['page_header'] = 'Movie Details'
         movie = get_object_or_404(models.Movie, id=mid)
         context['movie'] = movie
-        manager = models.Movie.objects
-        context['genres'] = manager.get_movie_genres(mid)
-        context['actors'] = manager.get_movie_actors(mid)
-        context['directors'] = manager.get_movie_directors(mid)
-        context['avg_user_rating'] = manager.get_movie_average_user_rating(mid)
+        details = services.get_movie_details_full(mid)
+        context['actors'] = details['actors']
+        context['directors'] = details['directors']
+        context['genres'] = details['genres']
+        context['reviews'] = details['reviews']
+        context['avg_user_rating'] = details['avg_rating']
+        # context['movie'] = movie
+        # manager = models.Movie.objects
+        # context['genres'] = manager.get_movie_genres(mid)
+        # context['actors'] = manager.get_movie_actors(mid)
+        # context['directors'] = manager.get_movie_directors(mid)
+        # context['avg_user_rating'] = manager.get_movie_average_user_rating(mid)
         return render(request, 'movie_detail.html', context)
 
 

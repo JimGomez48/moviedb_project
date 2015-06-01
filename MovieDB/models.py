@@ -78,9 +78,56 @@ class Movie(models.Model):
             return manager.filter(mid=movie_id).aggregate(models.Avg('rating'))['rating__avg']
 
         def get_movie_details_full(self, movie_id):
-            cursor = connection.cursor()
-            cursor.callproc('')
-            return None
+            proc_name = 'movie_db.sp_get_movie_details_full'
+            with connection.cursor() as cursor:
+                cursor.callproc(proc_name, [movie_id])
+                results = {}
+                actors = []
+                for row in cursor:
+                    actor = Actor()
+                    actor.id =      row[0]
+                    actor.last =    row[1]
+                    actor.first =   row[2]
+                    actor.sex =     row[3]
+                    actor.dob =     row[4]
+                    actor.dod =     row[5]
+                    actor.role =    row[6]
+                    actors.append(actor)
+                results['actors'] = actors
+
+                cursor.nextset()
+                directors = []
+                for row in cursor:
+                    director = Director()
+                    director.id =       row[0]
+                    director.last =     row[1]
+                    director.first =    row[2]
+                    director.dob =      row[3]
+                    director.dod =      row[4]
+                    directors.append(director)
+                results['directors'] = directors
+
+                cursor.nextset()
+                genres = []
+                for row in cursor:
+                    genres.append(row[0])
+                results['genres'] = genres
+
+                cursor.nextset()
+                reviews = []
+                for row in cursor:
+                    review = Review()
+                    review.id =         row[0]
+                    review.time =       row[1]
+                    review.user_name =  row[2]
+                    review.rating =     row[3]
+                    review.comment =    row[4]
+                    reviews.append(review)
+                results['reviews'] = reviews
+
+                cursor.nextset()
+                results['avg_rating'] = cursor.fetchone()[0]
+            return results
 
     MPAA_RATINGS = (
         ('NC-17', 'NC-17'),

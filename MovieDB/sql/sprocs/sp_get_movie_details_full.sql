@@ -21,16 +21,14 @@ BEGIN
     WHERE g.mid=movie_id;
 
     -- get the latest 5 reviews of this movie
-	SELECT r.id, r.time, r.user_name, r.rating, r.comment, m.title as movie_title, m.year
+	SELECT r.id, r.time, r.user_name, r.rating, r.comment
 	FROM MovieDB_review r
-	INNER JOIN MovieDB_movie m
-	ON r.mid=m.id
 	WHERE r.mid=movie_id
 	ORDER BY TIME
 	LIMIT 5;
 
     -- get the average rating of this movie
-    SELECT AVG(r.rating)
+    SELECT AVG(r.rating) as avg_rating
 	FROM MovieDB_review r
 	WHERE r.mid=movie_id;
 END

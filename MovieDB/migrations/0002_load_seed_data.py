@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import os
-from django.db import migrations, models
+from django.db import migrations
 from moviedb_project.settings import BASE_DIR
 
 def load_seed_data_sql():

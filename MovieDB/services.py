@@ -52,4 +52,6 @@ def get_navbar_data():
 
 
 def get_movie_details_full(movie_id):
-    pass
+    manager = models.Movie.objects
+    movie_details = manager.get_movie_details_full(movie_id)
+    return movie_details

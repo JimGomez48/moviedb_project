@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('time', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=20)),
+                ('user_name', models.CharField(max_length=20)),
                 ('rating', models.IntegerField(choices=[(1, b'1-star'), (2, b'2-star'), (3, b'3-star'), (4, b'4-star'), (5, b'5-star')])),
                 ('comment', models.CharField(default=b'', max_length=500, blank=True)),
                 ('mid', models.ForeignKey(to='MovieDB.Movie', db_column=b'mid')),

@@ -213,7 +213,7 @@ class BrowseDirectorView(BrowseBaseView):
         for term in search_terms:
             q_objects |= Q(first__icontains=term)
             q_objects |= Q(last__icontains=term)
-        return models.objects.filter(q_objects).order_by('last', 'first').values()
+        return models.Director.objects.filter(q_objects).order_by('last', 'first').values()
 
 
 class MovieDetailView(BaseView):

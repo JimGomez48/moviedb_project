@@ -1,11 +1,9 @@
 import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import models, connection
 
-# ############################
-# # standalone model entities
-# ############################
+
 class Actor(models.Model):
     class ActorManager(models.Manager):
         pass
@@ -80,6 +78,8 @@ class Movie(models.Model):
             return manager.filter(mid=movie_id).aggregate(models.Avg('rating'))['rating__avg']
 
         def get_movie_details_full(self, movie_id):
+            cursor = connection.cursor()
+            cursor.callproc('')
             return None
 
     MPAA_RATINGS = (
@@ -119,13 +119,13 @@ class Review(models.Model):
     )
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now=True, editable=False)
-    name = models.CharField(max_length=20)
+    user_name = models.CharField(max_length=20)
     mid = models.ForeignKey(Movie, db_column='mid')
     rating = models.IntegerField(choices=RATING_RANGE)
     comment = models.CharField(max_length=500, blank=True, default='')
 
     def __unicode__(self):
-        return 'mid:%s user:%s time:%s' % (self.mid, self.name, self.time)
+        return 'mid:%s user:%s time:%s' % (self.mid, self.user_name, self.time)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -134,10 +134,6 @@ class Review(models.Model):
         super(Review, self).save(force_insert, force_update, using, update_fields)
 
 
-##########################
-# model relation entities
-##########################
-#
 class MovieActor(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     mid = models.ForeignKey(Movie, db_column='mid')

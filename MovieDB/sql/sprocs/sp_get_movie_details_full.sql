@@ -1,14 +1,15 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_movie_details_full`(IN movie_id INT)
+DROP PROCEDURE IF EXISTS sp_get_movie_details_full;
+CREATE PROCEDURE `sp_get_movie_details_full`(IN movie_id INT)
 BEGIN
 	-- get the actors in this movie
-	SELECT a.last, a.first, a.sex, a.dob, a.dod, ma.role, ma.aid
+	SELECT a.id, a.last, a.first, a.sex, a.dob, a.dod, ma.role
     FROM MovieDB_actor a
     INNER JOIN MovieDB_movieactor ma
     ON a.id=ma.aid
     WHERE ma.mid=movie_id;
 
     -- get the directors for this movie
-    SELECT d.last, d.first, d.dob, d.dod, md.did
+    SELECT d.id, d.last, d.first, d.dob, d.dod
     FROM MovieDB_director d
     INNER JOIN MovieDB_moviedirector md
     ON d.id=md.did
@@ -20,7 +21,7 @@ BEGIN
     WHERE g.mid=movie_id;
 
     -- get the latest 5 reviews of this movie
-	SELECT r.time, r.name AS user_name, r.rating, r.comment, m.title as movie_title, m.year AS movie_year
+	SELECT r.id, r.time, r.user_name, r.rating, r.comment, m.title as movie_title, m.year
 	FROM MovieDB_review r
 	INNER JOIN MovieDB_movie m
 	ON r.mid=m.id

@@ -7,7 +7,7 @@
         </div>
         <div class="list-group">
             {% for director in page %}
-                <a class="list-group-item" href={% url 'DirectorDetail' %}>
+                <a class="list-group-item" href={% url 'DirectorDetail' director.id %}>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="media-left">

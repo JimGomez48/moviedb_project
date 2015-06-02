@@ -6,7 +6,6 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic.base import TemplateView
-import xml.etree.cElementTree as ET
 
 from moviedb_project.settings import BASE_DIR
 from MovieDB import models

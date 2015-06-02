@@ -17,7 +17,7 @@
                     <div class="list-group">
                         {% if movie_results %}
                             {% for movie in movie_results %}
-                            <a class="list-group-item text-left" href={% url 'MovieDetail' %}{{ movie.id }}/>
+                            <a class="list-group-item text-left" href={% url 'MovieDetail' movie.id %}>
                                 <div class="media-left">
                                     <span class="glyphicon glyphicon-film"></span>
                                 </div>
@@ -45,7 +45,7 @@
                     <div class="list-group">
                         {% if actor_results %}
                             {% for actor in actor_results %}
-                            <a class="list-group-item text-left" href={% url 'ActorDetail' %}{{ actor.id }}/>
+                            <a class="list-group-item text-left" href={% url 'ActorDetail' actor.id %}>
                                 <div class="media-left">
                                     <span class="glyphicon glyphicon-user"></span>
                                 </div>
@@ -73,7 +73,7 @@
                     <div class="list-group">
                         {% if director_results %}
                             {% for director in director_results %}
-                            <a class="list-group-item text-left" href={% url 'DirectorDetail' %}{{ director.id }}/>
+                            <a class="list-group-item text-left" href={% url 'DirectorDetail' director.id %}>
                                 <div class="media-left">
                                     <span class="glyphicon glyphicon-bullhorn"></span>
                                 </div>

@@ -7,7 +7,7 @@
         </div>
         <div class="list-group">
             {% for actor in page %}
-                <a class="list-group-item" href={% url 'ActorDetail' %}>
+                <a class="list-group-item" href={% url 'ActorDetail' actor.id %}>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="media-left">

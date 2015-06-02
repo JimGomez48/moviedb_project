@@ -7,7 +7,7 @@ from moviedb_project.settings import BASE_DIR
 
 def load_seed_data_sql():
     print 'Loading seed data...'
-    sql = open(os.path.join(BASE_DIR, 'MovieDB/sql/scripts/load.sql'), 'r').read()
+    sql = open(os.path.join(BASE_DIR, os.path.normpath('MovieDB/sql/scripts/load.sql')), 'r').read()
     return sql
 
 class Migration(migrations.Migration):

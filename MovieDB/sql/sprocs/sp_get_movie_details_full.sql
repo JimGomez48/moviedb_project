@@ -1,4 +1,3 @@
-DROP PROCEDURE IF EXISTS sp_get_movie_details_full;
 CREATE PROCEDURE `sp_get_movie_details_full`(IN movie_id INT)
 BEGIN
 	-- get the actors in this movie

@@ -21,4 +21,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL(create_stored_procedures())
     ]

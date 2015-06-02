@@ -10,7 +10,7 @@ import xml.etree.cElementTree as ET
 
 from moviedb_project.settings import BASE_DIR
 from MovieDB import models
-from MovieDB import services
+from MovieDB import actions
 
 
 PROJECT_ROOT = BASE_DIR
@@ -23,76 +23,27 @@ def Error404(request):
 class BaseView(TemplateView):
     def __init__(self):
         super(BaseView, self).__init__()
-        self.__context = None
+        self.__context = super(BaseView, self).get_context_data()
 
     def get_context_data(self, **kwargs):
-        if not self.__context:
-            self.__context = super(BaseView, self).get_context_data(**kwargs)
-        nav_items = services.get_navbar_data()
-        self.__context['title'] = 'MovieDB'
-        self.__context['nav_items'] = nav_items
+        actions.BaseViewActions().bind_context_data(self.__context)
         return self.__context
 
 
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
-        context = super(IndexView, self).get_context_data()
-        context['page_header'] = 'MovieDB Landing Page'
+        context = self.get_context_data()
+        view_actions = actions.IndexViewActions()
+        view_actions.bind_context_data(context)
         return render(request, 'index.html', context)
 
 
 class SearchResultsView(BaseView):
-    RESULTS_PER_PAGE = 15
-
     def get(self, request, *args, **kwargs):
         context = super(SearchResultsView, self).get_context_data()
-        context['page_header'] = 'Search Results for "' + request.GET['search_term'] + '"'
-        context['search_term'] = request.GET['search_term']
-        search_terms = str(request.GET['search_term']).split(' ')
-        movies = self.get_movie_results(search_terms)
-        actors = self.get_actor_results(search_terms)
-        directors = self.get_director_results(search_terms)
-        context['movie_results'] = movies
-        context['actor_results'] = actors
-        context['director_results'] = directors
+        view_actions = actions.SearchResultsViewActions()
+        view_actions.bind_context_data(context, search_term=request.GET['search_term'])
         return render(request, 'search_results.html', context)
-
-    def get_movie_results(self, search_terms):
-        movies = []
-        total_count = 0
-        for term in search_terms:
-            results = models.Movie.objects.filter(title__icontains=term).values('id', 'title', 'year')
-            total_count += results.count()
-            movies.extend([item for item in results])
-            if total_count >= self.RESULTS_PER_PAGE:
-                return movies[0: self.RESULTS_PER_PAGE]
-        return movies
-
-    def get_actor_results(self, search_terms):
-        actors = []
-        total_count = 0
-        for term in search_terms:
-            results = models.Actor.objects.filter(
-                Q(first__icontains=term) |
-                Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
-            total_count += results.count()
-            actors.extend([item for item in results])
-            if total_count >= self.RESULTS_PER_PAGE:
-                return actors[0: self.RESULTS_PER_PAGE]
-        return actors
-
-    def get_director_results(self, search_terms):
-        directors = []
-        total_count = 0
-        for term in search_terms:
-            results = models.Director.objects.filter(
-                Q(first__icontains=term) |
-                Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
-            total_count += results.count()
-            directors.extend([item for item in results])
-            if total_count >= self.RESULTS_PER_PAGE:
-                return directors[0: self.RESULTS_PER_PAGE]
-        return directors
 
 
 class BrowseBaseView(BaseView):
@@ -222,7 +173,7 @@ class MovieDetailView(BaseView):
         context['page_header'] = 'Movie Details'
         movie = get_object_or_404(models.Movie, id=mid)
         context['movie'] = movie
-        details = services.get_movie_details_full(mid)
+        details = actions.get_movie_details_full(mid)
         context['actors'] = details['actors']
         context['directors'] = details['directors']
         context['genres'] = details['genres']

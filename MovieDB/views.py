@@ -38,10 +38,27 @@ class IndexView(BaseView):
 
 
 class SearchResultsView(BaseView):
-    def get(self, request, *args, **kwargs):
-        context = super(SearchResultsView, self).get_context_data()
+    def post(self, request):
         view_actions = actions.SearchResultsViewActions()
-        view_actions.bind_context_data(context, search_term=request.GET['search_term'])
+        # process search form request
+        search_form = view_actions.get_search_form(data=request.POST)
+        if search_form.is_valid():
+            return redirect('SearchResults', search_form.cleaned_data['search_term'])
+        else:
+            raise Http404()
+
+    def get(self, request, search_term):
+        if not search_term:
+            raise Http404()
+        context = self.get_context_data()
+        view_actions = actions.SearchResultsViewActions()
+        # get search results and bind to view
+        search_results = view_actions.get_search_results(search_term)
+        view_actions.bind_context_data(
+            context,
+            search_term=search_term,
+            results=search_results
+        )
         return render(request, 'search_results.html', context)
 
 

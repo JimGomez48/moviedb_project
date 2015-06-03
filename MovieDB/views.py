@@ -125,8 +125,7 @@ class BrowseMovieView(BrowseBaseView):
             page = paginator.page(paginator.num_pages)
         context['page_range'] = self.get_visible_page_range(paginator, self.page_num)
         context['page'] = page
-        context['page_url'] = reverse('BrowseMovie')
-        context['page_url'] = reverse('BrowseMovie')
+        context['base_url'] = reverse('BrowseMovie')
         return render(request, 'browse_movie.html', context)
 
     def __get_movie_results(self, search_terms):

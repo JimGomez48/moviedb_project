@@ -90,6 +90,7 @@ class Movie(models.Model):
             with connection.cursor() as cursor:
                 cursor.callproc(proc_name, [movie_id])
                 results = {}
+                # get actors
                 actors = []
                 for row in cursor:
                     actor = Actor()
@@ -102,7 +103,7 @@ class Movie(models.Model):
                     actor.role =    row[6]
                     actors.append(actor)
                 results['actors'] = actors
-
+                # get directors
                 cursor.nextset()
                 directors = []
                 for row in cursor:
@@ -114,13 +115,13 @@ class Movie(models.Model):
                     director.dod =      row[4]
                     directors.append(director)
                 results['directors'] = directors
-
+                # get genres
                 cursor.nextset()
                 genres = []
                 for row in cursor:
                     genres.append(row[0])
                 results['genres'] = genres
-
+                # get reviews
                 cursor.nextset()
                 reviews = []
                 for row in cursor:
@@ -132,7 +133,7 @@ class Movie(models.Model):
                     review.comment =    row[4]
                     reviews.append(review)
                 results['reviews'] = reviews
-
+                # get average review rating
                 cursor.nextset()
                 results['avg_rating'] = cursor.fetchone()[0]
             return results

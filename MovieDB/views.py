@@ -13,7 +13,6 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q, Count
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic.base import TemplateView
 
 from moviedb_project.settings import BASE_DIR
@@ -23,10 +22,6 @@ from MovieDB import forms
 
 
 PROJECT_ROOT = BASE_DIR
-
-
-# def Error404(request):
-#     return render(request, '404.html')
 
 
 class BaseView(TemplateView):
@@ -84,37 +79,21 @@ class BrowseBaseView(BaseView):
 
 
 class BrowseMovieView(BrowseBaseView):
-    def get(self, request, search_term=None, page_request=None):
+    def get(self, request, search_term=None, page_num=None):
         view_actions = actions.BrowseMovieViewActions()
-        context = self.get_context_data()
-        context['search_term'] = search_term
-        context['page_header'] = 'Browse Movies'
-        context['results_header'] = 'Movies'
-        search_terms = None
-        if search_term:
-            search_terms = search_term.split()
-        # get the movie results that match the search terms and paginate results
-        movies = self.__get_movie_results(search_terms)
-        paginator = Paginator(movies, self.RESULTS_PER_PAGE)
-        try:
-            page = paginator.page(page_request)
-        except PageNotAnInteger:
-            page = paginator.page(1)
-        except EmptyPage:
-            page = paginator.page(paginator.num_pages)
-        # context['page_range'] = self.get_visible_page_range(paginator, page_request)
-        context['page_range'] = view_actions.get_visible_page_range(paginator, page.number, self.MAX_SHOWN_PAGES)
-        context['page'] = page
-        context['base_url'] = reverse('BrowseMovie')
-        return render(request, 'browse_movie.html', context)
-
-    def __get_movie_results(self, search_terms):
-        if not search_terms or len(search_terms) < 1:
-            return models.Movie.objects.all().order_by('title', 'year').values()
-        q_objects = Q()
-        for term in search_terms:
-            q_objects |= Q(title__icontains=term)
-        return models.Movie.objects.filter(q_objects).order_by('title', 'year').values()
+        movies_queryset = view_actions.get_movie_query_set(search_term)
+        page = view_actions.get_page(movies_queryset, page_num, self.RESULTS_PER_PAGE)
+        page_range = view_actions.get_visible_page_range(page, self.MAX_SHOWN_PAGES)
+        base_url = reverse('BrowseMovie')
+        self.bind_context_data(
+            search_term=search_term,
+            page_header='Browse Movies',
+            results_header='Movies',
+            page_range=page_range,
+            page=page,
+            base_url=base_url,
+        )
+        return render(request, 'browse_movie.html', self.get_context_data())
 
 
 class BrowseActorView(BrowseBaseView):

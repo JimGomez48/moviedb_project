@@ -10,19 +10,21 @@
 
 import xml.etree.cElementTree as ET
 import os
+import abc
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q
+from django.core import paginator
 
 from moviedb_project.settings import BASE_DIR
 from MovieDB import models
 from MovieDB import services
 
 
-class BaseActions(object):
-    pass
+class AbstractActions(object):
+    __metaclass__ = abc.ABCMeta
 
 
-class BaseViewActions(BaseActions):
+class BaseViewActions(AbstractActions):
     class NavElement(object):
         DROPDOWN = 'dropdown'
         ITEM = 'item'
@@ -72,11 +74,11 @@ class BaseViewActions(BaseActions):
         return navbar
 
 
-class IndexViewActions(BaseActions):
+class IndexViewActions(AbstractActions):
     pass
 
 
-class SearchResultsViewActions(BaseActions):
+class SearchResultsViewActions(AbstractActions):
     RESULTS_PER_PAGE = 15
 
     def get_search_results_all(self, search_term):
@@ -123,43 +125,56 @@ class SearchResultsViewActions(BaseActions):
         return director_manager.values()[:self.RESULTS_PER_PAGE]
 
 
-class PaginatedViewBaseActions(BaseActions):
-    def get_visible_page_range(self, paginator, current_page, max_shown_pages=9):
+class AbstractPaginatedViewActions(AbstractActions):
+    __metaclass__ = abc.ABCMeta
+
+    def get_visible_page_range(self, page, max_shown_pages=9):
+        paginator = page.paginator
         if paginator.num_pages < max_shown_pages:
             pages = range(1, paginator.num_pages + 1)
         else:
-            start = max(1, min(paginator.num_pages - max_shown_pages + 1, current_page - (max_shown_pages // 2)))
+            start = max(1, min(paginator.num_pages - max_shown_pages + 1, page.number - (max_shown_pages // 2)))
             end = min(paginator.num_pages, start + max_shown_pages - 1)
             pages = range(start, end + 1)
         return pages
 
-    def get_page(self, page_num):
-        raise NotImplementedError()
-
-class BrowseMovieViewActions(PaginatedViewBaseActions):
-    def get_page(self, page_num):
+    @abc.abstractmethod
+    def get_page(self, query_set, page_num, results_per_page):
         pass
 
-    def __get_movie_results(self, search_terms):
-        if search_terms is None:
-            return models.Movie.objects.all().order_by('title', 'year').values()
+
+class BrowseMovieViewActions(AbstractPaginatedViewActions):
+    def get_page(self, query_set, page_num, results_per_page=20):
+        pager = paginator.Paginator(query_set, results_per_page)
+        try:
+            page = pager.page(page_num)
+        except paginator.PageNotAnInteger:
+            page = pager.page(1)
+        except paginator.EmptyPage:
+            page = pager.page(pager.num_pages)
+        return page
+
+    def get_movie_query_set(self, search_term):
+        if not search_term:
+            return models.Movie.objects.order_by('title', 'year')
+        search_terms = str(search_term).split()
         q_objects = Q()
         for term in search_terms:
-            q_objects |= Q(title__icontains=term)
-        return models.Movie.objects.filter(q_objects).order_by('title', 'year').values()
+            q_objects &= Q(title__icontains=term)
+        return models.Movie.objects.filter(q_objects).order_by('title', 'year')
 
 
-class BrowseActorViewActions(PaginatedViewBaseActions):
-    def get_page(self, page_num):
+class BrowseActorViewActions(AbstractPaginatedViewActions):
+    def get_page(self, query_set, page_num, results_per_page):
         pass
 
 
-class BrowseDirectorViewActions(PaginatedViewBaseActions):
-    def get_page(self, page_num):
+class BrowseDirectorViewActions(AbstractPaginatedViewActions):
+    def get_page(self, query_set, page_num, results_per_page):
         pass
 
 
-class MovieDetailViewActions(BaseActions):
+class MovieDetailViewActions(AbstractActions):
     def get_movie_details_full(self, movie_id):
         manager = models.Movie.objects
         movie_details = manager.get_movie_details_full(movie_id)

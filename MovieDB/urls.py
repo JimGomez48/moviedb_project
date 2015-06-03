@@ -6,16 +6,23 @@ urlpatterns = [
     # Base
     url(r'^$', views.IndexView.as_view(), name='Index'),
     url(r'^SearchResults/$', views.SearchResultsView.as_view(), name='SearchResults'),
+    url(r'^SearchResults/(?P<search_term>[\w+\s+]+)/$', views.SearchResultsView.as_view(), name='SearchResults'),
     # Browse
     url(r'^BrowseMovie/$', views.BrowseMovieView.as_view(), name='BrowseMovie'),
+    url(r'^BrowseMovie/(?P<search_term>[\w+\s+]+)/$', views.BrowseMovieView.as_view(), name='BrowseMovie'),
+    url(r'^BrowseMovie/(?P<page>\d+)/$', views.BrowseMovieView.as_view(), name='BrowseMovie'),
+    url(r'^BrowseMovie/(?P<search_term>[\w+\s+]+)/(?P<page>\d+)/$', views.BrowseMovieView.as_view(), name='BrowseMovie'),
     url(r'^BrowseActor/$', views.BrowseActorView.as_view(), name='BrowseActor'),
+    url(r'^BrowseActor/(?P<search_term>[\w+\s+]+)/$', views.BrowseActorView.as_view(), name='BrowseActor'),
+    url(r'^BrowseActor/(?P<page>\d+)/$', views.BrowseActorView.as_view(), name='BrowseActor'),
+    url(r'^BrowseActor/(?P<search_term>[\w+\s+]+)/(?P<page>\d+)/$', views.BrowseActorView.as_view(), name='BrowseActor'),
     url(r'^BrowseDirector/$', views.BrowseDirectorView.as_view(), name='BrowseDirector'),
+    url(r'^BrowseDirector/(?P<search_term>[\w+\s+]+)/$', views.BrowseDirectorView.as_view(), name='BrowseDirector'),
+    url(r'^BrowseDirector/(?P<page>\d+)/$', views.BrowseDirectorView.as_view(), name='BrowseDirector'),
+    url(r'^BrowseDirector/(?P<search_term>[\w+\s+]+)/(?P<page>\d+)/$', views.BrowseDirectorView.as_view(), name='BrowseDirector'),
     # Detail
-    # url(r'^MovieDetail/$', views.MovieDetailView.as_view(), name='MovieDetail'),
     url(r'^MovieDetail/(?P<mid>\d+)/$', views.MovieDetailView.as_view(), name='MovieDetail'),
-    # url(r'^ActorDetail/$', views.ActorDetailView.as_view(), name='ActorDetail'),
     url(r'^ActorDetail/(?P<aid>\d+)/$', views.ActorDetailView.as_view(), name='ActorDetail'),
-    # url(r'^DirectorDetail/$', views.DirectorDetailView.as_view(), name='DirectorDetail'),
     url(r'^DirectorDetail/(?P<did>\d+)/$', views.DirectorDetailView.as_view(), name='DirectorDetail'),
     # Add
     url(r'^AddMovie/$', views.AddMovieView.as_view(), name='AddMovie'),

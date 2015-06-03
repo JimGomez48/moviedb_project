@@ -1,20 +1,28 @@
+################################################################################
+# This file constitutes the Action Layer. It is responsible for carrying out the
+# business logic of the system. It uses models to retrieve and persist data and
+# services to carry out external service commands.
+#
+# The Action Layer only knows about the following other system layers
+# - Model Layer
+# - Services Layer
+################################################################################
+
 import xml.etree.cElementTree as ET
 import os
-
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q
 
 from moviedb_project.settings import BASE_DIR
 from MovieDB import models
-from MovieDB import forms
+from MovieDB import services
 
 
-class AbstractActions(object):
-    def bind_context_data(self, context, **kwargs):
-        raise NotImplementedError()
+class BaseActions(object):
+    pass
 
 
-class BaseViewActions(AbstractActions):
+class BaseViewActions(BaseActions):
     class NavElement(object):
         DROPDOWN = 'dropdown'
         ITEM = 'item'
@@ -31,13 +39,7 @@ class BaseViewActions(AbstractActions):
                     self.children = []
                 self.children.append(child)
 
-    def bind_context_data(self, context, **kwargs):
-        context['title'] = 'MovieDB'
-        context['nav_items'] = self.__get_navbar_data()
-        context['search_form'] = forms.NavBarSearchForm()
-        return context
-
-    def __get_navbar_data(self):
+    def get_navbar_data(self):
         # parse navbar.xml to get the navbar information
         navbar = []
         path = os.path.join(BASE_DIR, 'MovieDB/static/data/navbar.xml')
@@ -65,63 +67,60 @@ class BaseViewActions(AbstractActions):
         return navbar
 
 
-class IndexViewActions(AbstractActions):
-    def bind_context_data(self, context, **kwargs):
-        context['page_header'] = 'MovieDB Landing Page'
-        return context
+class IndexViewActions(BaseActions):
+    pass
 
 
-class SearchResultsViewActions(AbstractActions):
+class SearchResultsViewActions(BaseActions):
     RESULTS_PER_PAGE = 15
 
+    def get_search_results_all(self, search_term):
+        # search_terms = str(search_term).split()
+        movies = self.get_search_results_movies(search_term)
+        actors = self.get_search_results_actors(search_term)
+        directors = self.get_search_results_directors(search_term)
+        results = {
+            'movies': movies,
+            'actors': actors,
+            'directors': directors,
+        }
+        return results
+
+    def get_search_results_movies(self, search_term):
+        search_terms = str(search_term).split()
+        # AND the search_terms together
+        q_objects = Q()
+        for term in search_terms:
+            q_objects &= Q(title__icontains=term)
+        movie_manager = models.Movie.objects
+        return movie_manager.filter(q_objects).order_by('title', 'year').values()[:self.RESULTS_PER_PAGE]
+
+    def get_search_results_actors(self, search_term):
+        search_terms = str(search_term).split()
+        actor_manager = models.Actor.objects
+        # AND the below Q objects together
+        for term in search_terms:
+            # last like '%term%' OR first like '%term%'
+            q_objects = Q(last__icontains=term)
+            q_objects |= Q(first__icontains=term)
+            actor_manager = actor_manager.filter(q_objects)
+        return actor_manager.values()[:self.RESULTS_PER_PAGE]
+
+    def get_search_results_directors(self, search_term):
+        search_terms = str(search_term).split()
+        director_manager = models.Director.objects
+        # and the below Q objects together
+        for term in search_terms:
+            # last like '%term%' OR first like '%term%'
+            q_objects = Q(last__icontains=term)
+            q_objects |= Q(first__icontains=term)
+            director_manager = director_manager.filter(q_objects)
+        return director_manager.values()[:self.RESULTS_PER_PAGE]
+
+
+class MovieDetailsActions(BaseActions):
     def bind_context_data(self, context, **kwargs):
-        context['page_header'] = 'Search Results for "' + kwargs['search_term'] + '"'
-        context['search_term'] = kwargs['search_term']
-        search_terms = str(kwargs['search_term']).split(' ')
-        movies = self.__get_movie_results(search_terms)
-        actors = self.__get_actor_results(search_terms)
-        directors = self.__get_director_results(search_terms)
-        context['movie_results'] = movies
-        context['actor_results'] = actors
-        context['director_results'] = directors
-        return context
-
-    def __get_movie_results(self, search_terms):
-        movies = []
-        total_count = 0
-        for term in search_terms:
-            results = models.Movie.objects.filter(title__icontains=term).values('id', 'title', 'year')
-            total_count += results.count()
-            movies.extend([item for item in results])
-            if total_count >= self.RESULTS_PER_PAGE:
-                return movies[0: self.RESULTS_PER_PAGE]
-        return movies
-
-    def __get_actor_results(self, search_terms):
-        actors = []
-        total_count = 0
-        for term in search_terms:
-            results = models.Actor.objects.filter(
-                Q(first__icontains=term) |
-                Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
-            total_count += results.count()
-            actors.extend([item for item in results])
-            if total_count >= self.RESULTS_PER_PAGE:
-                return actors[0: self.RESULTS_PER_PAGE]
-        return actors
-
-    def __get_director_results(self, search_terms):
-        directors = []
-        total_count = 0
-        for term in search_terms:
-            results = models.Director.objects.filter(
-                Q(first__icontains=term) |
-                Q(last__icontains=term)).values('id', 'last', 'first', 'dob')
-            total_count += results.count()
-            directors.extend([item for item in results])
-            if total_count >= self.RESULTS_PER_PAGE:
-                return directors[0: self.RESULTS_PER_PAGE]
-        return directors
+        pass
 
 
 def get_movie_details_full(movie_id, **kwargs):

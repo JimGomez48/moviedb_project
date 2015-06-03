@@ -31,15 +31,16 @@
                 {% endfor %}
             </ul>
             <form id="search_form" class="navbar-form navbar-right"
-                  role="search" method="get" action="{% url 'SearchResults' %}">
+                  role="search" method="post" action="{% url 'SearchResults' %}">
+                {% csrf_token %}
                 <div class="form-group">
                     <div class="input-group">
-                        <input class="form-control" id="id_search_term" maxlength="200" name="search_term" placeholder="Search..." type="text">
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" id="search_submit_button" type="submit">
-                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                </button>
-                            </span>
+                        {{ search_form }}
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="search_submit_button" type="submit">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                        </span>
                     </div>
                 </div>
             </form>

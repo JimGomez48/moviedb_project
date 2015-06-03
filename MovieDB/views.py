@@ -1,4 +1,13 @@
-import os
+################################################################################
+# This file constitutes the View Layer. It is responsible responding to HTTP
+# requests and preparing context data for the template layer to present.
+#
+# The View Layer only knows about the following other system layers
+# - Action Layer
+# - Forms Layer
+# - Template Layer
+################################################################################
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q, Count
@@ -10,38 +19,45 @@ from django.views.generic.base import TemplateView
 from moviedb_project.settings import BASE_DIR
 from MovieDB import models
 from MovieDB import actions
+from MovieDB import forms
 
 
 PROJECT_ROOT = BASE_DIR
 
 
-def Error404(request):
-    return render(request, '404.html')
+# def Error404(request):
+#     return render(request, '404.html')
 
 
 class BaseView(TemplateView):
     def __init__(self):
         super(BaseView, self).__init__()
         self.__context = super(BaseView, self).get_context_data()
+        view_actions = actions.BaseViewActions()
+        self.bind_context_data(
+            title='MovieDB',
+            nav_items=view_actions.get_navbar_data(),
+            search_form=forms.NavBarSearchForm(),
+        )
+
+    def bind_context_data(self, **kwargs):
+        for key, value in kwargs.iteritems():
+            self.__context[key] = value
 
     def get_context_data(self, **kwargs):
-        actions.BaseViewActions().bind_context_data(self.__context)
         return self.__context
 
 
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
-        context = self.get_context_data()
         view_actions = actions.IndexViewActions()
-        view_actions.bind_context_data(context)
-        return render(request, 'index.html', context)
+        self.bind_context_data(page_header='MovieDB Landing Page')
+        return render(request, 'index.html', self.get_context_data())
 
 
 class SearchResultsView(BaseView):
     def post(self, request):
-        view_actions = actions.SearchResultsViewActions()
-        # process search form request
-        search_form = view_actions.get_search_form(data=request.POST)
+        search_form = forms.NavBarSearchForm(request.POST)
         if search_form.is_valid():
             return redirect('SearchResults', search_form.cleaned_data['search_term'])
         else:
@@ -50,16 +66,16 @@ class SearchResultsView(BaseView):
     def get(self, request, search_term):
         if not search_term:
             raise Http404()
-        context = self.get_context_data()
         view_actions = actions.SearchResultsViewActions()
-        # get search results and bind to view
-        search_results = view_actions.get_search_results(search_term)
-        view_actions.bind_context_data(
-            context,
+        search_results = view_actions.get_search_results_all(search_term)
+        self.bind_context_data(
+            page_header='Search Results for "%s"' % (search_term),
             search_term=search_term,
-            results=search_results
+            movie_results=search_results['movies'],
+            actor_results=search_results['actors'],
+            director_results=search_results['directors'],
         )
-        return render(request, 'search_results.html', context)
+        return render(request, 'search_results.html', self.get_context_data())
 
 
 class BrowseBaseView(BaseView):

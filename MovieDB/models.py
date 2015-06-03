@@ -1,3 +1,11 @@
+################################################################################
+# This file constitutes the Model Layer. It is responsible for data retrieval
+# and persistence of model instances. Models can contain behavior logic, but
+# should not depend on any other model to carry out the behaviour.
+#
+# The Model Layer knows about itself only.
+################################################################################
+
 import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator

@@ -26,7 +26,7 @@
                                 </div>
                             </a>
                             {% endfor %}
-                            <a class="list-group-item" href="{% url 'BrowseMovie' %}?search_term={{ search_term }}"
+                            <a class="list-group-item" href="{% url 'BrowseMovie' search_term %}"
                                data-toggle="tooltip" data-placement="bottom" title="Browse full movie results">
                                 <span class="glyphicon glyphicon-zoom-in"></span>
                             </a>
@@ -54,7 +54,7 @@
                                 </div>
                             </a>
                             {% endfor %}
-                            <a class="list-group-item" href="{% url 'BrowseActor' %}?search_term={{ search_term }}"
+                            <a class="list-group-item" href="{% url 'BrowseActor' search_term %}"
                                data-toggle="tooltip" data-placement="bottom" title="Browse full actor results">
                                 <span class="glyphicon glyphicon-zoom-in"></span>
                             </a>
@@ -82,7 +82,7 @@
                                 </div>
                             </a>
                             {% endfor %}
-                            <a class="list-group-item" href="{% url 'BrowseDirector' %}?search_term={{ search_term }}"
+                            <a class="list-group-item" href="{% url 'BrowseDirector' search_term %}"
                                 data-toggle="tooltip" data-placement="bottom" title="Browse full directors results">
                                 <span class="glyphicon glyphicon-zoom-in"></span>
                             </a>

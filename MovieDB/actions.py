@@ -54,15 +54,20 @@ class BaseViewActions(BaseActions):
                     nav_item.text = sub_element.find('text').text
                     try:
                         nav_item.url = reverse(
-                            str(sub_element.find('viewname').text))
+                            str(sub_element.find('viewname').text),
+                            # kwargs={'search_term':None, 'page_num': 1}
+                        )
                     except NoReverseMatch:
-                        nav_item.url = ''
+                        nav_item.url = '#'
                     dropdown.add_child(nav_item)
                 navbar.append(dropdown)
             elif element.tag == 'item':
                 nav_item = self.NavElement(type=self.NavElement.ITEM)
                 nav_item.text = element.find('text').text
-                nav_item.url = reverse(str(element.find('viewname').text))
+                nav_item.url = reverse(
+                    str(element.find('viewname').text),
+                    # kwargs={'search_term':'', 'page_num': 1}
+                )
                 navbar.append(nav_item)
         return navbar
 

@@ -82,22 +82,18 @@ class BrowseBaseView(BaseView):
     RESULTS_PER_PAGE = 20
     MAX_SHOWN_PAGES = 9
 
-    def init_browse_pagination(self, request):
+    def init_browse_pagination(self, search_term, page_request):
         self.search_term = ''
         self.page_num = 1
-        try:
-            self.search_term = request.GET['search_term']
-        except MultiValueDictKeyError:
-            pass
-        try:
-            self.page_num = int(request.GET['page'])
-        except MultiValueDictKeyError:
-            self.page_num = 1
+        if search_term:
+            self.search_term = search_term
+        if page_request:
+            self.page_num = int(page_request)
 
     def get_context_data(self, **kwargs):
         context = super(BrowseBaseView, self).get_context_data(**kwargs)
         if self.search_term:
-            context['search_term'] = 'search_term=' + self.search_term + '&'
+            context['search_term'] = self.search_term
         return context
 
     def get_visible_page_range(self, paginator, current_page_num):
@@ -111,8 +107,10 @@ class BrowseBaseView(BaseView):
 
 
 class BrowseMovieView(BrowseBaseView):
-    def get(self, request, *get_args, **kwargs):
-        self.init_browse_pagination(request)
+    def get(self, request, search_term=None, page_request=None):
+        # self.init_browse_pagination(request)
+        # page_request = int(page_request)
+        self.init_browse_pagination(search_term, page_request)
         context = self.get_context_data()
         context['page_header'] = 'Browse Movies'
         context['results_header'] = 'Movies'
@@ -127,6 +125,7 @@ class BrowseMovieView(BrowseBaseView):
             page = paginator.page(paginator.num_pages)
         context['page_range'] = self.get_visible_page_range(paginator, self.page_num)
         context['page'] = page
+        context['page_url'] = reverse('BrowseMovie')
         context['page_url'] = reverse('BrowseMovie')
         return render(request, 'browse_movie.html', context)
 

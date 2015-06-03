@@ -5,7 +5,7 @@
 
                 {# beginning #}
                 {% if page.has_previous %}
-                    <li><a href="{{ page_url }}?{{ search_term }}page=1" >
+                    <li><a href="{{ page_url }}{% if search_term %}search_term={{ search_term }}/{% endif %}page=1" >
                 {% else %}
                     <li class="disabled">
                 {% endif %}
@@ -13,7 +13,7 @@
 
                 {# previous #}
                 {% if page.has_previous %}
-                    <li><a href="{{ page_url }}?{{ search_term }}page={{ page.previous_page_number }}">
+                    <li><a href="{{ page_url }}{% if search_term %}search_term={{ search_term }}/{% endif %}page={{ page.previous_page_number }}">
                 {% else %}
                     <li class="disabled">
                 {% endif %}
@@ -21,16 +21,14 @@
 
                 {# page numbers #}
                 {% for num in page_range %}
-                    {% if num == page.number %}
-                        <li class="active"><a href="{{ page_url }}?{{ search_term }}page={{ num }}">{{ num }}</a></li>
-                    {% else %}
-                        <li ><a href="{{ page_url }}?{{ search_term }}page={{ num }}">{{ num }}</a></li>
-                    {% endif %}
+                    <li {% if num == page.number %}class="active"{% endif %}>
+                        <a href="{{ page_url }}{% if search_term %}search_term={{ search_term }}/{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
                 {% endfor %}
 
                 {# next #}
                 {% if page.has_next %}
-                    <li><a href="{{ page_url }}?{{ search_term }}page={{ page.next_page_number }}" >
+                    <li><a href="{{ page_url }}{% if search_term %}search_term={{ search_term }}/{% endif %}page={{ page.next_page_number }}" >
                 {% else %}
                     <li class="disabled">
                 {% endif %}
@@ -38,7 +36,7 @@
 
                 {# end #}
                 {% if page.has_next %}
-                    <li><a href="{{ page_url }}?{{ search_term }}page={{ page.paginator.num_pages }}" >
+                    <li><a href="{{ page_url }}{% if search_term %}search_term={{ search_term }}/{% endif %}page={{ page.paginator.num_pages }}" >
                 {% else %}
                     <li class="disabled">
                 {% endif %}

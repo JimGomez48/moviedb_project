@@ -123,12 +123,44 @@ class SearchResultsViewActions(BaseActions):
         return director_manager.values()[:self.RESULTS_PER_PAGE]
 
 
-class MovieDetailsActions(BaseActions):
-    def bind_context_data(self, context, **kwargs):
+class PaginatedViewBaseActions(BaseActions):
+    def get_visible_page_range(self, paginator, current_page, max_shown_pages=9):
+        if paginator.num_pages < max_shown_pages:
+            pages = range(1, paginator.num_pages + 1)
+        else:
+            start = max(1, min(paginator.num_pages - max_shown_pages + 1, current_page - (max_shown_pages // 2)))
+            end = min(paginator.num_pages, start + max_shown_pages - 1)
+            pages = range(start, end + 1)
+        return pages
+
+    def get_page(self, page_num):
+        raise NotImplementedError()
+
+class BrowseMovieViewActions(PaginatedViewBaseActions):
+    def get_page(self, page_num):
+        pass
+
+    def __get_movie_results(self, search_terms):
+        if search_terms is None:
+            return models.Movie.objects.all().order_by('title', 'year').values()
+        q_objects = Q()
+        for term in search_terms:
+            q_objects |= Q(title__icontains=term)
+        return models.Movie.objects.filter(q_objects).order_by('title', 'year').values()
+
+
+class BrowseActorViewActions(PaginatedViewBaseActions):
+    def get_page(self, page_num):
         pass
 
 
-def get_movie_details_full(movie_id, **kwargs):
-    manager = models.Movie.objects
-    movie_details = manager.get_movie_details_full(movie_id)
-    return movie_details
+class BrowseDirectorViewActions(PaginatedViewBaseActions):
+    def get_page(self, page_num):
+        pass
+
+
+class MovieDetailViewActions(BaseActions):
+    def get_movie_details_full(self, movie_id):
+        manager = models.Movie.objects
+        movie_details = manager.get_movie_details_full(movie_id)
+        return movie_details

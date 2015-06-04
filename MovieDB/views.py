@@ -12,11 +12,11 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q, Count
 from django.http import HttpResponse, Http404
+from django.core import exceptions
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 
 from moviedb_project.settings import BASE_DIR
-from MovieDB import models
 from MovieDB import actions
 from MovieDB import forms
 
@@ -136,15 +136,11 @@ class MovieDetailView(BaseView):
     def get(self, request, mid):
         context = super(MovieDetailView, self).get_context_data()
         context['page_header'] = 'Movie Details'
-        movie = get_object_or_404(models.Movie, id=mid)
-        context['movie'] = movie
         view_actions = actions.MovieDetailViewActions()
-        # details = view_actions.get_movie_details_full_sproc(movie_id=mid)
-        # context['actors'] = details['actors']
-        # context['directors'] = details['directors']
-        # context['genres'] = details['genres']
-        # context['reviews'] = details['reviews']
-        # context['avg_user_rating'] = details['avg_rating']
+        try:
+            context['movie'] = view_actions.get_movie(mid)
+        except exceptions.ObjectDoesNotExist:
+            raise Http404()
         context['actors'] = view_actions.get_movie_actors(mid)
         context['directors'] = view_actions.get_movie_directors(mid)
         context['genres'] = view_actions.get_movie_genres(mid)

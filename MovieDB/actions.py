@@ -191,7 +191,7 @@ class BrowseDirectorViewActions(AbstractPaginatedViewActions):
 
 class MovieDetailViewActions(AbstractActions):
     def get_movie(self, movie_id):
-        return models.Movie.objects.get(movie_id)
+        return models.Movie.objects.get(id=movie_id)
 
     def get_movie_genres(self, movie_id):
         manager = models.MovieGenre.objects

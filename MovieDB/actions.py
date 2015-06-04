@@ -12,7 +12,8 @@ import xml.etree.cElementTree as ET
 import os
 import abc
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.db.models import Q
+from django.db import connection
+from django.db.models import Q, Avg
 from django.core import paginator
 
 from moviedb_project.settings import BASE_DIR
@@ -68,7 +69,6 @@ class BaseViewActions(AbstractActions):
                 nav_item.text = element.find('text').text
                 nav_item.url = reverse(
                     str(element.find('viewname').text),
-                    # kwargs={'search_term':'', 'page_num': 1}
                 )
                 navbar.append(nav_item)
         return navbar
@@ -82,7 +82,6 @@ class SearchResultsViewActions(AbstractActions):
     RESULTS_PER_PAGE = 15
 
     def get_search_results_all(self, search_term):
-        # search_terms = str(search_term).split()
         movies = self.get_search_results_movies(search_term)
         actors = self.get_search_results_actors(search_term)
         directors = self.get_search_results_directors(search_term)
@@ -191,7 +190,107 @@ class BrowseDirectorViewActions(AbstractPaginatedViewActions):
 
 
 class MovieDetailViewActions(AbstractActions):
+    def get_movie(self, movie_id):
+        return models.Movie.objects.get(movie_id)
+
+    def get_movie_genres(self, movie_id):
+        manager = models.MovieGenre.objects
+        return manager.filter(mid=movie_id).values_list('genre', flat='True')
+
+    def get_movie_actors(self, movie_id):
+        query_set = models.MovieActor.objects
+        query_set = query_set.filter(mid=movie_id).select_related(
+            'aid__last',
+            'aid__first',
+            'aid__sex',
+            'aid__dob',
+            'aid__dod',
+        )
+        return query_set
+
+    def get_movie_directors(self, movie_id):
+        manager = models.MovieDirector.objects
+        results = manager.filter(mid=movie_id).select_related(
+            'did__last',
+            'did__first',
+            'did__dob',
+            'did__dod',
+        )
+        return results
+
+    def get_movie_reviews(self, movie_id):
+        manager = models.Review.objects
+        return manager.filter(mid=movie_id)
+
+    def get_movie_avg_user_rating(self, movie_id):
+        manager = models.Review.objects
+        return manager.filter(mid=movie_id).aggregate(Avg('rating'))['rating__avg']
+
     def get_movie_details_full(self, movie_id):
-        manager = models.Movie.objects
-        movie_details = manager.get_movie_details_full(movie_id)
-        return movie_details
+        movie = self.get_movie(movie_id)
+        actors = self.get_movie_actors(movie_id)
+        directors = self.get_movie_directors(movie_id)
+        genres = self.get_movie_genres(movie_id)
+        reviews = self.get_movie_reviews(movie_id)
+        avg_rating = self.get_movie_avg_user_rating(movie_id)
+        return {
+            'movie': movie,
+            'actors': actors,
+            'directors': directors,
+            'genres': genres,
+            'reviews': reviews,
+            'avg_rating': avg_rating,
+        }
+
+    def get_movie_details_full_sproc(self, movie_id):
+        proc_name = 'movie_db.sp_get_movie_details_full'
+        with connection.cursor() as cursor:
+            cursor.callproc(proc_name, [movie_id])
+            results = {}
+            # get actors
+            actors = []
+            for row in cursor:
+                actor = models.Actor()
+                actor.id =      row[0]
+                actor.last =    row[1]
+                actor.first =   row[2]
+                actor.sex =     row[3]
+                actor.dob =     row[4]
+                actor.dod =     row[5]
+                actor.role =    row[6]
+                actors.append(actor)
+            results['actors'] = actors
+            # get directors
+            cursor.nextset()
+            directors = []
+            for row in cursor:
+                director = models.Director()
+                director.id =       row[0]
+                director.last =     row[1]
+                director.first =    row[2]
+                director.dob =      row[3]
+                director.dod =      row[4]
+                directors.append(director)
+            results['directors'] = directors
+            # get genres
+            cursor.nextset()
+            genres = []
+            for row in cursor:
+                genres.append(row[0])
+            results['genres'] = genres
+            # get reviews
+            cursor.nextset()
+            reviews = []
+            for row in cursor:
+                review = models.Review()
+                review.id =         row[0]
+                review.time =       row[1]
+                review.user_name =  row[2]
+                review.rating =     row[3]
+                review.comment =    row[4]
+                reviews.append(review)
+            results['reviews'] = reviews
+            # get average review rating
+            cursor.nextset()
+            results['avg_rating'] = cursor.fetchone()[0]
+        return results

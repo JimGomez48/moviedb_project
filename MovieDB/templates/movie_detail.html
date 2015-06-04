@@ -45,14 +45,14 @@
                         <dt>Directors</dt>
                         {% if directors %}
                             {% for director in directors %}
-                                <dd>{{ director.get_full_name }}</dd>
+                                <dd><a href="{% url 'DirectorDetail' director.did.id %}">{{ director.did.get_full_name }}</a></dd>
                             {% endfor %}
                         {% else %}
                             <dd>N/A</dd>
                         {% endif %}
                         <dt>Actors</dt>
                         {% for actor in actors %}
-                            <dd>{{ actor.get_full_name }}
+                            <dd><a href="{% url 'ActorDetail' actor.aid.id %}">{{ actor.aid.get_full_name }}</a> as {{ actor.role }}</dd>
                         {% endfor %}
                     </dl>
                 </div>

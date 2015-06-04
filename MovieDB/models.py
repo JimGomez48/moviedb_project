@@ -29,7 +29,7 @@ class Actor(models.Model):
     objects = ActorManager()
 
     def __unicode__(self):
-        return '%s: %s, %s' % (self.id, self.last, self.first)
+        return '[%s] %s, %s (%s)' % (self.id, self.last, self.first, self.dob)
 
     def get_full_name(self):
         return '%s %s' % (self.first, self.last)
@@ -55,7 +55,7 @@ class Director(models.Model):
     objects = DirectorManager()
 
     def __unicode__(self):
-        return '%s: %s, %s' % (self.id, self.last, self.first)
+        return '%s: %s, %s %s' % (self.id, self.last, self.first, self.dob)
 
     def get_full_name(self):
         return '%s %s' % (self.first, self.last)
@@ -69,74 +69,7 @@ class Director(models.Model):
 
 class Movie(models.Model):
     class MovieManager(models.Manager):
-        def get_movie_genres(self, movie_id):
-            manager = MovieGenre.objects
-            return manager.filter(mid=movie_id).values_list('genre', flat='True')
-
-        def get_movie_actors(self, movie_id):
-            manager = Actor.objects
-            return manager.filter(movieactor__mid=movie_id)
-
-        def get_movie_directors(self, movie_id):
-            manager = Director.objects
-            return manager.filter(moviedirector__mid=movie_id)
-
-        def get_movie_average_user_rating(self, movie_id):
-            manager = Review.objects
-            return manager.filter(mid=movie_id).aggregate(models.Avg('rating'))['rating__avg']
-
-        def get_movie_details_full(self, movie_id):
-            proc_name = 'movie_db.sp_get_movie_details_full'
-            with connection.cursor() as cursor:
-                cursor.callproc(proc_name, [movie_id])
-                results = {}
-                # get actors
-                actors = []
-                for row in cursor:
-                    actor = Actor()
-                    actor.id =      row[0]
-                    actor.last =    row[1]
-                    actor.first =   row[2]
-                    actor.sex =     row[3]
-                    actor.dob =     row[4]
-                    actor.dod =     row[5]
-                    actor.role =    row[6]
-                    actors.append(actor)
-                results['actors'] = actors
-                # get directors
-                cursor.nextset()
-                directors = []
-                for row in cursor:
-                    director = Director()
-                    director.id =       row[0]
-                    director.last =     row[1]
-                    director.first =    row[2]
-                    director.dob =      row[3]
-                    director.dod =      row[4]
-                    directors.append(director)
-                results['directors'] = directors
-                # get genres
-                cursor.nextset()
-                genres = []
-                for row in cursor:
-                    genres.append(row[0])
-                results['genres'] = genres
-                # get reviews
-                cursor.nextset()
-                reviews = []
-                for row in cursor:
-                    review = Review()
-                    review.id =         row[0]
-                    review.time =       row[1]
-                    review.user_name =  row[2]
-                    review.rating =     row[3]
-                    review.comment =    row[4]
-                    reviews.append(review)
-                results['reviews'] = reviews
-                # get average review rating
-                cursor.nextset()
-                results['avg_rating'] = cursor.fetchone()[0]
-            return results
+        pass
 
     MPAA_RATINGS = (
         ('NC-17', 'NC-17'),
@@ -154,15 +87,15 @@ class Movie(models.Model):
     objects = MovieManager()
 
     def __unicode__(self):
-        return '%s: %s (%s)' % (self.id, self.title, self.year)
+        return '[%s] %s (%s)' % (self.id, self.title, self.year)
 
-def save(self, force_insert=False, force_update=False, using=None,
-         update_fields=None):
-    if self.year < 1800 or self.year > datetime.datetime.now().year:
-        raise ValidationError('Invalid year value')
-    if not self.rating in self.MPAA_RATINGS:
-        raise ValidationError('Invalid rating value')
-    super(Movie, self).save(force_insert, force_update, using, update_fields)
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.year < 1800 or self.year > datetime.datetime.now().year:
+            raise ValidationError('Invalid year value')
+        if not self.rating in self.MPAA_RATINGS:
+            raise ValidationError('Invalid rating value')
+        super(Movie, self).save(force_insert, force_update, using, update_fields)
 
 
 class Review(models.Model):
@@ -197,17 +130,18 @@ class MovieActor(models.Model):
     role = models.CharField(max_length=50)
 
     def __unicode__(self):
-        return 'mid:%s aid:%s' % (self.mid, self.aid)
-#
+        return 'id:%s mid:%s aid:%s' % (self.id, self.mid, self.aid)
+
+
 class MovieDirector(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     mid = models.ForeignKey(Movie, db_column='mid')
     did = models.ForeignKey(Director, db_column='did')
 
     def __unicode__(self):
-        return 'mid:%s aid:%s' % (self.mid, self.did)
+        return 'id:%s mid:%s aid:%s' % (self.id, self.mid, self.did)
 
-#
+
 class MovieGenre(models.Model):
     GENRE_CHOICES = (
         ('Action', 'Action'),

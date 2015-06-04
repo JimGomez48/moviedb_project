@@ -17,6 +17,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 
 from moviedb_project.settings import BASE_DIR
+from MovieDB import models
 from MovieDB import actions
 from MovieDB import forms
 
@@ -165,6 +166,7 @@ class ActorDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         # return render(request, 'detail.html', context)
+        raise Http404()
 
 class DirectorDetailView(BaseView):
     def get(self, request, did):
@@ -174,6 +176,7 @@ class DirectorDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         # return render(request, 'detail.html', context)
+        raise Http404()
 
 class AddMovieView(BaseView):
     def get(self, request, *args, **kwargs):

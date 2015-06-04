@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db import connection
 from django.db.models import Q, Avg
 from django.core import paginator
+from django.core import exceptions
 
 from moviedb_project.settings import BASE_DIR
 from MovieDB import models
@@ -191,7 +192,7 @@ class BrowseDirectorViewActions(AbstractPaginatedViewActions):
 
 class MovieDetailViewActions(AbstractActions):
     def get_movie(self, movie_id):
-        return models.Movie.objects.get(movie_id)
+        return models.Movie.objects.get(id=movie_id)
 
     def get_movie_genres(self, movie_id):
         manager = models.MovieGenre.objects
@@ -294,3 +295,13 @@ class MovieDetailViewActions(AbstractActions):
             cursor.nextset()
             results['avg_rating'] = cursor.fetchone()[0]
         return results
+
+
+class ActorDetailsViewActions(AbstractActions):
+    def get_actor_details_full(self, actor_id):
+        raise exceptions.ObjectDoesNotExist
+
+
+class DirectorDetailsViewActions(AbstractActions):
+    def get_director_details_full(self, director_id):
+        raise exceptions.ObjectDoesNotExist

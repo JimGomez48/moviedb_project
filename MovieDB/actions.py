@@ -138,13 +138,7 @@ class AbstractPaginatedViewActions(AbstractActions):
             pages = range(start, end + 1)
         return pages
 
-    @abc.abstractmethod
     def get_page(self, query_set, page_num, results_per_page):
-        pass
-
-
-class BrowseMovieViewActions(AbstractPaginatedViewActions):
-    def get_page(self, query_set, page_num, results_per_page=20):
         pager = paginator.Paginator(query_set, results_per_page)
         try:
             page = pager.page(page_num)
@@ -154,6 +148,8 @@ class BrowseMovieViewActions(AbstractPaginatedViewActions):
             page = pager.page(pager.num_pages)
         return page
 
+
+class BrowseMovieViewActions(AbstractPaginatedViewActions):
     def get_movie_query_set(self, search_term):
         if not search_term:
             return models.Movie.objects.order_by('title', 'year')
@@ -165,13 +161,33 @@ class BrowseMovieViewActions(AbstractPaginatedViewActions):
 
 
 class BrowseActorViewActions(AbstractPaginatedViewActions):
-    def get_page(self, query_set, page_num, results_per_page):
-        pass
+    def get_actor_query_set(self, search_term):
+        actor_manager = models.Actor.objects
+        if not search_term:
+            return actor_manager.order_by('last', 'first')
+        search_terms = str(search_term).split()
+        # AND the below Q objects together
+        for term in search_terms:
+            # last like '%term%' OR first like '%term%'
+            q_objects = Q(last__icontains=term)
+            q_objects |= Q(first__icontains=term)
+            actor_manager = actor_manager.filter(q_objects)
+        return actor_manager.order_by('last', 'first')
 
 
 class BrowseDirectorViewActions(AbstractPaginatedViewActions):
-    def get_page(self, query_set, page_num, results_per_page):
-        pass
+    def get_director_query_set(self, search_term):
+        director_manager = models.Director.objects
+        if not search_term:
+            return director_manager.order_by('last', 'first')
+        search_terms = str(search_term).split()
+        # AND the below Q objects together
+        for term in search_terms:
+            # last like '%term%' OR first like '%term%'
+            q_objects = Q(last__icontains=term)
+            q_objects |= Q(first__icontains=term)
+            director_manager = director_manager.filter(q_objects)
+        return director_manager.order_by('last', 'first')
 
 
 class MovieDetailViewActions(AbstractActions):

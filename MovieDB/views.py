@@ -97,71 +97,39 @@ class BrowseMovieView(BrowseBaseView):
 
 
 class BrowseActorView(BrowseBaseView):
-    def get(self, request, search_term=None, page_request=None):
+    def get(self, request, search_term=None, page_num=None):
         view_actions = actions.BrowseActorViewActions()
-        context = self.get_context_data()
-        context['search_term'] = search_term
-        context['page_header'] = 'Browse Actors'
-        context['results_header'] = 'Actors'
-        search_terms = None
-        if search_term:
-            search_terms = search_term.split()
-        # get the actor results that match the search terms and paginate results
-        actors = self.__get_actor_results(search_terms)
-        paginator = Paginator(actors, self.RESULTS_PER_PAGE)
-        try:
-            page = paginator.page(page_request)
-        except PageNotAnInteger:
-            page = paginator.page(1)
-        except EmptyPage:
-            page = paginator.page(paginator.num_pages)
-        context['page_range'] = view_actions.get_visible_page_range(paginator, page.number, self.MAX_SHOWN_PAGES)
-        context['page'] = page
-        context['base_url'] = reverse('BrowseActor')
-        return render(request, 'browse_actor.html', context)
-
-    def __get_actor_results(self, search_terms):
-        if not search_terms or len(search_terms) < 1:
-            return models.Actor.objects.all().order_by('last', 'first').values()
-        q_objects = Q()
-        for term in search_terms:
-            q_objects |= Q(first__icontains=term)
-            q_objects |= Q(last__icontains=term)
-        return models.Actor.objects.filter(q_objects).order_by('last', 'first').values()
+        actors_queryset = view_actions.get_actor_query_set(search_term)
+        page = view_actions.get_page(actors_queryset, page_num, self.RESULTS_PER_PAGE)
+        page_range = view_actions.get_visible_page_range(page, self.MAX_SHOWN_PAGES)
+        base_url = reverse('BrowseActor')
+        self.bind_context_data(
+            search_term=search_term,
+            page_header='Browse Actors',
+            results_header='Actors',
+            page_range=page_range,
+            page=page,
+            base_url=base_url,
+        )
+        return render(request, 'browse_actor.html', self.get_context_data())
 
 
 class BrowseDirectorView(BrowseBaseView):
-    def get(self, request, search_term=None, page_request=None):
+    def get(self, request, search_term=None, page_num=None):
         view_actions = actions.BrowseDirectorViewActions()
-        context = self.get_context_data()
-        context['search_term'] = search_term
-        context['page_header'] = 'Browse Directors'
-        context['results_header'] = 'Directors'
-        search_terms = None
-        if search_term:
-            search_terms = search_term.split()
-        # get the actor results that match the search terms and paginate results
-        actors = self.__get_director_results(search_terms)
-        paginator = Paginator(actors, self.RESULTS_PER_PAGE)
-        try:
-            page = paginator.page(page_request)
-        except PageNotAnInteger:
-            page = paginator.page(1)
-        except EmptyPage:
-            page = paginator.page(paginator.num_pages)
-        context['page_range'] = view_actions.get_visible_page_range(paginator, page.number, self.MAX_SHOWN_PAGES)
-        context['page'] = page
-        context['base_url'] = reverse('BrowseDirector')
-        return render(request, 'browse_director.html', context)
-
-    def __get_director_results(self, search_terms):
-        if not search_terms or len(search_terms) < 1:
-            return models.Director.objects.all().order_by('last', 'first').values()
-        q_objects = Q()
-        for term in search_terms:
-            q_objects |= Q(first__icontains=term)
-            q_objects |= Q(last__icontains=term)
-        return models.Director.objects.filter(q_objects).order_by('last', 'first').values()
+        directors_queryset = view_actions.get_director_query_set(search_term)
+        page = view_actions.get_page(directors_queryset, page_num, self.RESULTS_PER_PAGE)
+        page_range = view_actions.get_visible_page_range(page, self.MAX_SHOWN_PAGES)
+        base_url = reverse('BrowseDirector')
+        self.bind_context_data(
+            search_term=search_term,
+            page_header='Browse Directors',
+            results_header='Directors',
+            page_range=page_range,
+            page=page,
+            base_url=base_url,
+        )
+        return render(request, 'browse_director.html', self.get_context_data())
 
 
 class MovieDetailView(BaseView):
@@ -185,7 +153,6 @@ class ActorDetailView(BaseView):
         context = super(ActorDetailView, self).get_context_data()
         context['page_header'] = 'Actor Details'
         # return render(request, 'detail.html', context)
-        # return redirect('Error404')
         raise Http404()
 
 class DirectorDetailView(BaseView):

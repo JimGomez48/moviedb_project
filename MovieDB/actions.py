@@ -201,6 +201,7 @@ class MovieDetailViewActions(AbstractActions):
     def get_movie_actors(self, movie_id):
         query_set = models.MovieActor.objects
         query_set = query_set.filter(mid=movie_id).select_related(
+            'aid__id',
             'aid__last',
             'aid__first',
             'aid__sex',
@@ -212,6 +213,7 @@ class MovieDetailViewActions(AbstractActions):
     def get_movie_directors(self, movie_id):
         manager = models.MovieDirector.objects
         results = manager.filter(mid=movie_id).select_related(
+            'did__id',
             'did__last',
             'did__first',
             'did__dob',
@@ -299,9 +301,47 @@ class MovieDetailViewActions(AbstractActions):
 
 class ActorDetailsViewActions(AbstractActions):
     def get_actor_details_full(self, actor_id):
-        raise exceptions.ObjectDoesNotExist
+        actor = self.get_actor(actor_id)
+        movies = self.get_actor_movies(actor_id)
+        return {
+            'actor': actor,
+            'movies': movies,
+        }
+
+    def get_actor(self, actor_id):
+        return models.Actor.objects.get(id=actor_id)
+
+    def get_actor_movies(self, actor_id):
+        manager = models.MovieActor.objects
+        results = manager.filter(aid=actor_id).select_related(
+            'mid__id',
+            'mid__title',
+            'mid__year',
+            'mid__rating',
+            'mid__company',
+        )
+        return results
 
 
 class DirectorDetailsViewActions(AbstractActions):
     def get_director_details_full(self, director_id):
-        raise exceptions.ObjectDoesNotExist
+        director = self.get_director(director_id)
+        movies = self.get_director_movies(director_id)
+        return {
+            'director': director,
+            'movies': movies,
+        }
+
+    def get_director(self, director_id):
+        return models.Director.objects.get(id=director_id)
+
+    def get_director_movies(self, director_id):
+        manager = models.MovieDirector.objects
+        results = manager.filter(did=director_id).select_related(
+            'mid__id',
+            'mid__title',
+            'mid__year',
+            'mid__rating',
+            'mid__company',
+        )
+        return results

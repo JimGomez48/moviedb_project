@@ -207,7 +207,7 @@ class MovieDetailViewActions(AbstractActions):
             'aid__sex',
             'aid__dob',
             'aid__dod',
-        )
+        ).order_by('aid__last', 'aid__first')
         return query_set
 
     def get_movie_directors(self, movie_id):
@@ -218,12 +218,12 @@ class MovieDetailViewActions(AbstractActions):
             'did__first',
             'did__dob',
             'did__dod',
-        )
+        ).order_by('did__last', 'did__first')
         return results
 
     def get_movie_reviews(self, movie_id):
         manager = models.Review.objects
-        return manager.filter(mid=movie_id)
+        return manager.filter(mid=movie_id).order_by('-time')
 
     def get_movie_avg_user_rating(self, movie_id):
         manager = models.Review.objects
@@ -319,7 +319,7 @@ class ActorDetailsViewActions(AbstractActions):
             'mid__year',
             'mid__rating',
             'mid__company',
-        )
+        ).order_by('-mid__year', 'mid__title')
         return results
 
 
@@ -343,5 +343,5 @@ class DirectorDetailsViewActions(AbstractActions):
             'mid__year',
             'mid__rating',
             'mid__company',
-        )
+        ).order_by('-mid__year', 'mid__title')
         return results

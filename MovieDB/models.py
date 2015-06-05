@@ -111,7 +111,7 @@ class Review(models.Model):
     user_name = models.CharField(max_length=20)
     mid = models.ForeignKey(Movie, db_column='mid')
     rating = models.IntegerField(choices=RATING_RANGE)
-    comment = models.CharField(max_length=500, blank=True, default='')
+    comment = models.TextField(max_length=1000, blank=True, default='')
 
     def __unicode__(self):
         return 'mid:%s user:%s time:%s' % (self.mid, self.user_name, self.time)

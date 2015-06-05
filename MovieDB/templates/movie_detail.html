@@ -6,7 +6,7 @@
 
         <div class="panel panel-default text-left">
             <div class="panel-heading">
-                <h2 class="">{{ movie.title }}</h2>
+                <h2 class="text-primary">{{ movie.title }}</h2>
             </div>
             <div class="list-group">
                 <div class="list-group-item">
@@ -15,7 +15,6 @@
                             <img class="media-object" src="{% static 'img/default_movie.png' %}">
                         </div>
                         <div class="media-body">
-                            <h3 class="text-primary text-capitalize">Details</h3>
                             <dl class="dl-horizontal">
                                 <dt>Year</dt>
                                 <dd>{{ movie.year }}</dd>
@@ -23,6 +22,7 @@
                                 <dd>{{ movie.company }}</dd>
                                 <dt>MPAA Rating</dt>
                                 <dd>{{ movie.rating }}</dd>
+{#                                <dd><img src="{% static 'img/mpaa-icon_g.svg.png' %}" width="18"></dd>#}
                                 <dt>Genres</dt>
                                 {% for genre in genres %}
                                     <dd>{{ genre }}</dd>
@@ -40,39 +40,63 @@
                 </div>
 
                 <div class="list-group-item">
-                    <h3 class="text-primary text-capitalize">Cast & Crew</h3>
-                    <dl class="dl-horizontal">
-                        <dt>Directors</dt>
-                        {% if directors %}
-                            {% for director in directors %}
-                                <dd><a href="{% url 'DirectorDetail' director.did.id %}">{{ director.did.get_full_name }}</a></dd>
-                            {% endfor %}
-                        {% else %}
-                            <dd>N/A</dd>
-                        {% endif %}
-                        <dt>Actors</dt>
-                        {% for actor in actors %}
-                            <dd><a href="{% url 'ActorDetail' actor.aid.id %}">{{ actor.aid.get_full_name }}</a> as {{ actor.role }}</dd>
+                    <h3 class="list-group-item-heading text-capitalize">Directors</h3>
+                    {% if directors %}
+                        {% for director in directors %}
+                            <a href="{% url 'DirectorDetail' director.did.id %}">{{ director.did.get_full_name }}</a>
                         {% endfor %}
-                    </dl>
+                    {% else %}
+                        <h4 class="text-muted"><em>No directors to display</em></h4>
+                    {% endif %}
                 </div>
 
                 <div class="list-group-item">
-                    <h3 class="text-primary text-capitalize">Reviews</h3>
-                    <dl class="dl-horizontal">
-                        {% for review in reviews %}
-                            <dt>User:</dt>
-                            <dd>{{ review.user_name }}</dd>
-                            <dt>Time:</dt>
-                            <dd>{{ review.time }}</dd>
-                            <dt>Rating:</dt>
-                            <dd>{{ review.rating }}</dd>
-                            <dt>Comment:</dt>
-                            <dd>{{ review.comment }}</dd>
+                    <h3 class="list-group-item-heading text-capitalize">Cast</h3>
+                    {% if actors %}
+                        {% for actor in actors %}
+                            <a href="{% url 'ActorDetail' actor.aid.id %}">{{ actor.aid.get_full_name }}</a> as {{ actor.role }}
+                            </br>
                         {% endfor %}
-                    </dl>
+                    {% else %}
+                        <h4 class="text-muted"><em>No cast to display</em></h4>
+                    {% endif %}
+                </div>
+
+                <div class="list-group-item">
+                    <h3 class="list-group-item-heading text-capitalize">Reviews</h3>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {% if reviews %}
+                                <div class="list-group">
+                                    {% for review in reviews %}
+                                        <div class="list-group-item">
+                                            <div class="media">
+                                                <div class="media-left media-top">
+                                                    <img class="media-object"
+                                                         width="56"
+                                                         src="{% static 'img/default_person.png' %}">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading text-primary text-capitalize">{{ review.user_name }}</h4>
+                                                    <small>{{ review.time }}</small>
+                                                    </br>
+                                                    <strong>Rating: </strong>{{ review.rating }}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5>{{ review.comment }}</h5>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <h4 class="text-muted"><em>No Reviews To display</em></h4>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 {% endblock %}

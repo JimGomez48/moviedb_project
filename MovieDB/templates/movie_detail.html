@@ -4,9 +4,9 @@
     <div class="container">
         <h1>{{ page_header }}</h1>
 
-        <div class="panel panel-default text-left">
+        <div class="panel panel-dark text-left">
             <div class="panel-heading">
-                <h2 class="text-primary">{{ movie.title }}</h2>
+                <h2 class="">{{ movie.get_cleaned_title }}</h2>
             </div>
             <div class="list-group">
                 {# Movie Details #}
@@ -16,8 +16,7 @@
                             <img class="media-object" src="{% static 'img/default_movie.png' %}">
                         </div>
                         <div class="media-body">
-{#                        <div class="bs-callout bs-callout-primary">#}
-                            <Table class="table table-condensed" border="0">
+                            <Table class="table table-condensed no-border" border="0">
                                 <tr>
                                     <td><h4><strong>Year</strong></h4></td>
                                     <td><h4>{{ movie.year }}</h4></td>
@@ -28,48 +27,45 @@
                                 </tr>
                                 <tr>
                                     <td><h4><strong>MPAA Rating</strong></h4></td>
-                                    <td><h4>{{ movie.rating }}</h4></td>
+                                    <td><h4>
+                                        {% if movie.rating == 'G' %}
+                                            <img src="{% static 'img/mpaa-icon_g.svg.png' %}" height="20">
+                                        {% elif movie.rating == 'PG' %}
+                                            <img src="{% static 'img/mpaa-icon_pg.svg.png' %}" height="20">
+                                        {% elif movie.rating == 'PG-13' %}
+                                            <img src="{% static 'img/mpaa-icon_pg-13.svg.png' %}" height="20">
+                                        {% elif movie.rating == 'R' %}
+                                            <img src="{% static 'img/mpaa-icon_r.svg.png' %}" height="20">
+                                        {% elif movie.rating == 'NC-17' %}
+                                            <img src="{% static 'img/mpaa-icon_nc-17.svg.png' %}" height="20">
+                                        {% elif movie.rating == 'surrendered' %}
+                                            <h4>Rating surrendered</h4>
+                                        {% endif %}
+                                    </h4></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><strong>Average User Rating</strong></h4></td>
+                                    <td><h4><strong>Avg. User Rating</strong></h4></td>
                                     {% if avg_user_rating %}
                                         <td><h4>{{ avg_user_rating }}</h4></td>
                                     {% else %}
-                                        <td><h4><em>This movie has not yet been reviewed</em></h4></td>
+                                        <td><h4 class="text-muted"><em>This movie has not yet been reviewed</em></h4></td>
                                     {% endif %}
                                 </tr>
                                 <tr>
                                     <td><h4><strong>Genres</strong></h4></td>
+                                    <td>
                                     {% if genres %}
+                                        <h4>
                                         {% for genre in genres %}
-                                            <td><h4>{{ genre }}</h4></td>
+                                            {{ genre }}
                                         {% endfor %}
+                                        </h4>
                                     {% else %}
-                                        <td><h4><em>No genres to display</em></h4></td>
+                                        <h4><em>No genres to display</em></h4>
                                     {% endif %}
+                                    </td>
                                 </tr>
                             </Table>
-{#                            <dl class="dl-horizontal">#}
-{#                                <dt>Year</dt>#}
-{#                                <dd>{{ movie.year }}</dd>#}
-{#                                <dt>Company</dt>#}
-{#                                <dd>{{ movie.company }}</dd>#}
-{#                                <dt>MPAA Rating</dt>#}
-{#                                <dd>{{ movie.rating }}</dd>#}
-{#                                <dd><img src="{% static 'img/mpaa-icon_g.svg.png' %}" width="18"></dd>#}
-{#                                <dt>Genres</dt>#}
-{#                                {% for genre in genres %}#}
-{#                                    <dd>{{ genre }}</dd>#}
-{#                                {% endfor %}#}
-{#                                <dt>Avg. User Rating</dt>#}
-{#                                {% if avg_user_rating %}#}
-{#                                    <dd>{{ avg_user_rating }}</dd>#}
-{#                                {% else %}#}
-{#                                    <dd>This movie has not yet been reviewed#}
-{#                                    </dd>#}
-{#                                {% endif %}#}
-{#                            </dl>#}
-{#                        </div>#}
                         </div>
                     </div>
                 </div>
@@ -77,8 +73,7 @@
                 <div class="list-group-item">
                     <h3 class="list-group-item-heading text-capitalize">Directors</h3>
                     {% if directors %}
-                        <table class="table table-condensed">
-{#                            <th class="text-primary">Name</th>#}
+                        <table class="table table-condensed table-striped no-border">
                             {% for director in directors %}
                                 <tr>
                                     <td>
@@ -90,9 +85,6 @@
                                 </tr>
                             {% endfor %}
                         </table>
-{#                        {% for director in directors %}#}
-{#                            <a href="{% url 'DirectorDetail' director.did.id %}">{{ director.did.get_full_name }}</a>#}
-{#                        {% endfor %}#}
                     {% else %}
                         <h4 class="text-muted"><em>No directors to display</em></h4>
                     {% endif %}
@@ -101,13 +93,13 @@
                 <div class="list-group-item">
                     <h3 class="list-group-item-heading text-capitalize">Cast</h3>
                     {% if actors %}
-                        <table class="table table-striped table-condensed">
-                            <th class="text-primary">Actor</th>
-                            <th class="text-primary">Role</th>
+                        <table class="table table-condensed table-striped no-border">
+                            <th class="text-info">Actor</th>
+                            <th class="text-info">Role</th>
                             {% for actor in actors %}
                                 <tr>
                                     <td>
-                                        <img class="img-circle" src="{% static 'img/default_person.png' %}" width="24">
+                                        <img class="img-circle" src="{% static 'img/default_person.png' %}" height="24">
                                         <a class="text-primary text-capitalize" href="{% url 'ActorDetail' actor.aid.id %}">
                                             {{ actor.aid.get_full_name }}
                                         </a>

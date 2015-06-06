@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <div class="panel panel-default">
+                <div class="panel panel-dark">
                     <div class="panel-heading">
                         <h3><span class="glyphicon glyphicon-film"></span> Movies</h3>
                     </div>
@@ -22,7 +22,7 @@
                                     <span class="glyphicon glyphicon-film"></span>
                                 </div>
                                 <div class="media-body">
-                                    {{ movie.title }} ({{ movie.year }})
+                                    {{ movie.get_cleaned_title }} ({{ movie.year }})
                                 </div>
                             </a>
                             {% endfor %}
@@ -38,7 +38,7 @@
             </div>
 
             <div class="col-md-4">
-                <div class="panel panel-default">
+                <div class="panel panel-dark">
                     <div class="panel-heading">
                         <h3><span class="glyphicon glyphicon-user"></span> Actors</h3>
                     </div>
@@ -50,7 +50,7 @@
                                     <span class="glyphicon glyphicon-user"></span>
                                 </div>
                                 <div class="media-body">
-                                    {{ actor.last }}, {{ actor.first }} ({{ actor.dob }})
+                                    {{ actor.get_full_name }} ({{ actor.dob }})
                                 </div>
                             </a>
                             {% endfor %}
@@ -66,7 +66,7 @@
             </div>
 
             <div class="col-md-4">
-                <div class="panel panel-default">
+                <div class="panel panel-dark">
                     <div class="panel-heading">
                         <h3><span class="glyphicon glyphicon-bullhorn"></span> Directors</h3>
                     </div>
@@ -78,7 +78,7 @@
                                     <span class="glyphicon glyphicon-bullhorn"></span>
                                 </div>
                                 <div class="media-body">
-                                    {{ director.last }}, {{ director.first }} ({{ director.dob }})
+                                    {{ director.get_full_name }} ({{ director.dob }})
                                 </div>
                             </a>
                             {% endfor %}

@@ -7,6 +7,7 @@
 ################################################################################
 
 import datetime
+import re
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, connection
@@ -77,7 +78,7 @@ class Movie(models.Model):
         ('PG-13', 'PG-13'),
         ('PG', 'PG'),
         ('G', 'G'),
-        ('surrendere', 'surrendere'),
+        ('surrendered', 'surrendered'),
     )
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=100)
@@ -88,6 +89,13 @@ class Movie(models.Model):
 
     def __unicode__(self):
         return '[%s] %s (%s)' % (self.id, self.title, self.year)
+
+    def get_cleaned_title(self):
+        r = re.compile(r', The$', re.IGNORECASE)
+        if not re.search(r, self.title):
+            return self.title
+        cleaned_title = '%s %s' % ('The', str(re.sub(r, '', self.title)))
+        return cleaned_title
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

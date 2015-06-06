@@ -1,7 +1,7 @@
 {% extends 'browse_base.html' %}
 {% load staticfiles %}
 {% block paged_content %}
-    <div class="panel panel-default text-left">
+    <div class="panel panel-dark text-left">
         <div class="panel-heading">
             <h2><span class="glyphicon glyphicon-bullhorn"></span> {{ results_header }}</h2>
         </div>
@@ -11,11 +11,15 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="media-left">
-                                <img class="media-object img-circle" width="120" height="120" src="{% static 'img/default_person.png' %}">
+                                <img class="media-object img-circle" height="128" src="{% static 'img/default_person.png' %}">
                             </div>
                             <div class="media-body">
-                                <h3 class="media-heading text-primary text-capitalize">{{ director.last }}, {{ director.first }}</h3>
+                                <h3 class="media-heading text-primary text-capitalize">{{ director.get_full_name }}</h3>
                                 <strong>DOB:</strong> {{ director.dob }}
+                                {% if director.dod %}
+                                    </br>
+                                    <strong>DOD: </strong> {{ director.dod }}
+                                {% endif %}
                             </div>
                         </div>
                     </div>

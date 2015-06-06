@@ -100,7 +100,7 @@ class SearchResultsViewActions(AbstractActions):
         for term in search_terms:
             q_objects &= Q(title__icontains=term)
         movie_manager = models.Movie.objects
-        return movie_manager.filter(q_objects).order_by('title', 'year').values()[:self.RESULTS_PER_PAGE]
+        return movie_manager.filter(q_objects).order_by('title', 'year')[:self.RESULTS_PER_PAGE]
 
     def get_search_results_actors(self, search_term):
         search_terms = str(search_term).split()
@@ -111,7 +111,7 @@ class SearchResultsViewActions(AbstractActions):
             q_objects = Q(last__icontains=term)
             q_objects |= Q(first__icontains=term)
             actor_manager = actor_manager.filter(q_objects)
-        return actor_manager.values()[:self.RESULTS_PER_PAGE]
+        return actor_manager[:self.RESULTS_PER_PAGE]
 
     def get_search_results_directors(self, search_term):
         search_terms = str(search_term).split()
@@ -122,7 +122,7 @@ class SearchResultsViewActions(AbstractActions):
             q_objects = Q(last__icontains=term)
             q_objects |= Q(first__icontains=term)
             director_manager = director_manager.filter(q_objects)
-        return director_manager.values()[:self.RESULTS_PER_PAGE]
+        return director_manager[:self.RESULTS_PER_PAGE]
 
 
 class AbstractPaginatedViewActions(AbstractActions):

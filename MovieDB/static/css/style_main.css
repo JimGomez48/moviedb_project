@@ -135,3 +135,28 @@ html, body {
 .bs-callout-info h4 {
     color: #5bc0de;
 }
+
+.table.no-border tr td, .table.no-border tr th {
+  border-width: 0;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+   background-color: white;
+}
+
+
+.table-striped > tbody > tr:nth-child(2n) > td, .table-striped > tbody > tr:nth-child(2n) > th {
+   background-color: #F5F5F5;
+}
+
+.panel-dark{
+    background-color: #404040;
+    border-color: #B4B4B4;
+}
+
+.panel-dark > .panel-heading {
+  color: white;
+    background-image: none;
+  background-color: #404040;
+  border-color: #404040;
+}

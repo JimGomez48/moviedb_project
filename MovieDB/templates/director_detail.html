@@ -4,39 +4,59 @@
     <div class="container">
         <h1>{{ page_header }}</h1>
 
-        <div class="panel panel-default text-left">
+        <div class="panel panel-dark text-left">
             <div class="panel-heading">
-                <h2 class="text-primary">{{ director.get_full_name }}</h2>
+                <h2 class="">{{ director.get_full_name }}</h2>
             </div>
             <div class="list-group">
+                {# details #}
                 <div class="list-group-item">
                     <div class="media">
                         <div class="media-left media-top">
                             <img class="media-object img-circle" src="{% static 'img/default_person.png' %}">
                         </div>
                         <div class="media-body">
-{#                            <h3 class="list-group-item-heading text-primary text-capitalize">Details</h3>#}
-                            <dl class="dl-horizontal">
-                                <dt>DOB</dt>
-                                <dd>{{ director.dob}}</dd>
+                            <Table class="table table-condensed no-border" border="0">
+                                <tr>
+                                    <td></td>
+                                    <td><h4><strong>DOB</strong></h4></td>
+                                    <td><h4>{{ director.dob }}</h4></td>
+                                </tr>
                                 {% if director.dod %}
-                                <dt>DOD</dt>
-                                <dd>{{ director.dod }}</dd>
+                                <tr>
+                                    <td></td>
+                                    <td><h4><strong>DOD</strong></h4></td>
+                                    <td><h4>{{ director.dod }}</h4></td>
+                                </tr>
                                 {% endif %}
-                            </dl>
+                            </Table>
                         </div>
                     </div>
                 </div>
-
+                {# movies #}
                 <div class="list-group-item">
                     <h3 class="list-group-item-heading text-capitalize ">Movies</h3>
-                    <div class="list-group">
-                        {% for movie in movies %}
-                            <a class="list-group-item" href="{% url 'MovieDetail' movie.mid.id %}">
-                                {{ movie.mid.title }} ({{ movie.mid.year }})
-                            </a>
-                        {% endfor %}
-                    </div>
+                    {% if movies %}
+                        <table class="table table-condensed table-striped no-border">
+                            <th class="text-info">Movie</th>
+                            <th class="text-info">Year</th>
+                            {% for movie in movies %}
+                                <tr>
+                                    <td>
+                                        <img class="" src="{% static 'img/default_movie.png' %}" height="36">
+                                        <a class="text-primary text-capitalize" href="{% url 'MovieDetail' movie.mid.id %}">
+                                            {{ movie.mid.get_cleaned_title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{ movie.mid.year }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <h4 class="text-muted"><em>No movies to display</em></h4>
+                    {% endif %}
                 </div>
             </div>
         </div>

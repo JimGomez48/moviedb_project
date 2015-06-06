@@ -88,3 +88,20 @@ class TestModels(unittest.TestCase):
         results = manager.filter(mid=253).select_related('aid__last', 'aid__first')
         for item in results:
             print '%s %s (%s) as %s' % (item.aid.first, item.aid.last, item.aid.dob, item.role)
+
+    def test_cleaned_movie_title(self):
+        manager = models.Movie.objects
+        # a movie NOT starting with 'The'
+        movie = manager.get(id=2)
+        title = movie.title
+        cleaned_title = movie.get_cleaned_title()
+        # print title
+        # print cleaned_title
+        self.assertEquals(title, cleaned_title)
+        # a movie stating with 'The', thus stored with ', The' at the end
+        movie = manager.get(id=9)
+        title = movie.title
+        cleaned_title = movie.get_cleaned_title()
+        # print title
+        # print cleaned_title
+        self.assertNotEqual(title, cleaned_title)

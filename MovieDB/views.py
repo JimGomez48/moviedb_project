@@ -90,7 +90,7 @@ class BrowseMovieView(BrowseBaseView):
         base_url = reverse('BrowseMovie')
         self.bind_context_data(
             search_term=search_term,
-            page_header='Browse Movies',
+            # page_header='Browse Movies',
             results_header='Movies',
             page_range=page_range,
             page=page,
@@ -110,7 +110,6 @@ class BrowseActorView(BrowseBaseView):
         base_url = reverse('BrowseActor')
         self.bind_context_data(
             search_term=search_term,
-            page_header='Browse Actors',
             results_header='Actors',
             page_range=page_range,
             page=page,
@@ -130,7 +129,6 @@ class BrowseDirectorView(BrowseBaseView):
         base_url = reverse('BrowseDirector')
         self.bind_context_data(
             search_term=search_term,
-            page_header='Browse Directors',
             results_header='Directors',
             page_range=page_range,
             page=page,
@@ -148,7 +146,6 @@ class MovieDetailView(BaseView):
             raise Http404()
         self.bind_context_data(
             movie= movie_details['movie'],
-            page_header = 'Movie Details',
             actors = movie_details['actors'],
             directors = movie_details['directors'],
             genres = movie_details['genres'],
@@ -166,7 +163,6 @@ class ActorDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         self.bind_context_data(
-            page_header='Actor Details',
             actor=actor_details['actor'],
             movies=actor_details['movies'],
         )
@@ -181,7 +177,6 @@ class DirectorDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         self.bind_context_data(
-            page_header='Director Details',
             director=director_details['director'],
             movies=director_details['movies'],
         )

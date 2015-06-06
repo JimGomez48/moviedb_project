@@ -214,18 +214,25 @@ class AddDirectorToMovieView(BaseView):
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
+class BrowseReviewView(BaseView):
+    def get(self, request):
+        context = self.get_context_data()
+        context['page_header'] = 'Browse Movie Reviews'
+        # return render(request, 'browse_movie.html', context)
+        raise Http404()
+
 
 class WriteReviewView(BaseView):
-    def get(self, request, *args, **kwargs):
-        context = super(WriteReviewView, self).get_context_data()
+    def get(self, request, mid=None):
+        context = self.get_context_data()
         context['page_header'] = 'Write a Movie Review'
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
 
 class ViewReviewView(BaseView):
-    def get(self, request, *args, **kwargs):
-        context = super(ViewReviewView, self).get_context_data()
-        context['page_header'] = 'View Movie Reviews'
+    def get(self, request, mid=None):
+        context = self.get_context_data()
+        context['page_header'] = 'View a Movie Review'
         # return render(request, 'browse_movie.html', context)
         raise Http404()

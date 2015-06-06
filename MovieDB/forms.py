@@ -16,3 +16,19 @@ class NavBarSearchForm(forms.Form):
                                        'class': 'form-control',
                                        'placeholder': 'Search...',
                                    }))
+
+
+class AddMoviesForm(forms.Form):
+    pass
+
+
+class AddActorDirectForm(forms.Form):
+    pass
+
+
+class AddActorToMovieForm(forms.Form):
+    pass
+
+
+class AddActorsDirectorsToMoviesForm(forms.Form):
+    pass

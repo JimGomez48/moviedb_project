@@ -48,8 +48,8 @@
                             {% for movie in movies %}
                                 <tr>
                                     <td>
-                                        <img class="" src="{% static 'img/default_movie.png' %}" height="36">
                                         <a class="text-primary text-capitalize" href="{% url 'MovieDetail' movie.mid.id %}">
+                                            <img class="" src="{% static 'img/default_movie.png' %}" height="36">
                                             {{ movie.mid.get_cleaned_title }}
                                         </a>
                                     </td>

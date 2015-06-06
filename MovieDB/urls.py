@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'^AddActorMovie/$', views.AddActorToMovieView.as_view(), name='AddActorMovie'),
     url(r'^AddDirectorMovie/$', views.AddDirectorToMovieView.as_view(), name='AddDirectorMovie'),
     # Review
-    url(r'^ViewReview/$', views.ViewReviewView.as_view(), name='ViewReview'),
+    url(r'^BrowseReview/$', views.BrowseReviewView.as_view(), name='BrowseReview'),
+    url(r'^ViewReview/(?P<mid>\d+)/$', views.ViewReviewView.as_view(), name='ViewReview'),
     url(r'^WriteReview/$', views.WriteReviewView.as_view(), name='WriteReview'),
+    url(r'^WriteReview/(?P<mid>\d+)/$', views.WriteReviewView.as_view(), name='WriteReview'),
 ]

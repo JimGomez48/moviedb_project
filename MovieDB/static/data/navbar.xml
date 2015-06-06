@@ -35,8 +35,8 @@
     </dropdown>
     <dropdown name="Reviews">
         <item>
-            <text>View Movie Reviews</text>
-            <viewname>ViewReview</viewname>
+            <text>Browse Movie Reviews</text>
+            <viewname>BrowseReview</viewname>
         </item>
         <item>
             <text>Write a Movie Review</text>

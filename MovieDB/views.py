@@ -8,16 +8,13 @@
 # - Template Layer
 ################################################################################
 
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.db.models import Q, Count
 from django.http import HttpResponse, Http404
 from django.core import exceptions
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
 
 from moviedb_project.settings import BASE_DIR
-from MovieDB import models
 from MovieDB import actions
 from MovieDB import forms
 
@@ -184,55 +181,52 @@ class DirectorDetailView(BaseView):
 
 
 class AddMovieView(BaseView):
+    def post(self, request):
+        add_movie_form = forms.AddMovieForm(request.POST)
+        if add_movie_form.is_valid():
+            return redirect('Index')
+        else:
+            raise Http404()
+
     def get(self, request, *args, **kwargs):
-        context = super(AddMovieView, self).get_context_data()
-        context['page_header'] = 'Add Movies'
-        # return render(request, 'browse_movie.html', context)
-        raise Http404()
+        add_movie_form = forms.AddMovieForm()
+        self.bind_context_data(
+            page_header='Add Movies',
+            add_movie_form=add_movie_form
+        )
+        return render(request, 'add_movie.html', self.get_context_data())
 
 
 class AddActorDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
-        context = super(AddActorDirectorView, self).get_context_data()
-        context['page_header'] = 'Add Actors and Directors'
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
 
 class AddActorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
-        context = super(AddActorToMovieView, self).get_context_data()
-        context['page_header'] = 'Add an Actor to a Movie'
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
 
 class AddDirectorToMovieView(BaseView):
     def get(self, request, *args, **kwargs):
-        context = super(AddDirectorToMovieView, self).get_context_data()
-        context['page_header'] = 'Add a Director to a Movie'
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
 class BrowseReviewView(BaseView):
     def get(self, request):
-        context = self.get_context_data()
-        context['page_header'] = 'Browse Movie Reviews'
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
 
 class WriteReviewView(BaseView):
     def get(self, request, mid=None):
-        context = self.get_context_data()
-        context['page_header'] = 'Write a Movie Review'
         # return render(request, 'browse_movie.html', context)
         raise Http404()
 
 
 class ViewReviewView(BaseView):
     def get(self, request, mid=None):
-        context = self.get_context_data()
-        context['page_header'] = 'View a Movie Review'
         # return render(request, 'browse_movie.html', context)
         raise Http404()

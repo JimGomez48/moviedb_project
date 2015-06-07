@@ -82,7 +82,7 @@ class Movie(models.Model):
     )
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=100)
-    year = models.IntegerField(blank=True, default='')
+    year = models.IntegerField(blank=True, default='', max_length=4)
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
     company = models.CharField(max_length=50)
     objects = MovieManager()

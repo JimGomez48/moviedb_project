@@ -15,18 +15,26 @@
         <div class="panel panel-dark text-left">
             <div class="panel-heading">
                 <div class="btn-group pull-right">
-                    <h4>
-                    <button class="btn btn-ghost btn-panel btn-circle btn-lg dropdown-toggle" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-option-vertical"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Option</a></li>
-                        <li><a href="#">Another Option</a></li>
-                    </ul>
-                    </h4>
+                    {% if menu_items %}
+                        <h4>
+                            <button class="btn btn-ghost btn-panel btn-circle btn-lg dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-option-vertical"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Option</a></li>
+                                <li><a href="#">Another Option</a></li>
+                            </ul>
+                        </h4>
+                    {% else %}
+                        <h4>
+                            <button class="btn btn-ghost btn-panel btn-circle btn-lg dropdown-toggle" data-toggle="dropdown" disabled="disabled">
+                                <span class="glyphicon glyphicon-option-vertical"></span>
+                            </button>
+                        </h4>
+                    {% endif %}
                 </div>
                 <h2>
                     {% block panel_heading %}{% endblock %}

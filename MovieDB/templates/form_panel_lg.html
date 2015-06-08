@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block main_block %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>{{ panel_heading }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-dark text-left">
+                    <div class="panel-heading">
+                        {% block form_heading %}{% endblock %}
+                    </div>
+
+                    <div class="panel-body">
+                        <form class="text-left" id="id_add_movie_form" name="add_movie_form" role="form" method="post">
+                            {% csrf_token %}
+                            {% block form_content %}{% endblock %}
+                        </form>
+                    </div>
+
+                    {% block form_footer %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -5,14 +5,16 @@ BEGIN
     FROM MovieDB_actor a
     INNER JOIN MovieDB_movieactor ma
     ON a.id=ma.aid
-    WHERE ma.mid=movie_id;
+    WHERE ma.mid=movie_id
+    ORDER BY a.last, a.first;
 
     -- get the directors for this movie
     SELECT d.id, d.last, d.first, d.dob, d.dod
     FROM MovieDB_director d
     INNER JOIN MovieDB_moviedirector md
     ON d.id=md.did
-    WHERE md.mid=movie_id;
+    WHERE md.mid=movie_id
+    ORDER BY d.last, d.first;
 
     -- get the genres of this movie
     SELECT genre
@@ -23,8 +25,8 @@ BEGIN
 	SELECT r.id, r.time, r.user_name, r.rating, r.comment
 	FROM MovieDB_review r
 	WHERE r.mid=movie_id
-	ORDER BY TIME
-	LIMIT 5;
+    ORDER BY r.time DESC
+    LIMIT 5;
 
     -- get the average rating of this movie
     SELECT AVG(r.rating) as avg_rating

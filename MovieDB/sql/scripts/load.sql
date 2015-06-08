@@ -14,6 +14,3 @@ LOAD XML LOCAL INFILE 'MovieDB/sql/seed_data/xml/movieactor2.xml' INTO TABLE Mov
 LOAD XML LOCAL INFILE 'MovieDB/sql/seed_data/xml/moviedirector.xml' INTO TABLE MovieDB_moviedirector CHARACTER SET UTF8;
 
 LOAD XML LOCAL INFILE 'MovieDB/sql/seed_data/xml/moviegenre.xml' INTO TABLE MovieDB_moviegenre CHARACTER SET UTF8;
-
-INSERT INTO MovieDB_maxpersonid VALUES (69000);
-INSERT INTO MovieDB_maxmovieid VALUES (4750);

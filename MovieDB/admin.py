@@ -1,12 +1,12 @@
 from django.contrib import admin
-from models import *
+from MovieDB import models
 
-admin.site.register(Actor)
-admin.site.register(Director)
-admin.site.register(Movie)
-admin.site.register(Review)
-admin.site.register(MovieActor)
-admin.site.register(MovieDirector)
-admin.site.register(MovieGenre)
-admin.site.register(MaxPersonID)
-admin.site.register(MaxMovieID)
+admin.site.register(models.Actor)
+admin.site.register(models.Director)
+admin.site.register(models.Movie)
+admin.site.register(models.Review)
+admin.site.register(models.MovieActor)
+admin.site.register(models.MovieDirector)
+admin.site.register(models.MovieGenre)
+# admin.site.register(MaxPersonID)
+# admin.site.register(MaxMovieID)

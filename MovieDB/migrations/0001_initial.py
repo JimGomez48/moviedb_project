@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Actor',
             fields=[
-                ('id', models.IntegerField(serialize=False, primary_key=True)),
+                ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('last', models.CharField(max_length=20)),
                 ('first', models.CharField(max_length=20)),
                 ('sex', models.CharField(max_length=6, choices=[(b'male', b'male'), (b'female', b'female')])),
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Director',
             fields=[
-                ('id', models.IntegerField(serialize=False, primary_key=True)),
+                ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('last', models.CharField(max_length=20)),
                 ('first', models.CharField(max_length=20)),
                 ('dob', models.DateField()),
@@ -32,24 +32,12 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='MaxMovieID',
-            fields=[
-                ('id', models.IntegerField(serialize=False, primary_key=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='MaxPersonID',
-            fields=[
-                ('id', models.IntegerField(serialize=False, primary_key=True)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Movie',
             fields=[
-                ('id', models.IntegerField(serialize=False, primary_key=True)),
+                ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('title', models.CharField(max_length=100)),
                 ('year', models.IntegerField(default=b'', blank=True)),
-                ('rating', models.CharField(max_length=10, choices=[(b'NC-17', b'NC-17'), (b'R', b'R'), (b'PG-13', b'PG-13'), (b'PG', b'PG'), (b'G', b'G'), (b'surrendere', b'surrendere')])),
+                ('rating', models.CharField(max_length=10, choices=[(b'NC-17', b'NC-17'), (b'R', b'R'), (b'PG-13', b'PG-13'), (b'PG', b'PG'), (b'G', b'G'), (b'surrendered', b'surrendered')])),
                 ('company', models.CharField(max_length=50)),
             ],
         ),
@@ -85,7 +73,7 @@ class Migration(migrations.Migration):
                 ('time', models.DateTimeField(auto_now=True)),
                 ('user_name', models.CharField(max_length=20)),
                 ('rating', models.IntegerField(choices=[(1, b'1-star'), (2, b'2-star'), (3, b'3-star'), (4, b'4-star'), (5, b'5-star')])),
-                ('comment', models.CharField(default=b'', max_length=500, blank=True)),
+                ('comment', models.TextField(default=b'', max_length=2000, blank=True)),
                 ('mid', models.ForeignKey(to='MovieDB.Movie', db_column=b'mid')),
             ],
         ),

@@ -10,7 +10,7 @@ import datetime
 import re
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models, connection
+from django.db import models
 
 
 class Actor(models.Model):
@@ -21,7 +21,7 @@ class Actor(models.Model):
         ('male', 'male'),
         ('female', 'female'),
     )
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     last = models.CharField(max_length=20)
     first = models.CharField(max_length=20)
     sex = models.CharField(max_length=6, choices=SEX_CHOICES)
@@ -39,8 +39,8 @@ class Actor(models.Model):
              update_fields=None):
         if self.dod and self.dod < self.dob:
             raise ValidationError('dod cannot be less than dod')
-        if not self.sex in self.SEX_CHOICES:
-            raise ValidationError('invalid value for sex')
+        # if not self.sex in self.SEX_CHOICES:
+        #     raise ValidationError('invalid value for sex')
         super(Actor, self).save(force_insert, force_update, using, update_fields)
 
 
@@ -48,7 +48,7 @@ class Director(models.Model):
     class DirectorManager(models.Manager):
         pass
 
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     last = models.CharField(max_length=20)
     first = models.CharField(max_length=20)
     dob = models.DateField()
@@ -80,9 +80,9 @@ class Movie(models.Model):
         ('G', 'G'),
         ('surrendered', 'surrendered'),
     )
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=100)
-    year = models.IntegerField(blank=True, default='', max_length=4)
+    year = models.IntegerField(blank=True, default='')
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
     company = models.CharField(max_length=50)
     objects = MovieManager()
@@ -101,8 +101,8 @@ class Movie(models.Model):
              update_fields=None):
         if self.year < 1800 or self.year > datetime.datetime.now().year:
             raise ValidationError('Invalid year value')
-        if not self.rating in self.MPAA_RATINGS:
-            raise ValidationError('Invalid rating value')
+        # if not self.rating in self.MPAA_RATINGS:
+        #     raise ValidationError('Invalid rating value')
         super(Movie, self).save(force_insert, force_update, using, update_fields)
 
 
@@ -119,7 +119,7 @@ class Review(models.Model):
     user_name = models.CharField(max_length=20)
     mid = models.ForeignKey(Movie, db_column='mid')
     rating = models.IntegerField(choices=RATING_RANGE)
-    comment = models.TextField(max_length=1000, blank=True, default='')
+    comment = models.TextField(max_length=2000, blank=True, default='')
 
     def __unicode__(self):
         return 'mid:%s user:%s time:%s' % (self.mid, self.user_name, self.time)
@@ -181,20 +181,20 @@ class MovieGenre(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        if not self.genre in self.GENRE_CHOICES:
-            raise ValidationError('Invalid genre value')
+        # if not self.genre in self.GENRE_CHOICES:
+        #     raise ValidationError('Invalid genre value')
         super(MovieGenre, self).save(force_insert, force_update, using, update_fields)
 
 
-class MaxPersonID(models.Model):
-    id = models.IntegerField(primary_key=True)
-
-    def __unicode__(self):
-        return 'MaxPersonID: %s' % (self.id)
-
-
-class MaxMovieID(models.Model):
-    id = models.IntegerField(primary_key=True)
-
-    def __unicode__(self):
-        return 'MaxPersonID: %s' % (self.id)
+# class MaxPersonID(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#
+#     def __unicode__(self):
+#         return 'MaxPersonID: %s' % (self.id)
+#
+#
+# class MaxMovieID(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#
+#     def __unicode__(self):
+#         return 'MaxPersonID: %s' % (self.id)

@@ -8,10 +8,6 @@
             </div>
         </div>
 
-        {% if page.has_other_pages %}
-            {% include 'browse_paginator.html' %}
-        {% endif %}
-
         <div class="panel panel-dark text-left">
             <div class="panel-heading">
                 <div class="btn-group pull-right">
@@ -29,17 +25,13 @@
                     </h4>
                 </div>
                 <h2>
-                    {% block panel_heading_icon %}{% endblock %}
-                    {{ results_header }}
+                    {% block panel_heading %}{% endblock %}
                 </h2>
             </div>
 
-            {% block paged_content %}{% endblock %}
-        </div>
+            {% block details_content %}{% endblock %}
 
-        {% if page.has_other_pages %}
-            {% include 'browse_paginator.html' %}
-        {% endif %}
+        </div>
 
     </div>
 {% endblock %}

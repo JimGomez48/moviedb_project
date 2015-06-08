@@ -1,43 +1,43 @@
 {% extends 'browse_base.html' %}
 {% load staticfiles %}
+
+{% block panel_heading_icon %}
+    <span class="glyphicon glyphicon-film"></span>
+{% endblock %}
+
 {% block paged_content %}
-    <div class="panel panel-dark text-left">
-        <div class="panel-heading">
-            <h2><span class="glyphicon glyphicon-film"></span> {{ results_header }}</h2>
-        </div>
-        <div class="list-group">
-            {% for movie in page %}
-                <a class="list-group-item" href={% url 'MovieDetail' movie.id %}>
-                    <div class="row">
-                        <div class="col-lg-12">
-                                <div class="media-left">
-                                    <img class="" {# width="100"#} height="128" src="{% static 'img/default_movie.png' %}">
-                                </div>
-                                <div class="media-body">
-                                    <h3 class="media-heading text-primary text-capitalize">{{ movie.get_cleaned_title }}</h3>
-                                    <strong>Rating:</strong>
-                                    {% if movie.rating == 'G' %}
-                                        <img src="{% static 'img/mpaa-icon_g.svg.png' %}" height="14">
-                                    {% elif movie.rating == 'PG' %}
-                                        <img src="{% static 'img/mpaa-icon_pg.svg.png' %}" height="14">
-                                    {% elif movie.rating == 'PG-13' %}
-                                        <img src="{% static 'img/mpaa-icon_pg-13.svg.png' %}" height="14">
-                                    {% elif movie.rating == 'R' %}
-                                        <img src="{% static 'img/mpaa-icon_r.svg.png' %}" height="14">
-                                    {% elif movie.rating == 'NC-17' %}
-                                        <img src="{% static 'img/mpaa-icon_nc-17.svg.png' %}" height="14">
-                                    {% elif movie.rating == 'surrendered' %}
-                                        <h4>Rating surrendered</h4>
-                                    {% endif %}
-                                    </br>
-                                    <strong>Company:</strong> {{ movie.company }}
-                                    </br>
-                                    <strong>Year:</strong> {{ movie.year }}
-                                </div>
-                        </div>
+    <div class="list-group">
+        {% for movie in page %}
+            <a class="list-group-item" href={% url 'MovieDetail' movie.id %}>
+                <div class="row">
+                    <div class="col-lg-12">
+                            <div class="media-left">
+                                <img class="" {# width="100"#} height="128" src="{% static 'img/default_movie.png' %}">
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading text-primary text-capitalize">{{ movie.get_cleaned_title }}</h3>
+                                <strong>Rating:</strong>
+                                {% if movie.rating == 'G' %}
+                                    <img src="{% static 'img/mpaa-icon_g.svg.png' %}" height="14">
+                                {% elif movie.rating == 'PG' %}
+                                    <img src="{% static 'img/mpaa-icon_pg.svg.png' %}" height="14">
+                                {% elif movie.rating == 'PG-13' %}
+                                    <img src="{% static 'img/mpaa-icon_pg-13.svg.png' %}" height="14">
+                                {% elif movie.rating == 'R' %}
+                                    <img src="{% static 'img/mpaa-icon_r.svg.png' %}" height="14">
+                                {% elif movie.rating == 'NC-17' %}
+                                    <img src="{% static 'img/mpaa-icon_nc-17.svg.png' %}" height="14">
+                                {% elif movie.rating == 'surrendered' %}
+                                    <h4>Rating surrendered</h4>
+                                {% endif %}
+                                </br>
+                                <strong>Company:</strong> {{ movie.company }}
+                                </br>
+                                <strong>Year:</strong> {{ movie.year }}
+                            </div>
                     </div>
-                </a>
-            {% endfor %}
-        </div>
+                </div>
+            </a>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -18,6 +18,7 @@
 {#                    <div class="col-md-3"></div>#}
                     <div class="col-md-6 col-md-offset-3">
                         <form class="text-left" id="id_add_movie_form" name="add_movie_form" role="form" method="post">
+                            {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -40,7 +41,7 @@
                             <div class="row">
                                 <div class="col-xs-4 col-xs-offset-4">
                                     <div class="form-group">
-                                        <button class="btn btn-block btn-success btn-lg">Submit</button>
+                                        <button class="btn btn-block btn-success btn-ghost">Submit</button>
                                     </div>
                                 </div>
                             </div>

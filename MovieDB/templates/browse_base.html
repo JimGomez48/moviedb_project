@@ -9,27 +9,36 @@
         </div>
 
         {% if page.has_other_pages %}
-        {% include 'browse_paginator.html' %}
+            {% include 'browse_paginator.html' %}
         {% endif %}
 
-        <div class="row">
-            <div class="col-lg-12">
-                {% block paged_content %}{% endblock %}
+        <div class="panel panel-dark text-left">
+            <div class="panel-heading">
+                <div class="btn-group pull-right">
+                    <h4>
+                    <button class="btn btn-ghost btn-panel btn-circle btn-lg dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-option-vertical"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                    </h4>
+                </div>
+                <h2>
+                    {% block panel_heading_icon %}{% endblock %}
+                    {{ results_header }}
+                </h2>
             </div>
+
+            {% block paged_content %}{% endblock %}
         </div>
 
-{#        <div class="panel panel-dark text-left">#}
-{#            <div class="panel-heading"></div>#}
-{##}
-{#            <div class="panel-body">#}
-{#                {% block paged_content %}{% endblock %}#}
-{#            </div>#}
-{##}
-{#            <div class="panel-footer"></div>#}
-{#        </div>#}
-
         {% if page.has_other_pages %}
-        {% include 'browse_paginator.html' %}
+            {% include 'browse_paginator.html' %}
         {% endif %}
 
     </div>

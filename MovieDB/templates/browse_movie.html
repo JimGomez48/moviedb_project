@@ -1,8 +1,9 @@
 {% extends 'browse_base.html' %}
 {% load staticfiles %}
 
-{% block panel_heading_icon %}
+{% block panel_heading %}
     <span class="glyphicon glyphicon-film"></span>
+    {{ results_header }}
 {% endblock %}
 
 {% block paged_content %}

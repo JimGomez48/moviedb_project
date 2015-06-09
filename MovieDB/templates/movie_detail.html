@@ -57,7 +57,11 @@
                             {% if genres %}
                                 <h4>
                                 {% for genre in genres %}
-                                    {{ genre }}
+                                    {% if forloop.first %}
+                                        {{ genre }}
+                                    {% else %}
+                                        , {{ genre }}
+                                    {% endif %}
                                 {% endfor %}
                                 </h4>
                             {% else %}

@@ -30,7 +30,7 @@ class Actor(models.Model):
     objects = ActorManager()
 
     def __unicode__(self):
-        return '[%s] %s, %s (%s)' % (self.id, self.last, self.first, self.dob)
+        return '%s, %s (%s) [%s]' % (self.last, self.first, self.dob, self.id)
 
     def get_full_name(self):
         return '%s %s' % (self.first, self.last)
@@ -56,7 +56,7 @@ class Director(models.Model):
     objects = DirectorManager()
 
     def __unicode__(self):
-        return '%s: %s, %s %s' % (self.id, self.last, self.first, self.dob)
+        return '%s, %s (%s) [%s]' % (self.last, self.first, self.dob, self.id)
 
     def get_full_name(self):
         return '%s %s' % (self.first, self.last)
@@ -88,7 +88,7 @@ class Movie(models.Model):
     objects = MovieManager()
 
     def __unicode__(self):
-        return '[%s] %s (%s)' % (self.id, self.title, self.year)
+        return '%s (%s) [%s]' % (self.title, self.year, self.id)
 
     def get_cleaned_title(self):
         r = re.compile(r', The$', re.IGNORECASE)
@@ -117,12 +117,12 @@ class Review(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now=True, editable=False)
     user_name = models.CharField(max_length=20)
-    mid = models.ForeignKey(Movie, db_column='mid')
+    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=RATING_RANGE)
     comment = models.TextField(max_length=2000, blank=True, default='')
 
     def __unicode__(self):
-        return 'mid:%s user:%s time:%s' % (self.mid, self.user_name, self.time)
+        return 'mid:%s user:%s time:%s rating:%s' % (self.mid, self.user_name, self.time, self.rating)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -133,8 +133,8 @@ class Review(models.Model):
 
 class MovieActor(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    mid = models.ForeignKey(Movie, db_column='mid')
-    aid = models.ForeignKey(Actor, db_column='aid')
+    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
+    aid = models.ForeignKey(Actor, db_column='aid', on_delete=models.CASCADE)
     role = models.CharField(max_length=50)
 
     def __unicode__(self):
@@ -143,8 +143,8 @@ class MovieActor(models.Model):
 
 class MovieDirector(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    mid = models.ForeignKey(Movie, db_column='mid')
-    did = models.ForeignKey(Director, db_column='did')
+    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
+    did = models.ForeignKey(Director, db_column='did', on_delete=models.CASCADE)
 
     def __unicode__(self):
         return 'id:%s mid:%s aid:%s' % (self.id, self.mid, self.did)
@@ -192,7 +192,7 @@ class MovieGenre(models.Model):
         (WEST, 'Western'),
     )
     id = models.AutoField(primary_key=True, editable=False)
-    mid = models.ForeignKey(Movie, db_column='mid')
+    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
     genre = models.CharField(max_length=20, choices=GENRE_CHOICES, blank=False, null=False, default='Drama')
 
     def __unicode__(self):

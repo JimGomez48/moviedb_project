@@ -186,7 +186,10 @@ class AddMovieView(BaseView):
         genre_form = forms.MovieGenreForm(request.POST)
         if movie_form.is_valid() and genre_form.is_valid():
             view_actions = actions.AddMovieViewActions()
-            # view_actions.save_new_movie()
+            view_actions.save_new_movie(
+                movie_data=movie_form.cleaned_data,
+                genre_data=genre_form.cleaned_data,
+            )
             return redirect('Index')
         self.bind_context_data(
             page_header='Add Movies',

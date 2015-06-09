@@ -351,14 +351,21 @@ class AddMovieViewActions(AbstractActions):
     def save_new_movie(self, **kwargs):
         movie_data = kwargs['movie_data']
         genre_data = kwargs['genre_data']
+        movie = self.__save_movie_model(movie_data)
+        self.__save_movie_genre_models(movie, genre_data.values()[0])
+
+    def __save_movie_model(self, movie_data):
         movie = models.Movie()
         movie.title = movie_data['title']
         movie.company = movie_data['company']
         movie.year = movie_data['year']
         movie.rating = movie_data['rating']
         movie.save()
-        for genre in genre_data:
+        return movie
+
+    def __save_movie_genre_models(self, movie, genres):
+        for genre in genres:
             movie_genre = models.MovieGenre()
-            movie_genre.mid = movie.id
+            movie_genre.mid = movie
             movie_genre.genre = genre
             movie_genre.save()

@@ -30,20 +30,18 @@
             <label for="id_genre_checkboxes">Genres <em>(select all that apply)</em></label>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <table id="id_genre_checkboxes" class="table table-condensed no-border">
-                            {% for genre in genre_form.genre %}
-                                {% if forloop.first %}
-                                    <tr>
-                                {% elif forloop.counter0|divisibleby:3 %}
-                                    </tr>
-                                    <tr>
-                                {% endif %}
-                                <td>{{ genre }}</td>
-                            {% endfor %}
-                            </tr>
-                        </table>
-                    </div>
+                    <table id="id_genre_checkboxes" class="table table-condensed no-border">
+                        {% for genre in genre_form.genres %}
+                            {% if forloop.first %}
+                                <tr>
+                            {% elif forloop.counter0|divisibleby:3 %}
+                                </tr>
+                                <tr>
+                            {% endif %}
+                            <td>{{ genre }}</td>
+                        {% endfor %}
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -51,7 +49,7 @@
     <div class="row">
         <div class="col-xs-4 col-xs-offset-4">
             <div class="form-group">
-                <h2><button class="btn btn-block btn-success btn-ghost btn-lg">Submit</button></h2>
+                <button class="btn btn-block btn-success btn-ghost btn-lg">Submit</button>
             </div>
         </div>
     </div>

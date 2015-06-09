@@ -47,21 +47,12 @@ class MovieForm(forms.ModelForm):
             }),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(MovieForm, self).__init__(*args, **kwargs)
-        # mid = kwargs['mid']
-        # self.fields['genres'] = forms.ModelChoiceField(queryset=models.MovieGenre.objects.filter(mid=mid))
 
-
-class MovieGenreForm(forms.ModelForm):
-    class Meta:
-        model=models.MovieGenre
-        fields=['genre']
-        widgets={
-            'genre': forms.CheckboxSelectMultiple(attrs={
-               # 'class': 'form-control',
-            }),
-        }
+class MovieGenreForm(forms.Form):
+    genres = forms.MultipleChoiceField(
+        choices=models.MovieGenre.GENRE_CHOICES,
+        widget=forms.CheckboxSelectMultiple(),
+    )
 
 
 class AddActorDirectorForm(forms.Form):

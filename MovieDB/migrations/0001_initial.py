@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('title', models.CharField(max_length=100)),
                 ('year', models.IntegerField(default=b'', blank=True)),
-                ('rating', models.CharField(max_length=10, choices=[(b'NC-17', b'NC-17'), (b'R', b'R'), (b'PG-13', b'PG-13'), (b'PG', b'PG'), (b'G', b'G'), (b'surrendered', b'surrendered')])),
+                ('rating', models.CharField(default=b'G', max_length=10, choices=[(b'NC-17', b'NC-17'), (b'R', b'R'), (b'PG-13', b'PG-13'), (b'PG', b'PG'), (b'G', b'G'), (b'surrendered', b'surrendered')])),
                 ('company', models.CharField(max_length=50)),
             ],
         ),
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
             name='MovieGenre',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('genre', models.CharField(max_length=20, choices=[(b'Action', b'Action'), (b'Adult', b'Adult'), (b'Adventure', b'Adventure'), (b'Animation', b'Animation'), (b'Crime', b'Crime'), (b'Comedy', b'Comedy'), (b'Documentary', b'Documentary'), (b'Drama', b'Drama'), (b'Family', b'Family'), (b'Fantasy', b'Fantasy'), (b'Horror', b'Horror'), (b'Musical', b'Musical'), (b'Mystery', b'Mystery'), (b'Romance', b'Romance'), (b'Sci-Fi', b'Sci-Fi'), (b'Short', b'Short'), (b'Thriller', b'Thriller'), (b'War', b'War'), (b'Western', b'Western')])),
+                ('genre', models.CharField(default=b'Drama', max_length=20, choices=[(b'Action', b'Action'), (b'Adult', b'Adult'), (b'Adventure', b'Adventure'), (b'Animation', b'Animation'), (b'Crime', b'Crime'), (b'Comedy', b'Comedy'), (b'Documentary', b'Documentary'), (b'Drama', b'Drama'), (b'Family', b'Family'), (b'Fantasy', b'Fantasy'), (b'Horror', b'Horror'), (b'Musical', b'Musical'), (b'Mystery', b'Mystery'), (b'Romance', b'Romance'), (b'Sci-Fi', b'Sci-Fi'), (b'Short', b'Short'), (b'Thriller', b'Thriller'), (b'War', b'War'), (b'Western', b'Western')])),
                 ('mid', models.ForeignKey(to='MovieDB.Movie', db_column=b'mid')),
             ],
         ),

@@ -46,3 +46,11 @@ html, body {
 #footer p, a {
     color: #A0A0A0;
 }
+
+.errorlist {
+    color:#a94442
+}
+
+a.errorlist:hover{
+    color:#843534
+}

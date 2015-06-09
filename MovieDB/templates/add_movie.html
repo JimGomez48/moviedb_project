@@ -9,19 +9,42 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{ add_movie_form.title }}
+                {{ movie_form.title.errors }}
+                {{ movie_form.title }}
             </div>
             <div class="form-group">
-                {{ add_movie_form.company }}
+                {{ movie_form.company.errors }}
+                {{ movie_form.company }}
             </div>
             <div class="form-group">
+                {{ movie_form.year.errors }}
                 <label for="id_year">Year</label>
-                {{ add_movie_form.year }}
+                {{ movie_form.year }}
             </div>
             <div class="form-group">
-                <label for="id_rating">MPAA
-                    Rating</label>
-                {{ add_movie_form.rating }}
+                {{ movie_form.rating.errors }}
+                <label for="id_rating">MPAA Rating</label>
+                {{ movie_form.rating }}
+            </div>
+            {{ genre_form.genre.errors }}
+            <label for="id_genre_checkboxes">Genres <em>(select all that apply)</em></label>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <table id="id_genre_checkboxes" class="table table-condensed no-border">
+                            {% for genre in genre_form.genre %}
+                                {% if forloop.first %}
+                                    <tr>
+                                {% elif forloop.counter0|divisibleby:3 %}
+                                    </tr>
+                                    <tr>
+                                {% endif %}
+                                <td>{{ genre }}</td>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

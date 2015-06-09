@@ -83,7 +83,7 @@ class Movie(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=100)
     year = models.IntegerField(blank=True, default='')
-    rating = models.CharField(max_length=10, choices=MPAA_RATINGS)
+    rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, default='G')
     company = models.CharField(max_length=50)
     objects = MovieManager()
 
@@ -151,30 +151,49 @@ class MovieDirector(models.Model):
 
 
 class MovieGenre(models.Model):
+    ACTION = 'Action'
+    ADULT = 'Adult'
+    ADV ='Adventure'
+    ANIM ='Animation'
+    CRIME ='Crime'
+    COMEDY = 'Comedy'
+    DOC ='Documentary'
+    DRAMA ='Drama'
+    FAM ='Family'
+    FANT ='Fantasy'
+    HORROR ='Horror'
+    MUS = 'Musical'
+    MYST ='Mystery'
+    ROM ='Romance'
+    SCI_FI ='Sci-Fi'
+    SHORT ='Short'
+    THRILL = 'Thriller'
+    WAR = 'War'
+    WEST ='Western'
     GENRE_CHOICES = (
-        ('Action', 'Action'),
-        ('Adult', 'Adult'),
-        ('Adventure', 'Adventure'),
-        ('Animation', 'Animation'),
-        ('Crime', 'Crime'),
-        ('Comedy', 'Comedy'),
-        ('Documentary', 'Documentary'),
-        ('Drama', 'Drama'),
-        ('Family', 'Family'),
-        ('Fantasy', 'Fantasy'),
-        ('Horror', 'Horror'),
-        ('Musical', 'Musical'),
-        ('Mystery', 'Mystery'),
-        ('Romance', 'Romance'),
-        ('Sci-Fi', 'Sci-Fi'),
-        ('Short', 'Short'),
-        ('Thriller', 'Thriller'),
-        ('War', 'War'),
-        ('Western', 'Western'),
+        (ACTION, 'Action'),
+        (ADULT, 'Adult'),
+        (ADV, 'Adventure'),
+        (ANIM, 'Animation'),
+        (CRIME, 'Crime'),
+        (COMEDY, 'Comedy'),
+        (DOC, 'Documentary'),
+        (DRAMA, 'Drama'),
+        (FAM, 'Family'),
+        (FANT, 'Fantasy'),
+        (HORROR, 'Horror'),
+        (MUS, 'Musical'),
+        (MYST, 'Mystery'),
+        (ROM, 'Romance'),
+        (SCI_FI, 'Sci-Fi'),
+        (SHORT, 'Short'),
+        (THRILL, 'Thriller'),
+        (WAR, 'War'),
+        (WEST, 'Western'),
     )
     id = models.AutoField(primary_key=True, editable=False)
     mid = models.ForeignKey(Movie, db_column='mid')
-    genre = models.CharField(max_length=20, choices=GENRE_CHOICES)
+    genre = models.CharField(max_length=20, choices=GENRE_CHOICES, blank=False, null=False, default='Drama')
 
     def __unicode__(self):
         return 'id:%s mid:%s genre:%s' % (self.id, self.mid, self.genre)

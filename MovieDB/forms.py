@@ -22,51 +22,7 @@ class NavBarSearchForm(forms.Form):
     )
 
 
-# class AddMovieForm(forms.Form):
-#     title = forms.CharField(
-#         max_length=100,
-#         label='Title',
-#         widget=forms.TextInput(
-#             attrs={
-#                 'class': 'form-control',
-#                 'placeholder': 'Movie Title',
-#             })
-#     )
-#     year = forms.IntegerField(
-#         min_value='1870',
-#         max_value=datetime.date.today().year,
-#         widget=widgets.NumberInput(
-#             attrs={
-#                 'class': 'form-control',
-#             }
-#         ),
-#     )
-#     mpaa_rating = forms.ChoiceField(
-#         choices=[],
-#         widget=forms.Select(attrs={
-#             'class': 'form-control',
-#         }),
-#     )
-#     company = forms.CharField(
-#         max_length=50,
-#         label='Company',
-#         widget=forms.TextInput(
-#             attrs={
-#                 'class': 'form-control',
-#                 'placeholder': 'Production Company'
-#             }),
-#     )
-#     genres = forms.MultipleChoiceField(
-#         choices=[],
-#         widget=forms.CheckboxInput(
-#             attrs={
-#                 'class': 'form-control',
-#                 'placeholder': 'Production Company'
-#             }),
-#     )
-
-
-class AddMovieForm(forms.ModelForm):
+class MovieForm(forms.ModelForm):
     class Meta:
         model=models.Movie
         fields=['title', 'company', 'year', 'rating']
@@ -91,9 +47,21 @@ class AddMovieForm(forms.ModelForm):
             }),
         }
 
-    def __init__(self):
-        super(AddMovieForm, self).__init__()
-        # self.title.widgets
+    def __init__(self, *args, **kwargs):
+        super(MovieForm, self).__init__(*args, **kwargs)
+        # mid = kwargs['mid']
+        # self.fields['genres'] = forms.ModelChoiceField(queryset=models.MovieGenre.objects.filter(mid=mid))
+
+
+class MovieGenreForm(forms.ModelForm):
+    class Meta:
+        model=models.MovieGenre
+        fields=['genre']
+        widgets={
+            'genre': forms.CheckboxSelectMultiple(attrs={
+               # 'class': 'form-control',
+            }),
+        }
 
 
 class AddActorDirectorForm(forms.Form):

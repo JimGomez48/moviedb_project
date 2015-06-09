@@ -345,3 +345,20 @@ class DirectorDetailsViewActions(AbstractActions):
             'mid__company',
         ).order_by('-mid__year', 'mid__title')
         return results
+
+
+class AddMovieViewActions(AbstractActions):
+    def save_new_movie(self, **kwargs):
+        movie_data = kwargs['movie_data']
+        genre_data = kwargs['genre_data']
+        movie = models.Movie()
+        movie.title = movie_data['title']
+        movie.company = movie_data['company']
+        movie.year = movie_data['year']
+        movie.rating = movie_data['rating']
+        movie.save()
+        for genre in genre_data:
+            movie_genre = models.MovieGenre()
+            movie_genre.mid = movie.id
+            movie_genre.genre = genre
+            movie_genre.save()

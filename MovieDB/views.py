@@ -182,17 +182,26 @@ class DirectorDetailView(BaseView):
 
 class AddMovieView(BaseView):
     def post(self, request):
-        add_movie_form = forms.AddMovieForm(request.POST)
-        if add_movie_form.is_valid():
+        movie_form = forms.MovieForm(request.POST)
+        genre_form = forms.MovieGenreForm(request.POST)
+        if movie_form.is_valid() and genre_form.is_valid():
+            view_actions = actions.AddMovieViewActions()
+            # view_actions.save_new_movie()
             return redirect('Index')
-        else:
-            raise Http404()
-
-    def get(self, request, *args, **kwargs):
-        add_movie_form = forms.AddMovieForm()
         self.bind_context_data(
             page_header='Add Movies',
-            add_movie_form=add_movie_form
+            movie_form=movie_form,
+            genre_form=genre_form,
+        )
+        return render(request, 'add_movie.html', self.get_context_data())
+
+    def get(self, request, *args, **kwargs):
+        movie_form = forms.MovieForm()
+        genre_form = forms.MovieGenreForm()
+        self.bind_context_data(
+            page_header='Add Movies',
+            movie_form=movie_form,
+            genre_form=genre_form,
         )
         return render(request, 'add_movie.html', self.get_context_data())
 

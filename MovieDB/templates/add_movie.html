@@ -6,51 +6,55 @@
 {% endblock %}
 
 {% block form_content %}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                {{ movie_form.title.errors }}
-                {{ movie_form.title }}
-            </div>
-            <div class="form-group">
-                {{ movie_form.company.errors }}
-                {{ movie_form.company }}
-            </div>
-            <div class="form-group">
-                {{ movie_form.year.errors }}
-                <label for="id_year">Year</label>
-                {{ movie_form.year }}
-            </div>
-            <div class="form-group">
-                {{ movie_form.rating.errors }}
-                <label for="id_rating">MPAA Rating</label>
-                {{ movie_form.rating }}
-            </div>
-            {{ genre_form.genre.errors }}
-            <label for="id_genre_checkboxes">Genres <em>(select all that apply)</em></label>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table id="id_genre_checkboxes" class="table table-condensed no-border">
-                        {% for genre in genre_form.genres %}
-                            {% if forloop.first %}
-                                <tr>
-                            {% elif forloop.counter0|divisibleby:3 %}
-                                </tr>
-                                <tr>
-                            {% endif %}
-                            <td>{{ genre }}</td>
-                        {% endfor %}
-                        </tr>
-                    </table>
+    <form class="text-left" id="id_add_movie_form" name="add_movie_form" role="form" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ movie_form.title.errors }}
+                    {{ movie_form.title }}
+                </div>
+                <div class="form-group">
+                    {{ movie_form.company.errors }}
+                    {{ movie_form.company }}
+                </div>
+                <div class="form-group">
+                    {{ movie_form.year.errors }}
+                    <label for="id_year">Year</label>
+                    {{ movie_form.year }}
+                </div>
+                <div class="form-group">
+                    {{ movie_form.rating.errors }}
+                    <label for="id_rating">MPAA Rating</label>
+                    {{ movie_form.rating }}
+                </div>
+                {{ genre_form.genre.errors }}
+                <label for="id_genre_checkboxes">Genres <em>(select all that apply)</em></label>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table id="id_genre_checkboxes" class="table table-condensed no-border">
+                            {% for genre in genre_form.genres %}
+                                {% if forloop.first %}
+                                    <tr>
+                                {% elif forloop.counter0|divisibleby:3 %}
+                                    </tr>
+                                    <tr>
+                                {% endif %}
+                                <td>{{ genre }}</td>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-4 col-xs-offset-4">
-            <div class="form-group">
-                <button class="btn btn-block btn-success btn-ghost btn-lg">Submit</button>
+        <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+                <div class="form-group">
+                    <button class="btn btn-block btn-success btn-ghost btn-lg">Submit</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
+
 {% endblock %}

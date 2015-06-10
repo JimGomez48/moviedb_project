@@ -18,10 +18,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <form class="text-left" id="id_add_movie_form" name="add_movie_form" role="form" method="post">
-                            {% csrf_token %}
-                            {% block form_content %}{% endblock %}
-                        </form>
+                        {% block form_content %}{% endblock %}
                     </div>
 
                     {% block form_footer %}{% endblock %}

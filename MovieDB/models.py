@@ -22,9 +22,9 @@ class Actor(models.Model):
         ('female', 'female'),
     )
     id = models.AutoField(primary_key=True, editable=False)
-    last = models.CharField(max_length=20)
-    first = models.CharField(max_length=20)
-    sex = models.CharField(max_length=6, choices=SEX_CHOICES)
+    last = models.CharField(max_length=20, blank=False, null=False)
+    first = models.CharField(max_length=20, blank=False, null=False)
+    sex = models.CharField(max_length=6, choices=SEX_CHOICES, blank=False, null=False)
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
     objects = ActorManager()
@@ -49,9 +49,9 @@ class Director(models.Model):
         pass
 
     id = models.AutoField(primary_key=True, editable=False)
-    last = models.CharField(max_length=20)
-    first = models.CharField(max_length=20)
-    dob = models.DateField()
+    last = models.CharField(max_length=20, blank=False, null=False)
+    first = models.CharField(max_length=20, blank=False, null=False)
+    dob = models.DateField(blank=False, null=False)
     dod = models.DateField(null=True, default=None)
     objects = DirectorManager()
 
@@ -81,10 +81,10 @@ class Movie(models.Model):
         ('surrendered', 'surrendered'),
     )
     id = models.AutoField(primary_key=True, editable=False)
-    title = models.CharField(max_length=100)
-    year = models.IntegerField(blank=True, default='')
+    title = models.CharField(max_length=100, blank=False, null=False)
+    year = models.IntegerField(blank=False, null=False)
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, default='G')
-    company = models.CharField(max_length=50)
+    company = models.CharField(max_length=50, blank=False, null=False)
     objects = MovieManager()
 
     def __unicode__(self):
@@ -116,9 +116,9 @@ class Review(models.Model):
     )
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now=True, editable=False)
-    user_name = models.CharField(max_length=20)
+    user_name = models.CharField(max_length=20, blank=False, null=False)
     mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=RATING_RANGE)
+    rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False)
     comment = models.TextField(max_length=2000, blank=True, default='')
 
     def __unicode__(self):
@@ -135,7 +135,7 @@ class MovieActor(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
     aid = models.ForeignKey(Actor, db_column='aid', on_delete=models.CASCADE)
-    role = models.CharField(max_length=50)
+    role = models.CharField(max_length=50, blank=False, null=False)
 
     def __unicode__(self):
         return 'id:%s mid:%s aid:%s' % (self.id, self.mid, self.aid)

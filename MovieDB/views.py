@@ -192,7 +192,6 @@ class AddMovieView(BaseView):
             )
             return redirect('Index')
         self.bind_context_data(
-            page_header='Add Movies',
             movie_form=movie_form,
             genre_form=genre_form,
         )
@@ -202,7 +201,6 @@ class AddMovieView(BaseView):
         movie_form = forms.MovieForm()
         genre_form = forms.MovieGenreForm()
         self.bind_context_data(
-            page_header='Add Movies',
             movie_form=movie_form,
             genre_form=genre_form,
         )
@@ -211,8 +209,13 @@ class AddMovieView(BaseView):
 
 class AddActorDirectorView(BaseView):
     def get(self, request, *args, **kwargs):
-        # return render(request, 'browse_movie.html', context)
-        raise Http404()
+        actor_form = forms.ActorForm()
+        director_form = forms.DirectorForm()
+        self.bind_context_data(
+            actor_form = actor_form,
+            director_form = director_form,
+        )
+        return render(request, 'add_actor_director.html', self.get_context_data())
 
 
 class AddActorToMovieView(BaseView):

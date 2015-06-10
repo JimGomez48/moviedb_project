@@ -55,8 +55,54 @@ class MovieGenreForm(forms.Form):
     )
 
 
-class AddActorDirectorForm(forms.Form):
-    pass
+class ActorForm(forms.ModelForm):
+    class Meta:
+        model = models.Actor
+        fields = {'last', 'first', 'sex', 'dob', 'dod'}
+        widgets = {
+            'last': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Last Name',
+            }),
+            'first': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'First Name',
+            }),
+            'sex': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'dob': forms.DateInput(attrs={
+                'class': 'form-control',
+            }),
+            'dod': forms.DateInput(attrs={
+                'class': 'form-control',
+            }),
+        }
+
+
+class DirectorForm(forms.ModelForm):
+    class Meta:
+        model = models.Director
+        fields = {'last', 'first', 'dob', 'dod'}
+        widgets = {
+            'last': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Last Name',
+            }),
+            'first': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'First Name',
+            }),
+            'sex': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'dob': forms.DateInput(attrs={
+                'class': 'form-control',
+            }),
+            'dod': forms.DateInput(attrs={
+                'class': 'form-control',
+            }),
+        }
 
 
 class AddActorToMovieForm(forms.Form):

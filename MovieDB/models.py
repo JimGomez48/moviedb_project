@@ -18,13 +18,13 @@ class Actor(models.Model):
         pass
 
     SEX_CHOICES = (
-        ('male', 'male'),
-        ('female', 'female'),
+        ('male', 'Male'),
+        ('female', 'Female'),
     )
     id = models.AutoField(primary_key=True, editable=False)
     last = models.CharField(max_length=20, blank=False, null=False)
     first = models.CharField(max_length=20, blank=False, null=False)
-    sex = models.CharField(max_length=6, choices=SEX_CHOICES, blank=False, null=False)
+    sex = models.CharField(max_length=6, choices=SEX_CHOICES, blank=False, null=False, default='male')
     dob = models.DateField()
     dod = models.DateField(null=True, default=None)
     objects = ActorManager()

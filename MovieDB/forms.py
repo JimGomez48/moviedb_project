@@ -65,6 +65,16 @@ class DateOptions(object):
 
 
 class ActorForm(forms.ModelForm):
+    dod = forms.DateField(
+        required=False,
+        widget=DateWidget(
+            bootstrap_version=3,
+            options=DateOptions.OPTIONS,
+            attrs={
+                'placeholder': 'Leave blank if not applicable',
+                'id': 'actor_dod',
+        })
+    )
     class Meta:
         model = models.Actor
         fields = {'last', 'first', 'sex', 'dob', 'dod'}
@@ -92,13 +102,22 @@ class ActorForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Leave blank if not applicable',
                     'id': 'actor_dod',
-                    # 'disabled': 'disabled',
                 },
             ),
         }
 
 
 class DirectorForm(forms.ModelForm):
+    dod = forms.DateField(
+        required=False,
+        widget=DateWidget(
+            bootstrap_version=3,
+            options=DateOptions.OPTIONS,
+            attrs={
+                'placeholder': 'Leave blank if not applicable',
+                'id': 'director_dod',
+        })
+    )
     class Meta:
         model = models.Director
         fields = {'last', 'first', 'dob', 'dod'}
@@ -115,14 +134,6 @@ class DirectorForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Required',
                     'id': 'director_dob',
-                },
-            ),
-            'dod': DateWidget(
-                bootstrap_version=3,
-                options=DateOptions.OPTIONS,
-                attrs={
-                    'placeholder': 'Leave blank if not applicable',
-                    'id': 'director_dod',
                 },
             ),
         }

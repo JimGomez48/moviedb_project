@@ -369,3 +369,35 @@ class AddMovieViewActions(AbstractActions):
             movie_genre.mid = movie
             movie_genre.genre = genre
             movie_genre.save()
+
+
+class AddActorActions(AbstractActions):
+    def save_new_actor(self, actor_data):
+        actor = models.Actor()
+        actor.last = actor_data['last']
+        actor.first = actor_data['first']
+        if actor_data['sex'] == models.Actor.MALE:
+            actor.sex = models.Actor.MALE
+        elif actor_data['sex'] == models.Actor.FEMALE:
+            actor.sex = models.Actor.FEMALE
+        else:
+            raise ValueError('Invalid value for actor.sex')
+        actor.dob = actor_data['dob']
+        if actor_data['dod']:
+            actor.dod = actor_data['dod']
+        else:
+            actor.dod = None
+        actor.save()
+
+
+class AddDirectorActions(AbstractActions):
+    def save_new_director(self, director_data):
+        director = models.Director()
+        director.last = director_data['last']
+        director.first = director_data['first']
+        director.dob = director_data['dob']
+        if director_data['dod']:
+            director.dod = director_data['dod']
+        else:
+            director.dod = None
+        director.save()

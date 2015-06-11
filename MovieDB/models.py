@@ -84,7 +84,7 @@ class Movie(models.Model):
         (PG_13, 'PG-13'),
         (PG, 'PG'),
         (G, 'G'),
-        (SURRENDERED, 'Surrendered'),
+        (SURRENDERED, 'Not Rated'),
     )
     id = models.AutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=100, blank=False, null=False)

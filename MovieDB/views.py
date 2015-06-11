@@ -208,6 +208,25 @@ class AddMovieView(BaseView):
 
 
 class AddActorDirectorView(BaseView):
+    def post(self, request):
+        actor_form = forms.ActorForm(request.POST)
+        director_form = forms.DirectorForm(request.POST)
+        if request.POST['submit'] == 'actor':
+            if actor_form.is_valid():
+                view_actions = actions.AddActorActions()
+                view_actions.save_new_actor(actor_form.cleaned_data)
+                return redirect('Index')
+        if request.POST['submit'] == 'director':
+            if director_form.is_valid():
+                view_actions = actions.AddDirectorActions()
+                view_actions.save_new_director(director_form.cleaned_data)
+                return redirect('Index')
+        self.bind_context_data(
+            actor_form = actor_form,
+            director_form = director_form,
+        )
+        return render(request, 'views/add_actor_director_view.html', self.get_context_data())
+
     def get(self, request, *args, **kwargs):
         actor_form = forms.ActorForm()
         director_form = forms.DirectorForm()

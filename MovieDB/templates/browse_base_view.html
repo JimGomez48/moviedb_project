@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_view.html' %}
 {% block main_block %}
     <div class="container">
 
@@ -7,6 +7,10 @@
                 <h1>{{ page_header }}</h1>
             </div>
         </div>
+
+        {% if page.has_other_pages %}
+            {% include 'browse_paginator_control.html' %}
+        {% endif %}
 
         <div class="panel panel-dark text-left">
             <div class="panel-heading">
@@ -37,9 +41,12 @@
                 </h2>
             </div>
 
-            {% block details_content %}{% endblock %}
-
+            {% block paged_content %}{% endblock %}
         </div>
+
+        {% if page.has_other_pages %}
+            {% include 'browse_paginator_control.html' %}
+        {% endif %}
 
     </div>
 {% endblock %}

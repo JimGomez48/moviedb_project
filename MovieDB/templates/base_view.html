@@ -20,11 +20,12 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
+    {% block head_extra %}{% endblock %}
 </head>
 
 <body>
 
-{% include 'navbar.html' %}
+{% include 'navbar_control.html' %}
 
 <div id="master_container">
 
@@ -32,7 +33,7 @@
         {% block main_block %}{% endblock %}
     </div>
 
-    {% include 'footer.html' %}
+    {% include 'footer_control.html' %}
 </div>
 </body>
 

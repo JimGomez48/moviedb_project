@@ -9,6 +9,10 @@ import datetime
 from django import forms
 from django.forms import widgets
 from django.forms import extras
+from bootstrap3_datepicker.fields import DatePickerField
+from bootstrap3_datepicker.widgets import DatePickerInput
+from datetimewidget.widgets import DateWidget
+
 from MovieDB import models
 
 class NavBarSearchForm(forms.Form):
@@ -55,6 +59,12 @@ class MovieGenreForm(forms.Form):
     )
 
 
+class DateOptions(object):
+    OPTIONS = {
+        'format': 'mm/dd/yyyy',
+    }
+
+
 class ActorForm(forms.ModelForm):
     class Meta:
         model = models.Actor
@@ -69,11 +79,21 @@ class ActorForm(forms.ModelForm):
             'sex': forms.Select(
                 attrs={'class': 'form-control'},
             ),
-            'dob': forms.DateInput(
-                attrs={'class': 'form-control'},
+            'dob': DateWidget(
+                bootstrap_version=3,
+                options=DateOptions.OPTIONS,
+                attrs={
+                    'placeholder': 'Required',
+                    'id': 'actor_dob',
+                }
             ),
-            'dod': forms.DateInput(
-                attrs={'class': 'form-control'},
+            'dod': DateWidget(
+                bootstrap_version=3,
+                options=DateOptions.OPTIONS,
+                attrs={
+                    'placeholder': 'Leave blank if not applicable',
+                    'id': 'actor_dod',
+                }
             ),
         }
 
@@ -89,11 +109,21 @@ class DirectorForm(forms.ModelForm):
             'first': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'First Name'},
             ),
-            'dob': forms.DateInput(
-                attrs={'class': 'form-control'},
+            'dob': DateWidget(
+                bootstrap_version=3,
+                options=DateOptions.OPTIONS,
+                attrs={
+                    'placeholder': 'Required',
+                    'id': 'director_dob',
+                }
             ),
-            'dod': forms.DateInput(
-                attrs={'class': 'form-control'},
+            'dod': DateWidget(
+                bootstrap_version=3,
+                options=DateOptions.OPTIONS,
+                attrs={
+                    'placeholder': 'Leave blank if not applicable',
+                    'id': 'director_dod',
+                }
             ),
         }
 

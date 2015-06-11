@@ -16,7 +16,7 @@
 #         self.response.close()
 #
 #     def test_uses_base_template(self):
-#         self.assertTemplateUsed(self.response, 'base.html')
+#         self.assertTemplateUsed(self.response, 'base_view.html')
 #
 #
 # class TestIndexPage(TestCase):

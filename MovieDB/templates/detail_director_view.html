@@ -1,8 +1,8 @@
-{% extends 'details_base.html' %}
+{% extends 'detail_base_view.html' %}
 {% load staticfiles %}
 
 {% block panel_heading %}
-    {{ actor.get_full_name }} <em>(Actor)</em>
+    {{ director.get_full_name }} <em>(Director)</em>
 {% endblock %}
 
 {% block details_content %}
@@ -18,27 +18,22 @@
                         <tr>
                             <td></td>
                             <td><h4><strong>DOB</strong></h4></td>
-                            <td><h4>{{ actor.dob }}</h4></td>
+                            <td><h4>{{ director.dob }}</h4></td>
                         </tr>
-                        {% if actor.dod %}
+                        {% if director.dod %}
                         <tr>
                             <td></td>
                             <td><h4><strong>DOD</strong></h4></td>
-                            <td><h4>{{ actor.dod }}</h4></td>
+                            <td><h4>{{ director.dod }}</h4></td>
                         </tr>
                         {% endif %}
-                        <tr>
-                            <td></td>
-                            <td><h4><strong>Sex</strong></h4></td>
-                            <td><h4>{{ actor.sex }}</h4></td>
-                        </tr>
                     </Table>
                 </div>
             </div>
         </div>
         {# movies #}
         <div class="list-group-item">
-            <h3 class="list-group-item-heading text-capitalize ">Movies</h3>
+            <h3 class="list-group-item-heading text-capitalize ">Movies Directed</h3>
             {% if movies %}
                 <table class="table table-condensed table-striped no-border">
                     <th class="text-info">Movie</th>

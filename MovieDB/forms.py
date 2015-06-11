@@ -9,8 +9,6 @@ import datetime
 from django import forms
 from django.forms import widgets
 from django.forms import extras
-from bootstrap3_datepicker.fields import DatePickerField
-from bootstrap3_datepicker.widgets import DatePickerInput
 from datetimewidget.widgets import DateWidget
 
 from MovieDB import models
@@ -62,6 +60,7 @@ class MovieGenreForm(forms.Form):
 class DateOptions(object):
     OPTIONS = {
         'format': 'mm/dd/yyyy',
+        'pickerPosition': 'bottom-left',
     }
 
 
@@ -85,7 +84,7 @@ class ActorForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Required',
                     'id': 'actor_dob',
-                }
+                },
             ),
             'dod': DateWidget(
                 bootstrap_version=3,
@@ -93,7 +92,8 @@ class ActorForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Leave blank if not applicable',
                     'id': 'actor_dod',
-                }
+                    # 'disabled': 'disabled',
+                },
             ),
         }
 
@@ -115,7 +115,7 @@ class DirectorForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Required',
                     'id': 'director_dob',
-                }
+                },
             ),
             'dod': DateWidget(
                 bootstrap_version=3,
@@ -123,7 +123,7 @@ class DirectorForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Leave blank if not applicable',
                     'id': 'director_dod',
-                }
+                },
             ),
         }
 

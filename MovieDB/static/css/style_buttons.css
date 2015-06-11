@@ -21,16 +21,28 @@
 }
 
 .btn-ghost.btn-default {
-    color: ghostwhite;
+    color: #232323;
+    border-color: #232323;
 }
 
 .btn-ghost.btn-default:hover {
+    background: #404040;
+    color: ghostwhite;
+}
+
+.btn-ghost.btn-white {
+    color: ghostwhite;
+    border-color: ghostwhite;
+}
+
+.btn-ghost.btn-white:hover {
     color: #404040;
     background: ghostwhite;
 }
 
 .btn-ghost.btn-primary {
     color: #337ab7;
+    border-color: #337ab7;
 }
 
 .btn-ghost.btn-primary:hover {
@@ -40,6 +52,7 @@
 
 .btn-ghost.btn-info {
     color: #5bc0de;
+    border-color: #5bc0de;
 }
 
 .btn-ghost.btn-info:hover {
@@ -50,6 +63,7 @@
 
 .btn-ghost.btn-success {
     color: #5cb85c;
+    border-color: #5cb85c;
 }
 
 .btn-ghost.btn-success:hover {
@@ -59,6 +73,7 @@
 
 .btn-ghost.btn-warning {
     color: #f0ad4e;
+    border-color: #f0ad4e;
 }
 
 .btn-ghost.btn-warning:hover {
@@ -68,6 +83,7 @@
 
 .btn-ghost.btn-danger {
     color: #d9534f;
+    border-color: #d9534f;
 }
 
 .btn-ghost.btn-danger:hover {

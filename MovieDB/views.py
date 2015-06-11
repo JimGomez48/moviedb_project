@@ -45,7 +45,7 @@ class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
         view_actions = actions.IndexViewActions()
         self.bind_context_data(page_header='MovieDB Landing Page')
-        return render(request, 'index.html', self.get_context_data())
+        return render(request, 'views/index.html', self.get_context_data())
 
 
 class SearchResultsView(BaseView):
@@ -68,7 +68,7 @@ class SearchResultsView(BaseView):
             actor_results=search_results['actors'],
             director_results=search_results['directors'],
         )
-        return render(request, 'search_results_view.html', self.get_context_data())
+        return render(request, 'views/search_results_view.html', self.get_context_data())
 
 
 class BrowseBaseView(BaseView):
@@ -93,7 +93,7 @@ class BrowseMovieView(BrowseBaseView):
             page=page,
             base_url=base_url,
         )
-        return render(request, 'browse_movie_view.html', self.get_context_data())
+        return render(request, 'views/browse_movie_view.html', self.get_context_data())
 
 
 class BrowseActorView(BrowseBaseView):
@@ -112,7 +112,7 @@ class BrowseActorView(BrowseBaseView):
             page=page,
             base_url=base_url,
         )
-        return render(request, 'browse_actor_view.html', self.get_context_data())
+        return render(request, 'views/browse_actor_view.html', self.get_context_data())
 
 
 class BrowseDirectorView(BrowseBaseView):
@@ -131,7 +131,7 @@ class BrowseDirectorView(BrowseBaseView):
             page=page,
             base_url=base_url,
         )
-        return render(request, 'browse_director_view.html', self.get_context_data())
+        return render(request, 'views/browse_director_view.html', self.get_context_data())
 
 
 class MovieDetailView(BaseView):
@@ -149,7 +149,7 @@ class MovieDetailView(BaseView):
             reviews = movie_details['reviews'],
             avg_user_rating = movie_details['avg_rating'],
         )
-        return render(request, 'detail_movie_view.html', self.get_context_data())
+        return render(request, 'views/detail_movie_view.html', self.get_context_data())
 
 
 class ActorDetailView(BaseView):
@@ -163,7 +163,7 @@ class ActorDetailView(BaseView):
             actor=actor_details['actor'],
             movies=actor_details['movies'],
         )
-        return render(request, 'detail_actor_view.html', self.get_context_data())
+        return render(request, 'views/detail_actor_view.html', self.get_context_data())
 
 
 class DirectorDetailView(BaseView):
@@ -177,7 +177,7 @@ class DirectorDetailView(BaseView):
             director=director_details['director'],
             movies=director_details['movies'],
         )
-        return render(request, 'detail_director_view.html', self.get_context_data())
+        return render(request, 'views/detail_director_view.html', self.get_context_data())
 
 
 class AddMovieView(BaseView):
@@ -195,7 +195,7 @@ class AddMovieView(BaseView):
             movie_form=movie_form,
             genre_form=genre_form,
         )
-        return render(request, 'add_movie_view.html', self.get_context_data())
+        return render(request, 'views/add_movie_view.html', self.get_context_data())
 
     def get(self, request, *args, **kwargs):
         movie_form = forms.MovieForm()
@@ -204,7 +204,7 @@ class AddMovieView(BaseView):
             movie_form=movie_form,
             genre_form=genre_form,
         )
-        return render(request, 'add_movie_view.html', self.get_context_data())
+        return render(request, 'views/add_movie_view.html', self.get_context_data())
 
 
 class AddActorDirectorView(BaseView):
@@ -215,7 +215,7 @@ class AddActorDirectorView(BaseView):
             actor_form = actor_form,
             director_form = director_form,
         )
-        return render(request, 'add_actor_director_view.html', self.get_context_data())
+        return render(request, 'views/add_actor_director_view.html', self.get_context_data())
 
 
 class AddActorToMovieView(BaseView):

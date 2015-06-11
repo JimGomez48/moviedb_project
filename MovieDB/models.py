@@ -16,10 +16,11 @@ from django.db import models
 class Actor(models.Model):
     class ActorManager(models.Manager):
         pass
-
+    MALE = 'male'
+    FEMALE = 'female'
     SEX_CHOICES = (
-        ('male', 'Male'),
-        ('female', 'Female'),
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
     )
     id = models.AutoField(primary_key=True, editable=False)
     last = models.CharField(max_length=20, blank=False, null=False)
@@ -71,14 +72,19 @@ class Director(models.Model):
 class Movie(models.Model):
     class MovieManager(models.Manager):
         pass
-
+    NC_17 = 'NC-17'
+    R = 'R'
+    PG_13 = 'PG-13'
+    PG = 'PG'
+    G = 'G'
+    SURRENDERED = 'surrendere'
     MPAA_RATINGS = (
-        ('NC-17', 'NC-17'),
-        ('R', 'R'),
-        ('PG-13', 'PG-13'),
-        ('PG', 'PG'),
-        ('G', 'G'),
-        ('surrendered', 'surrendered'),
+        (NC_17, 'NC-17'),
+        (R, 'R'),
+        (PG_13, 'PG-13'),
+        (PG, 'PG'),
+        (G, 'G'),
+        (SURRENDERED, 'Surrendered'),
     )
     id = models.AutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=100, blank=False, null=False)
@@ -203,17 +209,3 @@ class MovieGenre(models.Model):
         # if not self.genre in self.GENRE_CHOICES:
         #     raise ValidationError('Invalid genre value')
         super(MovieGenre, self).save(force_insert, force_update, using, update_fields)
-
-
-# class MaxPersonID(models.Model):
-#     id = models.IntegerField(primary_key=True)
-#
-#     def __unicode__(self):
-#         return 'MaxPersonID: %s' % (self.id)
-#
-#
-# class MaxMovieID(models.Model):
-#     id = models.IntegerField(primary_key=True)
-#
-#     def __unicode__(self):
-#         return 'MaxPersonID: %s' % (self.id)

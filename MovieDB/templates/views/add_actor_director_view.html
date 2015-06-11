@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% extends 'views/panels/panel_md.html' %}
+
+{% block head_extra %}
+    {{ actor_form.media }}
+{% endblock %}
+
+{% block form_heading %}
+    <h2>Add a New Actor or Director</h2>
+{% endblock %}
+
+{% block form_content %}
+    {# tab controls #}
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabpane_actor">Actor</a></li>
+        <li><a data-toggle="tab" href="#tabpane_director">Director</a></li>
+    </ul>
+    {# tab panels #}
+    <div class="tab-content">
+        {# actors #}
+        <div id="tabpane_actor" class="tab-pane fade in active">
+            <h3 class="text-info">Actor</h3>
+            {% include 'forms/actor_form.html' %}
+        </div>
+        {# directors #}
+        <div id="tabpane_director" class="tab-pane fade">
+            <h3 class="text-info">Director</h3>
+            {% include 'forms/director_form.html' %}
+        </div>
+    </div>
+{% endblock %}

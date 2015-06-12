@@ -1,5 +1,9 @@
 <form class="text-left" id="id_add_director_form" name="add_movie_form" role="form" method="post">
     {% csrf_token %}
+    {{ director_form.media }}
+    {% if director_form.errors %}
+        {% include 'controls/form_error_alert.html' with form=director_form %}
+    {% endif %}
     <div class="row">
         <div class="col-lg-12">
             <div class="form-group">

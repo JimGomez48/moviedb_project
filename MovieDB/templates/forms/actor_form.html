@@ -1,39 +1,59 @@
-<form class="text-left" id="id_add_actor_form" name="add_movie_form" role="form" method="post">
+<form class="form-horizontal text-left" id="id_add_actor_form" name="add_movie_form" role="form" method="post">
     {% csrf_token %}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="form-group">
-                {{ actor_form.first.errors }}
-                {{ actor_form.first }}
-            </div>
-            <div class="form-group">
-                {{ actor_form.last.errors }}
-                {{ actor_form.last }}
-            </div>
-            <div class="form-group">
-                {{ actor_form.sex.errors }}
-                <label for="id_dob" class="text-capitalize">Sex</label>
-                {{ actor_form.sex }}
-            </div>
-            <div class="form-group">
-                {{ actor_form.dob.errors }}
-                <label for="id_dob" class="text-capitalize">Date of Birth</label>
-                {{ actor_form.dob }}
-            </div>
-            <div class="form-group">
-                {{ actor_form.dod.errors }}
-                <label for="id_dod" class="text-capitalize">Date of Death</label>
-                {{ actor_form.dod }}
-            </div>
+    {{ actor_form.media }}
+    {% if actor_form.errors %}
+        {% include 'controls/form_error_alert.html' with form=actor_form %}
+    {% endif %}
+    <div class="form-group has-error has-feedback">
+        <label class="control-label col-sm-2" for="id_first">{{ actor_form.first.label }}</label>
+        <div class="col-sm-8">{{ actor_form.first }}<span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span></div>
+        <div class="col-sm-2">
+            {% for error in actor_form.first.errors %}
+                <em class="text-danger">* {{ error }}</em>
+            {% endfor %}
         </div>
     </div>
-    <div class="row">
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="id_first">{{ actor_form.last.label }}</label>
+        <div class="col-sm-8">{{ actor_form.last }}</div>
+        <div class="col-sm-2">
+            {% for error in actor_form.last.errors %}
+                <em class="text-danger">* {{ error }}</em>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="control-label id_dob" class="control-label col-sm-2">{{ actor_form.sex.label }}</label>
+        <div class="col-sm-8">{{ actor_form.sex }}</div>
+        <div class="col-sm-2">
+            {% for error in actor_form.sex.errors %}
+                <em class="text-danger">* {{ error }}</em>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="id_dob" class="control-label col-sm-2">{{ actor_form.dob.label }}</label>
+        <div class="col-sm-8">{{ actor_form.dob }}</div>
+        <div class="col-sm-2">
+            {% for error in actor_form.dob.errors %}
+                <em class="text-danger">* {{ error }}</em>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="id_dod" class="control-label col-sm-2">{{ actor_form.dob.label }}</label>
+        <div class="col-sm-8">{{ actor_form.dod }}</div>
+        <div class="col-sm-2">
+            {% for error in actor_form.dod.errors %}
+                <em class="text-danger">* {{ error }}</em>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
         <div class="col-xs-4 col-xs-offset-4">
-            <div class="form-group">
-                <button type="submit" class="btn btn-block btn-success btn-ghost btn-lg" name="submit" value="actor">
-                    Submit
-                </button>
-            </div>
+        <button type="submit" class="btn btn-block btn-success btn-ghost btn-lg" name="submit" value="actor">
+            Submit
+        </button>
         </div>
     </div>
 </form>

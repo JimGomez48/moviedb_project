@@ -80,10 +80,10 @@ class ActorForm(forms.ModelForm):
         fields = {'last', 'first', 'sex', 'dob', 'dod'}
         widgets = {
             'last': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Last Name'},
+                attrs={'class': 'form-control', 'placeholder': 'Enter Last Name'},
             ),
             'first': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'First Name'},
+                attrs={'class': 'form-control', 'placeholder': 'Enter First Name'},
             ),
             'sex': forms.Select(
                 attrs={'class': 'form-control'},

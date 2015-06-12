@@ -67,6 +67,7 @@ class DateOptions(object):
 class ActorForm(forms.ModelForm):
     dod = forms.DateField(
         required=False,
+        label=models.Actor._meta.fields[5].verbose_name,
         widget=DateWidget(
             bootstrap_version=3,
             options=DateOptions.OPTIONS,
@@ -96,20 +97,13 @@ class ActorForm(forms.ModelForm):
                     'id': 'actor_dob',
                 },
             ),
-            # 'dod': DateWidget(
-            #     bootstrap_version=3,
-            #     options=DateOptions.OPTIONS,
-            #     attrs={
-            #         'placeholder': 'Leave blank if not applicable',
-            #         'id': 'actor_dod',
-            #     },
-            # ),
         }
 
 
 class DirectorForm(forms.ModelForm):
     dod = forms.DateField(
         required=False,
+        label=models.Director._meta.fields[4].verbose_name,
         widget=DateWidget(
             bootstrap_version=3,
             options=DateOptions.OPTIONS,

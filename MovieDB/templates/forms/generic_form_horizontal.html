@@ -1,0 +1,33 @@
+<form class="form-horizontal text-left" id="id_add_actor_form" name="add_movie_form" role="form" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {% if form.errors %}
+        {% include 'controls/form_alert_error.html' with form=form %}
+    {% endif %}
+    {% for field in form %}
+        <div class="form-group {% if field.errors %}has-error has-feedback{% endif %}">
+            <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <div class="col-sm-9">
+                {{ field }}
+            </div>
+{#            <div class="col-sm-1">#}
+                {% if field.errors %}
+                    <a class="btn btn-link warning-icon"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="{% for error in field.errors %}{{ error }}{% endfor %}">
+                        <span class="glyphicon glyphicon-warning-sign " aria-hidden="true"></span>
+                    </a>
+                {% endif %}
+{#            </div>#}
+        </div>
+    {% endfor %}
+
+    <div class="form-group">
+        <div class="col-xs-4 col-xs-offset-4">
+            <button type="submit" class="btn btn-block btn-success btn-ghost btn-lg" name="submit" value="{{ submit }}">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>

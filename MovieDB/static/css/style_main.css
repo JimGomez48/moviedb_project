@@ -54,3 +54,11 @@ html, body {
 a.errorlist:hover{
     color:#843534
 }
+
+.warning-icon {
+    color: goldenrod;
+}
+
+.warning-icon:hover {
+    color: gold;
+}

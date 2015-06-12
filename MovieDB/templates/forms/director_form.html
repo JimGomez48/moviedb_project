@@ -1,38 +1,5 @@
-<form class="text-left" id="id_add_director_form" name="add_movie_form" role="form" method="post">
+<form class="form-horizontal" id="id_add_director_form" name="add_movie_form" role="form" method="post">
     {% csrf_token %}
     {{ director_form.media }}
-    {% if director_form.errors %}
-        {% include 'controls/form_error_alert.html' with form=director_form %}
-    {% endif %}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="form-group">
-                {{ director_form.first.errors }}
-                {{ director_form.first }}
-            </div>
-            <div class="form-group">
-                {{ director_form.last.errors }}
-                {{ director_form.last }}
-            </div>
-            <div class="form-group">
-                {{ director_form.dob.errors }}
-                <label for="id_dob" class="text-capitalize">Date of Birth</label>
-                {{ director_form.dob }}
-            </div>
-            <div class="form-group">
-                {{ director_form.dod.errors }}
-                <label for="id_dod" class="text-capitalize">Date of Death</label>
-                {{ director_form.dod }}
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-4 col-xs-offset-4">
-            <div class="form-group">
-                <button type="submit" class="btn btn-block btn-success btn-ghost btn-lg" name="submit" value="director">
-                    Submit
-                </button>
-            </div>
-        </div>
-    </div>
+    {% include 'forms/generic_form_horizontal.html' with form=director_form submit='director' %}
 </form>

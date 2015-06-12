@@ -77,7 +77,7 @@ class ActorForm(forms.ModelForm):
     )
     class Meta:
         model = models.Actor
-        fields = {'last', 'first', 'sex', 'dob', 'dod'}
+        fields = ['last', 'first', 'sex', 'dob', 'dod']
         widgets = {
             'last': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Enter Last Name'},
@@ -120,7 +120,7 @@ class DirectorForm(forms.ModelForm):
     )
     class Meta:
         model = models.Director
-        fields = {'last', 'first', 'dob', 'dod'}
+        fields = ['last', 'first', 'dob', 'dod']
         widgets = {
             'last': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Last Name'},

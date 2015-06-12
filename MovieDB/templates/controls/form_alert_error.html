@@ -3,12 +3,12 @@
         <span aria-hidden="true">&times;</span>
     </button>
     <strong>There were errors in your submission. Please fix and try again.</strong>
-    <ul>
-        {% for field in form %}
-            {% if field.errors %}
-                <li>{{ field.label }}: <em>{{ field.errors|striptags }}</em>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+{#    <ul>#}
+{#        {% for field in form %}#}
+{#            {% if field.errors %}#}
+{#                <li>{{ field.label }}: <em>{{ field.errors|striptags }}</em>#}
+{#                </li>#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#    </ul>#}
 </div>

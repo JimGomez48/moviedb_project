@@ -2,6 +2,7 @@
 {% extends 'views/panels/panel_md.html' %}
 
 {% block head_extra %}
+
     {{ actor_form.media }}
 {% endblock %}
 
@@ -12,18 +13,23 @@
 {% block form_content %}
     {# tab controls #}
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabpane_actor">Actor</a></li>
-        <li><a data-toggle="tab" href="#tabpane_director">Director</a></li>
+        {% if active_form == 'actor' %}
+            <li class="active"><a data-toggle="tab" href="#tabpane_actor">Actor</a></li>
+            <li><a data-toggle="tab" href="#tabpane_director">Director</a></li>
+        {% elif active_form == 'director'%}
+            <li><a data-toggle="tab" href="#tabpane_actor">Actor</a></li>
+            <li class="active"><a data-toggle="tab" href="#tabpane_director">Director</a></li>
+        {% endif %}
     </ul>
     {# tab panels #}
     <div class="tab-content">
         {# actors #}
-        <div id="tabpane_actor" class="tab-pane fade in active">
+        <div id="tabpane_actor" class="tab-pane fade {% if active_form == 'actor' %}in active{% endif %}">
             <h3 class="text-info">Actor</h3>
             {% include 'forms/actor_form.html' %}
         </div>
         {# directors #}
-        <div id="tabpane_director" class="tab-pane fade">
+        <div id="tabpane_director" class="tab-pane fade {% if active_form == 'director' %}in active{% endif %}">
             <h3 class="text-info">Director</h3>
             {% include 'forms/director_form.html' %}
         </div>

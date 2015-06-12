@@ -77,7 +77,7 @@ class ActorForm(forms.ModelForm):
     )
     class Meta:
         model = models.Actor
-        fields = ['last', 'first', 'sex', 'dob', 'dod']
+        fields = ['first', 'last', 'sex', 'dob', 'dod']
         widgets = {
             'last': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Enter Last Name'},
@@ -96,14 +96,14 @@ class ActorForm(forms.ModelForm):
                     'id': 'actor_dob',
                 },
             ),
-            'dod': DateWidget(
-                bootstrap_version=3,
-                options=DateOptions.OPTIONS,
-                attrs={
-                    'placeholder': 'Leave blank if not applicable',
-                    'id': 'actor_dod',
-                },
-            ),
+            # 'dod': DateWidget(
+            #     bootstrap_version=3,
+            #     options=DateOptions.OPTIONS,
+            #     attrs={
+            #         'placeholder': 'Leave blank if not applicable',
+            #         'id': 'actor_dod',
+            #     },
+            # ),
         }
 
 
@@ -120,7 +120,7 @@ class DirectorForm(forms.ModelForm):
     )
     class Meta:
         model = models.Director
-        fields = ['last', 'first', 'dob', 'dod']
+        fields = ['first', 'last', 'dob', 'dod']
         widgets = {
             'last': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Last Name'},

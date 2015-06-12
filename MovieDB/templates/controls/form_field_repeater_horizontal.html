@@ -1,0 +1,17 @@
+{# Form fields #}
+{% for field in form %}
+    <div class="form-group {% if field.errors %}has-error has-feedback{% endif %}">
+        <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="col-sm-9">
+            {{ field }}
+        </div>
+        {% if field.errors %}
+            <a class="btn btn-link warning-icon"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{% for error in field.errors %}{{ error }}{% endfor %}">
+                <span class="glyphicon glyphicon-warning-sign " aria-hidden="true"></span>
+            </a>
+        {% endif %}
+    </div>
+{% endfor %}

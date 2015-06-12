@@ -1,5 +1,18 @@
-<form class="form-horizontal text-left" id="id_add_actor_form" name="add_movie_form" role="form" method="post">
+<form class="form-horizontal" id="id_add_actor_form" name="add_actor_form" role="form" method="post">
     {% csrf_token %}
     {{ actor_form.media }}
-    {% include 'forms/generic_form_horizontal.html' with form=actor_form submit='actor' %}
+    {# error alert #}
+    {% if actor_form.errors %}
+        {% include 'controls/form_alert_error.html' with form=form %}
+    {% endif %}
+    {# form fields #}
+    {% include 'controls/form_field_repeater_horizontal.html' with form=actor_form %}
+    {# form submit #}
+    <div class="form-group">
+        <div class="col-xs-4 col-xs-offset-4">
+            <button type="submit" class="btn btn-block btn-success btn-ghost btn-lg" name="submit" value="actor">
+                Submit
+            </button>
+        </div>
+    </div>
 </form>

@@ -23,8 +23,8 @@ class Actor(models.Model):
         (FEMALE, 'Female'),
     )
     id = models.AutoField(primary_key=True, editable=False)
-    last = models.CharField(max_length=20, blank=False, null=False, verbose_name='Last Name')
-    first = models.CharField(max_length=20, blank=False, null=False, verbose_name='First Name')
+    last = models.CharField(max_length=50, blank=False, null=False, verbose_name='Last Name')
+    first = models.CharField(max_length=50, blank=False, null=False, verbose_name='First Name')
     sex = models.CharField(max_length=6, choices=SEX_CHOICES, blank=False, null=False, verbose_name='Sex')
     dob = models.DateField(verbose_name='Date of Birth')
     dod = models.DateField(null=True, default=None, verbose_name='Date of Death')
@@ -90,7 +90,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title')
     year = models.IntegerField(blank=False, null=False, verbose_name='Year')
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, default='G', verbose_name='MPAA Rating')
-    company = models.CharField(max_length=50, blank=False, null=False, verbose_name='Production Co.')
+    company = models.CharField(max_length=50, blank=False, null=False, verbose_name='Production Company')
     objects = MovieManager()
 
     def __unicode__(self):

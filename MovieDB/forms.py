@@ -72,7 +72,7 @@ class ActorForm(forms.ModelForm):
             bootstrap_version=3,
             options=DateOptions.OPTIONS,
             attrs={
-                'placeholder': 'Leave blank if not applicable',
+                'placeholder': DateOptions.OPTIONS['format'],
                 'id': 'actor_dod',
         })
     )
@@ -81,10 +81,10 @@ class ActorForm(forms.ModelForm):
         fields = ['first', 'last', 'sex', 'dob', 'dod']
         widgets = {
             'last': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Enter Last Name'},
+                attrs={'class': 'form-control', 'placeholder': "Actor's Last Name"},
             ),
             'first': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Enter First Name'},
+                attrs={'class': 'form-control', 'placeholder': "Actor's First Name"},
             ),
             'sex': forms.Select(
                 attrs={'class': 'form-control'},
@@ -93,7 +93,7 @@ class ActorForm(forms.ModelForm):
                 bootstrap_version=3,
                 options=DateOptions.OPTIONS,
                 attrs={
-                    'placeholder': 'Required',
+                    'placeholder': DateOptions.OPTIONS['format'],
                     'id': 'actor_dob',
                 },
             ),
@@ -108,7 +108,7 @@ class DirectorForm(forms.ModelForm):
             bootstrap_version=3,
             options=DateOptions.OPTIONS,
             attrs={
-                'placeholder': 'Leave blank if not applicable',
+                'placeholder': DateOptions.OPTIONS['format'],
                 'id': 'director_dod',
         })
     )
@@ -117,16 +117,16 @@ class DirectorForm(forms.ModelForm):
         fields = ['first', 'last', 'dob', 'dod']
         widgets = {
             'last': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Last Name'},
+                attrs={'class': 'form-control', 'placeholder': "Director's Last Name"},
             ),
             'first': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'First Name'},
+                attrs={'class': 'form-control', 'placeholder': "Director's First Name"},
             ),
             'dob': DateWidget(
                 bootstrap_version=3,
                 options=DateOptions.OPTIONS,
                 attrs={
-                    'placeholder': 'Required',
+                    'placeholder': DateOptions.OPTIONS['format'],
                     'id': 'director_dob',
                 },
             ),

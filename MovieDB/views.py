@@ -229,7 +229,7 @@ class AddActorDirectorView(BaseView):
                 view_actions = actions.AddDirectorActions()
                 view_actions.save_new_director(director_form.cleaned_data)
                 return redirect('Index')
-
+        # There were errors. Bind form contexts and render
         self.bind_context_data(
             actor_form = actor_form,
             director_form = director_form,

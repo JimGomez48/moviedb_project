@@ -6,7 +6,24 @@
         {% include 'controls/form_alert_error.html' with form=form %}
     {% endif %}
     {# form fields #}
-    {% include 'controls/form_field_repeater_horizontal.html' with form=actor_form %}
+    {% include 'controls/form_field_horizontal.html' with field=actor_form.first %}
+    {% include 'controls/form_field_horizontal.html' with field=actor_form.last %}
+    {% include 'controls/form_field_horizontal.html' with field=actor_form.sex %}
+    {% include 'controls/form_field_horizontal.html' with field=actor_form.dob %}
+    <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-9">
+            <div class="checkbox">
+            <label for="actor_deceased_check">
+                <input id="actor_deceased_check" name="deceased" type="checkbox" value="" data-toggle="collapse" data-target="#actor_dod_collapse">
+                Actor Deceased?
+            </label>
+            </div>
+        </div>
+    </div>
+    <div id="actor_dod_collapse" class="collapse">
+    {% include 'controls/form_field_horizontal.html' with field=actor_form.dod %}
+    </div>
     {# form submit #}
     <div class="form-group">
         <div class="col-xs-4 col-xs-offset-4">

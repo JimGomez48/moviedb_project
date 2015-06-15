@@ -38,8 +38,8 @@ class Actor(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        if self.dod and self.dod < self.dob:
-            raise ValidationError('dod cannot be less than dod')
+        if self.dod and (self.dod < self.dob):
+            raise ValidationError('Actor dod cannot be less than dob')
         # if not self.sex in self.SEX_CHOICES:
         #     raise ValidationError('invalid value for sex')
         super(Actor, self).save(force_insert, force_update, using, update_fields)
@@ -64,8 +64,8 @@ class Director(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        if self.dod and self.dod < self.dob:
-            raise ValidationError('Director.dod cannot be less than Director.dob')
+        if self.dod and (self.dod < self.dob):
+            raise ValidationError('Director dod cannot be less than dob')
         super(Director, self).save(force_insert, force_update, using, update_fields)
 
 
@@ -89,7 +89,7 @@ class Movie(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title')
     year = models.IntegerField(blank=False, null=False, verbose_name='Year')
-    rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, default='G', verbose_name='MPAA Rating')
+    rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, verbose_name='MPAA Rating')
     company = models.CharField(max_length=50, blank=False, null=False, verbose_name='Production Company')
     objects = MovieManager()
 

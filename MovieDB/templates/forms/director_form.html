@@ -2,11 +2,27 @@
     {% csrf_token %}
     {{ director_form.media }}
     {# error alert #}
-    {% if actor_form.errors %}
+    {% if director_form.errors %}
         {% include 'controls/form_alert_error.html' with form=form %}
     {% endif %}
     {# form fields #}
-    {% include 'controls/form_field_repeater_horizontal.html' with form=director_form %}
+    {% include 'controls/form_field_horizontal.html' with field=director_form.first %}
+    {% include 'controls/form_field_horizontal.html' with field=director_form.last %}
+    {% include 'controls/form_field_horizontal.html' with field=director_form.dob %}
+    <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-9">
+            <div class="checkbox">
+            <label for="director_deceased_check">
+                <input id="director_deceased_check" name="deceased" type="checkbox" value="" data-toggle="collapse" data-target="#director_dod_collapse">
+                Director Deceased?
+            </label>
+            </div>
+        </div>
+    </div>
+    <div id="director_dod_collapse" class="collapse">
+    {% include 'controls/form_field_horizontal.html' with field=director_form.dod %}
+    </div>
     {# form submit #}
     <div class="form-group">
         <div class="col-xs-4 col-xs-offset-4">

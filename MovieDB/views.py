@@ -249,15 +249,39 @@ class AddActorDirectorView(BaseView):
 
 
 class AddActorToMovieView(BaseView):
+    def post(self, request):
+        form = forms.ActorToMovieForm(request.POST)
+        if form.is_valid():
+            return HttpResponse('success')
+        self.bind_context_data(
+            movieactor_form=form
+        )
+        return render(request, 'views/add_actor_to_movie_view.html', self.get_context_data())
+
     def get(self, request, *args, **kwargs):
-        # return render(request, 'browse_movie_view.html', context)
-        raise Http404()
+        form = forms.ActorToMovieForm()
+        self.bind_context_data(
+            movieactor_form=form
+        )
+        return render(request, 'views/add_actor_to_movie_view.html', self.get_context_data())
 
 
 class AddDirectorToMovieView(BaseView):
+    def post(self, request):
+        form = forms.DirectorToMovieForm(request.POST)
+        if form.is_valid():
+            return HttpResponse('success')
+        self.bind_context_data(
+            moviedirector_form=form
+        )
+        return render(request, 'views/add_director_to_movie_view.html', self.get_context_data())
+
     def get(self, request, *args, **kwargs):
-        # return render(request, 'browse_movie_view.html', context)
-        raise Http404()
+        form = forms.DirectorToMovieForm()
+        self.bind_context_data(
+            moviedirector_form=form
+        )
+        return render(request, 'views/add_director_to_movie_view.html', self.get_context_data())
 
 class BrowseReviewView(BaseView):
     def get(self, request):

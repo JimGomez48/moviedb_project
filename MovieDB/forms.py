@@ -133,9 +133,32 @@ class DirectorForm(forms.ModelForm):
         }
 
 
-class AddActorToMovieForm(forms.Form):
-    pass
+class ActorToMovieForm(forms.ModelForm):
+    class Meta:
+        model = models.MovieActor
+        fields = ['mid', 'aid', 'role']
+        widgets = {
+            'mid': forms.Select(
+                attrs={'class': 'form-control'},
+            ),
+            'aid': forms.Select(
+                attrs={'class': 'form-control'},
+            ),
+            'role': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': "Actor's role in the film"},
+            ),
+        }
 
 
-class AddActorDirectorToMovieForm(forms.Form):
-    pass
+class DirectorToMovieForm(forms.ModelForm):
+    class Meta:
+        model = models.MovieDirector
+        fields = ['mid', 'did']
+        widgets = {
+            'mid': forms.Select(
+                attrs={'class': 'form-control'},
+            ),
+            'did': forms.Select(
+                attrs={'class': 'form-control'},
+            ),
+        }

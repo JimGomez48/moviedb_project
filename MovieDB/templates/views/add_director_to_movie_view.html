@@ -1,0 +1,9 @@
+{% extends 'views/panels/panel_md.html' %}
+
+{% block form_heading %}
+    <h2>Add a Director to a Movie</h2>
+{% endblock %}
+
+{% block form_content %}
+    {% include 'forms/movie_director_form.html' with moviedirector_form=moviedirector_form %}
+{% endblock %}

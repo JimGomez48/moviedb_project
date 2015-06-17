@@ -6,10 +6,10 @@ from django.db import migrations
 from moviedb_project.settings import BASE_DIR
 
 
-def load_seed_data_sql():
-    print 'Loading seed data...'
-    sql = open(os.path.join(BASE_DIR, os.path.normpath('MovieDB/sql/scripts/load.sql')), 'r').read()
-    return sql
+# def load_seed_data_sql():
+#     print 'Loading seed data...'
+#     sql = open(os.path.join(BASE_DIR, os.path.normpath('MovieDB/sql/scripts/load.sql')), 'r').read()
+#     return sql
 
 
 def create_stored_procedures():
@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(load_seed_data_sql()),
+        # migrations.RunSQL(load_seed_data_sql()),
         migrations.RunSQL(create_stored_procedures()),
     ]

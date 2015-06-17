@@ -3,6 +3,9 @@ This file constitutes the Action Layer. It is responsible for carrying out the
 business logic of the system. It uses models to retrieve and persist data and
 services to carry out external service commands.
 
+There is a one-to-one mapping for concrete view classes in the View Layer and
+concrete action classes in the Action Layer.
+
 The Action Layer only knows about the following other system layers
 - Model Layer
 - Services Layer

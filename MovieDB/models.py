@@ -88,7 +88,7 @@ class Movie(models.Model):
     )
     id = models.AutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title', unique_for_year='year')
-    year = models.IntegerField(blank=False, null=False, verbose_name='Year')
+    year = models.IntegerField(blank=False, null=False, default=datetime.date.today().year, verbose_name='Year')
     rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, verbose_name='MPAA Rating')
     company = models.CharField(max_length=50, blank=False, null=False, verbose_name='Production Company')
     objects = MovieManager()
@@ -124,7 +124,7 @@ class Review(models.Model):
     time = models.DateTimeField(auto_now=True, editable=False, verbose_name='Time')
     user_name = models.CharField(max_length=20, blank=False, null=False, verbose_name='User Name')
     mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False, verbose_name='User Rating')
+    rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False, default=5, verbose_name='User Rating')
     comment = models.TextField(max_length=2000, blank=True, default='')
 
     def __unicode__(self):

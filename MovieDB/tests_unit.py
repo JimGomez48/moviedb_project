@@ -1,5 +1,5 @@
 import os
-import unittest
+from django.utils import unittest
 import django
 from django.db import connection
 

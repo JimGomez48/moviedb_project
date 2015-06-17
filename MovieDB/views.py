@@ -1,12 +1,12 @@
-################################################################################
-# This file constitutes the View Layer. It is responsible responding to HTTP
-# requests and preparing context data for the template layer to present.
-#
-# The View Layer only knows about the following other system layers
-# - Action Layer
-# - Forms Layer
-# - Template Layer
-################################################################################
+"""
+This file constitutes the View Layer. It is responsible responding to HTTP
+requests and preparing context data for the template layer to present.
+
+The View Layer only knows about the following other system layers
+- Action Layer
+- Forms Layer
+- Template Layer
+"""
 
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.http import HttpResponse, Http404

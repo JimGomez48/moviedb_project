@@ -43,20 +43,23 @@
                         </tr>
                         <tr>
                             <td><h4><strong>Avg. User Rating</strong></h4></td>
-                            {% if avg_user_rating %}
-                                <td>
+                            <td>
+                                {% if avg_user_rating %}
                                     <input
                                         type="number"
                                         class="rating form-control hide"
                                         data-size="sm" data-show-clear="false"
                                         data-readonly="true"
                                         value="{{ avg_user_rating }}">
-                                </td>
-                            {% else %}
-                                <td>
-                                    <h4 class="text-muted"><em>This movie has not yet been reviewed</em></h4>
-                                </td>
-                            {% endif %}
+                                {% else %}
+                                    <input
+                                        type="number"
+                                        class="rating form-control hide"
+                                        data-size="sm" data-show-clear="false"
+                                        data-readonly="true"
+                                        value="0">
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td><h4><strong>Genres</strong></h4></td>

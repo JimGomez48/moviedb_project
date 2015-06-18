@@ -38,6 +38,9 @@ class Actor(models.Model):
     dod = models.DateField(null=True, default=None, verbose_name='Date of Death')
     objects = ActorManager()
 
+    class Meta:
+        ordering = ['last', 'first']
+
     def __unicode__(self):
         return '%s, %s (%s)' % (self.last, self.first, self.dob)
 
@@ -70,6 +73,9 @@ class Director(models.Model):
     dob = models.DateField(blank=False, null=False, verbose_name='Date of Birth')
     dod = models.DateField(null=True, default=None, verbose_name='Date of Death')
     objects = DirectorManager()
+
+    class Meta:
+        ordering = ['last', 'first']
 
     def __unicode__(self):
         return '%s, %s (%s)' % (self.last, self.first, self.dob)
@@ -115,6 +121,9 @@ class Movie(models.Model):
     company = models.CharField(max_length=50, blank=False, null=False, verbose_name='Production Company')
     objects = MovieManager()
 
+    class Meta:
+        ordering = ['title', 'year']
+
     def __unicode__(self):
         return '%s (%s)' % (self.title, self.year)
 
@@ -158,6 +167,9 @@ class Review(models.Model):
     mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False, default=5, verbose_name='User Rating')
     comment = models.TextField(max_length=2000, blank=True, default='')
+
+    class Meta:
+        ordering = ['-time']
 
     def __unicode__(self):
         return 'mid:%s user:%s time:%s rating:%s' % (self.mid, self.user_name, self.time, self.rating)

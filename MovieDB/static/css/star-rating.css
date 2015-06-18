@@ -145,6 +145,9 @@
     font-size: 2em;
 }
 
+.rating-xxs {
+    font-size: 1.5em;
+}
 /**
  * Clear rating button
  */

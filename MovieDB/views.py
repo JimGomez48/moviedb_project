@@ -296,6 +296,10 @@ class BrowseReviewView(BaseView):
 class WriteReviewView(BaseView):
     def post(self, request):
         review_form = forms.ReviewForm(request.POST)
+        if review_form.is_valid():
+            view_actions = actions.WriteReviewViewActions()
+            view_actions.add_movie_review(review_form.cleaned_data)
+            return redirect('Index')
         self.bind_context_data(
             review_form = review_form
         )

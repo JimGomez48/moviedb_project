@@ -435,4 +435,11 @@ class AddDirectorToMovieViewActions(AbstractActions):
 
 
 class WriteReviewViewActions(AbstractActions):
-    pass
+    def add_movie_review(self, data):
+        reviews = models.Review.objects
+        reviews.create(
+            user_name=data['user_name'],
+            mid=data['mid'],
+            rating=data['rating'],
+            comment=data['comment'],
+        )

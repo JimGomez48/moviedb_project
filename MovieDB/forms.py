@@ -184,7 +184,7 @@ class ReviewForm(forms.ModelForm):
                     'data-min': 0,
                     'data-max': models.Review.MAX,
                     'data-step': '1',
-                    'data-size': 'sm',
+                    'data-size': 'xxs',
                     'data-show-clear': 'false',
                 },
             ),

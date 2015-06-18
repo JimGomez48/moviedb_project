@@ -1,0 +1,21 @@
+{% load staticfiles %}
+<div class="bs-callout bs-callout-warning">
+    <div class="media">
+        <div class="media-left media-top">
+            <img class="media-object" width="56" src="{% static 'img/default_person.png' %}">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading text-capitalize">{{ review.user_name }}</h4>
+            <small>{{ review.time }}</small>
+            <input
+                    type="number"
+                    class="rating form-control hide"
+                    data-size="xxs" data-show-clear="false"
+                    data-readonly="true"
+                    value="{{ review.rating }}">
+        </div>
+    </div>
+    <div>
+        <h5>{{ review.comment }}</h5>
+    </div>
+</div>

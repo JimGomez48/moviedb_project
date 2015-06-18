@@ -44,7 +44,14 @@
                         <tr>
                             <td><h4><strong>Avg. User Rating</strong></h4></td>
                             {% if avg_user_rating %}
-                                <td><h4>{{ avg_user_rating }}</h4></td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="rating form-control hide"
+                                        data-size="sm" data-show-clear="false"
+                                        data-readonly="true"
+                                        value="{{ avg_user_rating }}">
+                                </td>
                             {% else %}
                                 <td>
                                     <h4 class="text-muted"><em>This movie has not yet been reviewed</em></h4>
@@ -123,24 +130,7 @@
             <h3 class="list-group-item-heading text-capitalize">Reviews</h3>
             {% if reviews %}
                 {% for review in reviews %}
-                    <div class="bs-callout bs-callout-warning">
-                        <div class="media">
-                            <div class="media-left media-top">
-                                <img class="media-object"
-                                     width="56"
-                                     src="{% static 'img/default_person.png' %}">
-                            </div>
-                            <div class="media-body">
-                                <h4 class="media-heading text-capitalize">{{ review.user_name }}</h4>
-                                <small>{{ review.time }}</small>
-                                </br>
-                                <strong>Rating: </strong>{{ review.rating }}
-                            </div>
-                        </div>
-                        <div>
-                            <h5>{{ review.comment }}</h5>
-                        </div>
-                    </div>
+                    {% include 'controls/review_card.html' with review=review %}
                 {% endfor %}
                 <div class="row" align="center">
                     <div class="col-lg-12">

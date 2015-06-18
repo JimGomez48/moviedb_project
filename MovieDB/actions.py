@@ -374,7 +374,7 @@ class AddMovieViewActions(AbstractActions):
             movie_genre.save()
 
 
-class AddActorActions(AbstractActions):
+class AddActorDirectorViewActions(AbstractActions):
     def save_new_actor(self, actor_data):
         actor = models.Actor()
         actor.last = actor_data['last']
@@ -392,8 +392,6 @@ class AddActorActions(AbstractActions):
             actor.dod = None
         actor.save()
 
-
-class AddDirectorActions(AbstractActions):
     def save_new_director(self, director_data):
         director = models.Director()
         director.last = director_data['last']
@@ -404,3 +402,22 @@ class AddDirectorActions(AbstractActions):
         else:
             director.dod = None
         director.save()
+
+
+class AddActorToMovieViewActions(AbstractActions):
+    def add_actor_to_movie(self, data):
+        movie_actors = models.MovieActor.objects
+        movie_actors.create(
+            mid=data['mid'],
+            aid=data['aid'],
+            role=data['role'],
+        )
+
+
+class AddDirectorToMovieViewActions(AbstractActions):
+    def add_director_to_movie(self, data):
+        movie_directors = models.MovieDirector.objects
+        movie_directors.create(
+            mid=data['mid'],
+            did=data['did'],
+        )

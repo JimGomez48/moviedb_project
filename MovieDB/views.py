@@ -219,14 +219,14 @@ class AddActorDirectorView(BaseView):
             actor_form = forms.ActorForm(request.POST)
             current_form = self.ACTOR_FORM
             if actor_form.is_valid():
-                view_actions = actions.AddActorActions()
+                view_actions = actions.AddActorDirectorViewActions()
                 view_actions.save_new_actor(actor_form.cleaned_data)
                 return redirect('Index')
         elif request.POST['submit'] == 'director':
             director_form = forms.DirectorForm(request.POST)
             current_form = self.DIRECTOR_FORM
             if director_form.is_valid():
-                view_actions = actions.AddDirectorActions()
+                view_actions = actions.AddActorDirectorViewActions()
                 view_actions.save_new_director(director_form.cleaned_data)
                 return redirect('Index')
         # There were errors. Bind form contexts and render
@@ -252,7 +252,9 @@ class AddActorToMovieView(BaseView):
     def post(self, request):
         form = forms.ActorToMovieForm(request.POST)
         if form.is_valid():
-            return HttpResponse('success')
+            view_actions = actions.AddActorToMovieViewActions()
+            view_actions.add_actor_to_movie(form.cleaned_data)
+            return redirect('Index')
         self.bind_context_data(
             movieactor_form=form
         )
@@ -270,7 +272,9 @@ class AddDirectorToMovieView(BaseView):
     def post(self, request):
         form = forms.DirectorToMovieForm(request.POST)
         if form.is_valid():
-            return HttpResponse('success')
+            view_actions = actions.AddDirectorToMovieViewActions()
+            view_actions.add_director_to_movie(form.cleaned_data)
+            return redirect('Index')
         self.bind_context_data(
             moviedirector_form=form
         )

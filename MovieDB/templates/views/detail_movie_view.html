@@ -44,21 +44,12 @@
                         <tr>
                             <td><h4><strong>Avg. User Rating</strong></h4></td>
                             <td>
-                                {% if avg_user_rating %}
-                                    <input
-                                        type="number"
-                                        class="rating form-control hide"
-                                        data-size="sm" data-show-clear="false"
-                                        data-readonly="true"
-                                        value="{{ avg_user_rating }}">
-                                {% else %}
-                                    <input
-                                        type="number"
-                                        class="rating form-control hide"
-                                        data-size="sm" data-show-clear="false"
-                                        data-readonly="true"
-                                        value="0">
-                                {% endif %}
+                                <input
+                                    type="number"
+                                    class="rating form-control hide"
+                                    data-size="sm" data-show-clear="false"
+                                    data-readonly="true"
+                                    value="{{ avg_user_rating }}">
                             </td>
                         </tr>
                         <tr>

@@ -143,6 +143,8 @@ class Review(models.Model):
     :param: rating - Rating (1-5 stars)
     :param: comment - User's review comments
     """
+    MIN = 1
+    MAX = 5
     RATING_RANGE = (
         (1, '1-star'),
         (2, '2-star'),

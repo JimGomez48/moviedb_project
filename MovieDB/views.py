@@ -294,9 +294,19 @@ class BrowseReviewView(BaseView):
 
 
 class WriteReviewView(BaseView):
+    def post(self, request):
+        review_form = forms.ReviewForm(request.POST)
+        self.bind_context_data(
+            review_form = review_form
+        )
+        return render(request, 'views/add_review_view.html', self.get_context_data())
+
     def get(self, request, mid=None):
-        # return render(request, 'browse_movie_view.html', context)
-        raise Http404()
+        review_form = forms.ReviewForm()
+        self.bind_context_data(
+            review_form = review_form
+        )
+        return render(request, 'views/add_review_view.html', self.get_context_data())
 
 
 class ViewReviewView(BaseView):

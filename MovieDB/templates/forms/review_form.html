@@ -1,0 +1,12 @@
+<form class="form-horizontal" id="id_review_form" name="review_form" role="form" method="post">
+    {% csrf_token %}
+    {{ review_form.media }}
+    {# error alert #}
+    {% if review_form.errors %}
+        {% include 'controls/form_alert_error.html' with form=review_form %}
+    {% endif %}
+    {# form fields #}
+    {% include 'controls/form_field_repeater_horizontal.html' with form=review_form %}
+    {# form submit #}
+    {% include 'controls/submit_button_horizontal.html' with submit_name='review' %}
+</form>

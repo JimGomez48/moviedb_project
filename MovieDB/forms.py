@@ -162,3 +162,36 @@ class DirectorToMovieForm(forms.ModelForm):
                 attrs={'class': 'form-control'},
             ),
         }
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = models.Review
+        fields = ['user_name', 'mid', 'rating', 'comment']
+        widgets = {
+            'user_name': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Enter your user name',
+                },
+            ),
+            'mid': forms.Select(
+                attrs={'class': 'form-control'},
+            ),
+            'rating': forms.NumberInput(
+                attrs={
+                    'class': 'rating form-control',
+                    'data-min': 0,
+                    'data-max': models.Review.MAX,
+                    'data-step': '1',
+                    'data-size': 'sm',
+                    'data-show-clear': 'false',
+                },
+            ),
+            'comment': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Write a comment...',
+                },
+            ),
+        }

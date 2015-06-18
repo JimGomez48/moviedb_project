@@ -301,6 +301,17 @@ class MovieDetailViewActions(AbstractActions):
             results['avg_rating'] = cursor.fetchone()[0]
         return results
 
+    def add_actor_to_movie(self, data):
+        # TODO
+        pass
+
+    def add_director_to_movie(self, data):
+        # TODO
+        pass
+
+    def add_movie_review(self, data):
+        # TODO
+        pass
 
 class ActorDetailsViewActions(AbstractActions):
     def get_actor_details_full(self, actor_id):
@@ -421,3 +432,7 @@ class AddDirectorToMovieViewActions(AbstractActions):
             mid=data['mid'],
             did=data['did'],
         )
+
+
+class WriteReviewViewActions(AbstractActions):
+    pass

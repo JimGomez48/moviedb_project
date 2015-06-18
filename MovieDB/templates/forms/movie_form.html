@@ -40,11 +40,5 @@
         {% endif %}
     </div>
     {# form submit #}
-    <div class="form-group">
-        <div class="col-xs-4 col-xs-offset-4">
-            <button type="submit" class="btn btn-block btn-success btn-ghost btn-lg" name="submit" value="movie">
-                Submit
-            </button>
-        </div>
-    </div>
+    {% include 'controls/submit_button_horizontal.html' with submit_name='movie' %}
 </form>

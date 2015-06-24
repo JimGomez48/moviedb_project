@@ -226,7 +226,7 @@ class MovieDetailViewActions(AbstractActions):
 
     def get_movie_reviews(self, movie_id):
         manager = models.Review.objects
-        return manager.filter(mid=movie_id).order_by('-time')
+        return manager.filter(mid=movie_id).order_by('-time')[0:3]
 
     def get_movie_avg_user_rating(self, movie_id):
         manager = models.Review.objects

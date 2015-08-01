@@ -294,7 +294,7 @@ class BrowseReviewView(BaseView):
 
 
 class WriteReviewView(BaseView):
-    def post(self, request):
+    def post(self, request, mid=None):
         review_form = forms.ReviewForm(request.POST)
         if review_form.is_valid():
             view_actions = actions.WriteReviewViewActions()
@@ -306,7 +306,10 @@ class WriteReviewView(BaseView):
         return render(request, 'views/add_review_view.html', self.get_context_data())
 
     def get(self, request, mid=None):
-        review_form = forms.ReviewForm()
+        initial = {}
+        if mid:
+            initial['mid'] = mid
+        review_form = forms.ReviewForm(initial=initial)
         self.bind_context_data(
             review_form = review_form
         )

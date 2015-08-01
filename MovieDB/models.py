@@ -164,7 +164,7 @@ class Review(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now=True, editable=False, verbose_name='Time')
     user_name = models.CharField(max_length=20, blank=False, null=False, verbose_name='User Name')
-    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE)
+    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE, verbose_name='Movie')
     rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False, default=5, verbose_name='User Rating')
     comment = models.TextField(max_length=2000, blank=True, default='')
 

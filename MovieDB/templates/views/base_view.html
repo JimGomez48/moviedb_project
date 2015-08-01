@@ -6,21 +6,7 @@
 <head>
     <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style_buttons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/star-rating.css' %}">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="{% static 'js/star-rating.js' %}"></script>
-    {# Initialize tooltips #}
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
+    {% include 'includes.html' %}
     {% block head_extra %}{% endblock %}
 </head>
 

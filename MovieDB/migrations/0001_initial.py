@@ -20,6 +20,10 @@ class Migration(migrations.Migration):
                 ('dob', models.DateField(verbose_name=b'Date of Birth')),
                 ('dod', models.DateField(default=None, null=True, verbose_name=b'Date of Death')),
             ],
+            options={
+                'ordering': ['last', 'first'],
+                'db_table': 'Actors',
+            },
         ),
         migrations.CreateModel(
             name='Director',
@@ -30,6 +34,10 @@ class Migration(migrations.Migration):
                 ('dob', models.DateField(verbose_name=b'Date of Birth')),
                 ('dod', models.DateField(default=None, null=True, verbose_name=b'Date of Death')),
             ],
+            options={
+                'ordering': ['last', 'first'],
+                'db_table': 'Directors',
+            },
         ),
         migrations.CreateModel(
             name='Movie',
@@ -40,31 +48,44 @@ class Migration(migrations.Migration):
                 ('rating', models.CharField(max_length=10, verbose_name=b'MPAA Rating', choices=[(b'NC-17', b'NC-17'), (b'R', b'R'), (b'PG-13', b'PG-13'), (b'PG', b'PG'), (b'G', b'G'), (b'surrendere', b'Not Rated')])),
                 ('company', models.CharField(max_length=50, verbose_name=b'Production Company')),
             ],
+            options={
+                'ordering': ['title', 'year'],
+                'db_table': 'Movies',
+            },
         ),
         migrations.CreateModel(
             name='MovieActor',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('role', models.CharField(max_length=50, verbose_name=b'Role')),
-                ('aid', models.ForeignKey(db_column=b'aid', verbose_name=b'Actor', to='MovieDB.Actor')),
-                ('mid', models.ForeignKey(db_column=b'mid', verbose_name=b'Movie', to='MovieDB.Movie')),
+                ('actor', models.ForeignKey(verbose_name=b'Actor', to='MovieDB.Actor')),
+                ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
             ],
+            options={
+                'db_table': 'MovieActors',
+            },
         ),
         migrations.CreateModel(
             name='MovieDirector',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('did', models.ForeignKey(db_column=b'did', verbose_name=b'Director', to='MovieDB.Director')),
-                ('mid', models.ForeignKey(db_column=b'mid', verbose_name=b'Movie', to='MovieDB.Movie')),
+                ('director', models.ForeignKey(verbose_name=b'Director', to='MovieDB.Director')),
+                ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
             ],
+            options={
+                'db_table': 'MovieDirectors',
+            },
         ),
         migrations.CreateModel(
             name='MovieGenre',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('genre', models.CharField(default=b'Drama', max_length=20, verbose_name=b'Genre', choices=[(b'Action', b'Action'), (b'Adult', b'Adult'), (b'Adventure', b'Adventure'), (b'Animation', b'Animation'), (b'Crime', b'Crime'), (b'Comedy', b'Comedy'), (b'Documentary', b'Documentary'), (b'Drama', b'Drama'), (b'Family', b'Family'), (b'Fantasy', b'Fantasy'), (b'Horror', b'Horror'), (b'Musical', b'Musical'), (b'Mystery', b'Mystery'), (b'Romance', b'Romance'), (b'Sci-Fi', b'Sci-Fi'), (b'Short', b'Short'), (b'Thriller', b'Thriller'), (b'War', b'War'), (b'Western', b'Western')])),
-                ('mid', models.ForeignKey(db_column=b'mid', verbose_name=b'Movie', to='MovieDB.Movie')),
+                ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
             ],
+            options={
+                'db_table': 'MovieGenres',
+            },
         ),
         migrations.CreateModel(
             name='Review',
@@ -74,7 +95,11 @@ class Migration(migrations.Migration):
                 ('user_name', models.CharField(max_length=20, verbose_name=b'User Name')),
                 ('rating', models.IntegerField(default=5, verbose_name=b'User Rating', choices=[(1, b'1-star'), (2, b'2-star'), (3, b'3-star'), (4, b'4-star'), (5, b'5-star')])),
                 ('comment', models.TextField(default=b'', max_length=2000, blank=True)),
-                ('mid', models.ForeignKey(to='MovieDB.Movie', db_column=b'mid')),
+                ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
             ],
+            options={
+                'ordering': ['-time'],
+                'db_table': 'Reviews',
+            },
         ),
     ]

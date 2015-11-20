@@ -39,6 +39,7 @@ class Actor(models.Model):
     objects = ActorManager()
 
     class Meta:
+        db_table = 'Actors'
         ordering = ['last', 'first']
 
     def __unicode__(self):
@@ -75,6 +76,7 @@ class Director(models.Model):
     objects = DirectorManager()
 
     class Meta:
+        db_table = 'Directors'
         ordering = ['last', 'first']
 
     def __unicode__(self):
@@ -100,11 +102,12 @@ class Movie(models.Model):
     """
     class MovieManager(models.Manager):
         pass
-    NC_17 = 'NC-17'
-    R = 'R'
-    PG_13 = 'PG-13'
-    PG = 'PG'
-    G = 'G'
+
+    NC_17   = 'NC-17'
+    R       = 'R'
+    PG_13   = 'PG-13'
+    PG      = 'PG'
+    G       = 'G'
     SURRENDERED = 'surrendere'
     MPAA_RATINGS = (
         (NC_17, 'NC-17'),
@@ -122,6 +125,7 @@ class Movie(models.Model):
     objects = MovieManager()
 
     class Meta:
+        db_table = 'Movies'
         ordering = ['title', 'year']
 
     def __unicode__(self):
@@ -148,7 +152,7 @@ class Review(models.Model):
     :param: id - Primary key
     :param: time - The datetime at which the review was made
     :param: user_name - User name of the person who wrote the review
-    :param: mid - Movie foreign key to which this review refers
+    :param: movie - Movie foreign key to which this review refers
     :param: rating - Rating (1-5 stars)
     :param: comment - User's review comments
     """
@@ -164,15 +168,16 @@ class Review(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now=True, editable=False, verbose_name='Time')
     user_name = models.CharField(max_length=20, blank=False, null=False, verbose_name='User Name')
-    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE, verbose_name='Movie')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False, default=5, verbose_name='User Rating')
     comment = models.TextField(max_length=2000, blank=True, default='')
 
     class Meta:
+        db_table = 'Reviews'
         ordering = ['-time']
 
     def __unicode__(self):
-        return 'mid:%s user:%s time:%s rating:%s' % (self.mid, self.user_name, self.time, self.rating)
+        return 'movie_id:%s user:%s time:%s rating:%s' % (self.movie, self.user_name, self.time, self.rating)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -184,31 +189,37 @@ class Review(models.Model):
 class MovieActor(models.Model):
     """
     :param: id - Primary key
-    :param: mid - Movie foreign key
-    :param: aid - Actor foreign key
+    :param: movie - Movie foreign key
+    :param: actor - Actor foreign key
     :param: role - Actor's role in this movie
     """
     id = models.AutoField(primary_key=True, editable=False)
-    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE, verbose_name='Movie')
-    aid = models.ForeignKey(Actor, db_column='aid', on_delete=models.CASCADE, verbose_name='Actor')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name='Actor')
     role = models.CharField(max_length=50, blank=False, null=False, verbose_name='Role')
 
+    class Meta:
+        db_table = 'MovieActors'
+
     def __unicode__(self):
-        return 'id:%s mid:%s aid:%s' % (self.id, self.mid, self.aid)
+        return 'id:%s movie:%s actor:%s' % (self.id, self.movie, self.actor)
 
 
 class MovieDirector(models.Model):
     """
     :param: id - Primary key
-    :param: mid - Movie foreign key
-    :param: did - Director foreign key
+    :param: movie - Movie foreign key
+    :param: director - Director foreign key
     """
     id = models.AutoField(primary_key=True, editable=False)
-    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE, verbose_name='Movie')
-    did = models.ForeignKey(Director, db_column='did', on_delete=models.CASCADE, verbose_name='Director')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
+    director = models.ForeignKey(Director, on_delete=models.CASCADE, verbose_name='Director')
+
+    class Meta:
+        db_table = 'MovieDirectors'
 
     def __unicode__(self):
-        return 'id:%s mid:%s aid:%s' % (self.id, self.mid, self.did)
+        return 'id:%s movie:%s director:%s' % (self.id, self.movie, self.director)
 
 
 class MovieGenre(models.Model):
@@ -217,25 +228,25 @@ class MovieGenre(models.Model):
     :param: mid - Movie foreign key
     :param: genre - A genre of this movie
     """
-    ACTION = 'Action'
-    ADULT = 'Adult'
-    ADV ='Adventure'
-    ANIM ='Animation'
-    CRIME ='Crime'
-    COMEDY = 'Comedy'
-    DOC ='Documentary'
-    DRAMA ='Drama'
-    FAM ='Family'
-    FANT ='Fantasy'
-    HORROR ='Horror'
-    MUS = 'Musical'
-    MYST ='Mystery'
-    ROM ='Romance'
-    SCI_FI ='Sci-Fi'
-    SHORT ='Short'
-    THRILL = 'Thriller'
-    WAR = 'War'
-    WEST ='Western'
+    ACTION  = 'Action'
+    ADULT   = 'Adult'
+    ADV     = 'Adventure'
+    ANIM    = 'Animation'
+    CRIME   = 'Crime'
+    COMEDY  = 'Comedy'
+    DOC     = 'Documentary'
+    DRAMA   = 'Drama'
+    FAM     = 'Family'
+    FANT    = 'Fantasy'
+    HORROR  = 'Horror'
+    MUS     = 'Musical'
+    MYST    = 'Mystery'
+    ROM     = 'Romance'
+    SCI_FI  = 'Sci-Fi'
+    SHORT   = 'Short'
+    THRILL  = 'Thriller'
+    WAR     = 'War'
+    WEST    ='Western'
     GENRE_CHOICES = (
         (ACTION, 'Action'),
         (ADULT, 'Adult'),
@@ -258,11 +269,14 @@ class MovieGenre(models.Model):
         (WEST, 'Western'),
     )
     id = models.AutoField(primary_key=True, editable=False)
-    mid = models.ForeignKey(Movie, db_column='mid', on_delete=models.CASCADE, verbose_name='Movie')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     genre = models.CharField(max_length=20, choices=GENRE_CHOICES, blank=False, null=False, default='Drama', verbose_name='Genre')
 
+    class Meta:
+        db_table = 'MovieGenres'
+
     def __unicode__(self):
-        return 'id:%s mid:%s genre:%s' % (self.id, self.mid, self.genre)
+        return 'id:%s movie:%s genre:%s' % (self.id, self.movie, self.genre)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

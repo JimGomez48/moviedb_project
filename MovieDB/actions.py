@@ -380,7 +380,7 @@ class AddMovieViewActions(AbstractActions):
     def __save_movie_genre_models(self, movie, genres):
         for genre in genres:
             movie_genre = models.MovieGenre()
-            movie_genre.mid = movie
+            movie_genre.movie = movie
             movie_genre.genre = genre
             movie_genre.save()
 

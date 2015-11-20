@@ -87,7 +87,7 @@ class TestModels(unittest.TestCase):
         manager = models.MovieActor.objects
         results = manager.filter(mid=253).select_related('aid__last', 'aid__first')
         for item in results:
-            print '%s %s (%s) as %s' % (item.aid.first, item.aid.last, item.aid.dob, item.role)
+            print '%s %s (%s) as %s' % (item.actor.first, item.actor.last, item.actor.dob, item.role)
 
     def test_cleaned_movie_title(self):
         manager = models.Movie.objects

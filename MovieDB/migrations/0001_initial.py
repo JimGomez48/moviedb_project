@@ -57,9 +57,9 @@ class Migration(migrations.Migration):
             name='MovieActor',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('role', models.CharField(max_length=50, verbose_name=b'Role')),
-                ('actor', models.ForeignKey(verbose_name=b'Actor', to='MovieDB.Actor')),
                 ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
+                ('actor', models.ForeignKey(verbose_name=b'Actor', to='MovieDB.Actor')),
+                ('role', models.CharField(max_length=50, verbose_name=b'Role')),
             ],
             options={
                 'db_table': 'MovieActors',
@@ -69,8 +69,8 @@ class Migration(migrations.Migration):
             name='MovieDirector',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('director', models.ForeignKey(verbose_name=b'Director', to='MovieDB.Director')),
                 ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
+                ('director', models.ForeignKey(verbose_name=b'Director', to='MovieDB.Director')),
             ],
             options={
                 'db_table': 'MovieDirectors',
@@ -80,8 +80,8 @@ class Migration(migrations.Migration):
             name='MovieGenre',
             fields=[
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
-                ('genre', models.CharField(default=b'Drama', max_length=20, verbose_name=b'Genre', choices=[(b'Action', b'Action'), (b'Adult', b'Adult'), (b'Adventure', b'Adventure'), (b'Animation', b'Animation'), (b'Crime', b'Crime'), (b'Comedy', b'Comedy'), (b'Documentary', b'Documentary'), (b'Drama', b'Drama'), (b'Family', b'Family'), (b'Fantasy', b'Fantasy'), (b'Horror', b'Horror'), (b'Musical', b'Musical'), (b'Mystery', b'Mystery'), (b'Romance', b'Romance'), (b'Sci-Fi', b'Sci-Fi'), (b'Short', b'Short'), (b'Thriller', b'Thriller'), (b'War', b'War'), (b'Western', b'Western')])),
                 ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
+                ('genre', models.CharField(default=b'Drama', max_length=20, verbose_name=b'Genre', choices=[(b'Action', b'Action'), (b'Adult', b'Adult'), (b'Adventure', b'Adventure'), (b'Animation', b'Animation'), (b'Crime', b'Crime'), (b'Comedy', b'Comedy'), (b'Documentary', b'Documentary'), (b'Drama', b'Drama'), (b'Family', b'Family'), (b'Fantasy', b'Fantasy'), (b'Horror', b'Horror'), (b'Musical', b'Musical'), (b'Mystery', b'Mystery'), (b'Romance', b'Romance'), (b'Sci-Fi', b'Sci-Fi'), (b'Short', b'Short'), (b'Thriller', b'Thriller'), (b'War', b'War'), (b'Western', b'Western')])),
             ],
             options={
                 'db_table': 'MovieGenres',
@@ -93,9 +93,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(serialize=False, editable=False, primary_key=True)),
                 ('time', models.DateTimeField(auto_now=True, verbose_name=b'Time')),
                 ('user_name', models.CharField(max_length=20, verbose_name=b'User Name')),
+                ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
                 ('rating', models.IntegerField(default=5, verbose_name=b'User Rating', choices=[(1, b'1-star'), (2, b'2-star'), (3, b'3-star'), (4, b'4-star'), (5, b'5-star')])),
                 ('comment', models.TextField(default=b'', max_length=2000, blank=True)),
-                ('movie', models.ForeignKey(verbose_name=b'Movie', to='MovieDB.Movie')),
             ],
             options={
                 'ordering': ['-time'],

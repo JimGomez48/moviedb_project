@@ -13,7 +13,7 @@ class TestMigrations(unittest.TestCase):
     def test_load_seed_data(self):
         print 'Loading seed data...'
         try:
-            sql = open(os.path.join(BASE_DIR, os.path.normpath('MovieDB/sql/scripts/load.sql')), 'r').read()
+            sql = open(os.path.join(BASE_DIR, os.path.normpath('MovieDB/sql/scripts/load_xml.sql')), 'r').read()
             print sql
         except StandardError as e:
             self.fail(e.message)

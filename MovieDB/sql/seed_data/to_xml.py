@@ -8,7 +8,7 @@ from moviedb_project.settings import BASE_DIR
 def main():
     IN_PATH = os.path.join(BASE_DIR, 'MovieDB/sql/seed_data/csv')
     OUT_PATH = os.path.join(BASE_DIR, 'MovieDB/sql/seed_data/xml')
-    file_name = 'actor1.del'
+    file_name = 'actor1.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -22,7 +22,7 @@ def main():
             ET.SubElement(row, 'dod').text = tokens[5].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'actor2.del'
+    file_name = 'actor2.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -36,7 +36,7 @@ def main():
             ET.SubElement(row, 'dod').text = tokens[5].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'actor3.del'
+    file_name = 'actor3.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -50,7 +50,7 @@ def main():
             ET.SubElement(row, 'dod').text = tokens[5].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'director.del'
+    file_name = 'director.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -63,7 +63,7 @@ def main():
             ET.SubElement(row, 'dod').text = tokens[4].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'movie.del'
+    file_name = 'movie.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -76,7 +76,7 @@ def main():
             ET.SubElement(row, 'company').text = tokens[4].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'movieactor1.del'
+    file_name = 'movieactor1.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -88,7 +88,7 @@ def main():
             ET.SubElement(row, 'role').text = tokens[3].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'movieactor2.del'
+    file_name = 'movieactor2.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -100,7 +100,7 @@ def main():
             ET.SubElement(row, 'role').text = tokens[3].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'moviedirector.del'
+    file_name = 'moviedirector.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')
@@ -111,7 +111,7 @@ def main():
             ET.SubElement(row, 'did').text = tokens[2].decode('utf-8')
         tree = ET.ElementTree(root)
         tree.write(os.path.join(OUT_PATH, file_name[:-3] + 'xml'), encoding="UTF-8", xml_declaration=True)
-    file_name = 'moviegenre.del'
+    file_name = 'moviegenre.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:
         root = ET.Element('root')

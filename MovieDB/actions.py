@@ -199,38 +199,40 @@ class MovieDetailViewActions(AbstractActions):
 
     def get_movie_genres(self, movie_id):
         manager = models.MovieGenre.objects
-        return manager.filter(mid=movie_id).values_list('genre', flat='True')
+        return manager.filter(movie_id=movie_id).values_list('genre',
+                                                             flat='True')
 
     def get_movie_actors(self, movie_id):
         query_set = models.MovieActor.objects
-        query_set = query_set.filter(mid=movie_id).select_related(
-            'aid__id',
-            'aid__last',
-            'aid__first',
-            'aid__sex',
-            'aid__dob',
-            'aid__dod',
-        ).order_by('aid__last', 'aid__first')
+        query_set = query_set.filter(movie_id=movie_id).select_related(
+            'actor__id',
+            'actor__last',
+            'actor__first',
+            'actor__sex',
+            'actor__dob',
+            'actor__dod',
+        ).order_by('actor__last', 'actor__first')
         return query_set
 
     def get_movie_directors(self, movie_id):
         manager = models.MovieDirector.objects
-        results = manager.filter(mid=movie_id).select_related(
-            'did__id',
-            'did__last',
-            'did__first',
-            'did__dob',
-            'did__dod',
-        ).order_by('did__last', 'did__first')
+        results = manager.filter(movie_id=movie_id).select_related(
+            'director__id',
+            'director__last',
+            'director__first',
+            'director__dob',
+            'director__dod',
+        ).order_by('director__last', 'director__first')
         return results
 
     def get_movie_reviews(self, movie_id):
         manager = models.Review.objects
-        return manager.filter(mid=movie_id).order_by('-time')[0:3]
+        return manager.filter(movie_id=movie_id).order_by('-time')[0:3]
 
     def get_movie_avg_user_rating(self, movie_id):
         manager = models.Review.objects
-        return manager.filter(mid=movie_id).aggregate(Avg('rating'))['rating__avg']
+        return manager.filter(movie_id=movie_id).aggregate(Avg('rating'))[
+            'rating__avg']
 
     def get_movie_details_full(self, movie_id):
         movie = self.get_movie(movie_id)

@@ -82,9 +82,10 @@
                     {% for director in directors %}
                         <tr>
                             <td>
-                                <a class="text-primary text-capitalize" href="{% url 'DirectorDetail' director.did.id %}">
+                                <a class="text-primary text-capitalize"
+                                   href="{% url 'DirectorDetail' director.director_id %}">
                                     <img class="img-circle" src="{% static 'img/default_person.png' %}" width="24">
-                                    {{ director.did.get_full_name }}
+                                    {{ director.director.get_full_name }}
                                 </a>
                             </td>
                         </tr>
@@ -104,9 +105,10 @@
                     {% for actor in actors %}
                         <tr>
                             <td>
-                                <a class="text-primary text-capitalize" href="{% url 'ActorDetail' actor.aid.id %}">
+                                <a class="text-primary text-capitalize"
+                                   href="{% url 'ActorDetail' actor.actor_id %}">
                                     <img class="img-circle" src="{% static 'img/default_person.png' %}" height="24">
-                                    {{ actor.aid.get_full_name }}
+                                    {{ actor.actor.get_full_name }}
                                 </a>
                             </td>
                             <td>

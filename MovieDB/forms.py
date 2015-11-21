@@ -136,12 +136,12 @@ class DirectorForm(forms.ModelForm):
 class ActorToMovieForm(forms.ModelForm):
     class Meta:
         model = models.MovieActor
-        fields = ['mid', 'aid', 'role']
+        fields = ['movie', 'actor', 'role']
         widgets = {
-            'mid': forms.Select(
+            'movie': forms.Select(
                 attrs={'class': 'form-control'},
             ),
-            'aid': forms.Select(
+            'actor': forms.Select(
                 attrs={'class': 'form-control'},
             ),
             'role': forms.TextInput(
@@ -153,12 +153,12 @@ class ActorToMovieForm(forms.ModelForm):
 class DirectorToMovieForm(forms.ModelForm):
     class Meta:
         model = models.MovieDirector
-        fields = ['mid', 'did']
+        fields = ['movie', 'director']
         widgets = {
-            'mid': forms.Select(
+            'movie': forms.Select(
                 attrs={'class': 'form-control'},
             ),
-            'did': forms.Select(
+            'director': forms.Select(
                 attrs={'class': 'form-control'},
             ),
         }
@@ -167,7 +167,7 @@ class DirectorToMovieForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = models.Review
-        fields = ['user_name', 'mid', 'rating', 'comment']
+        fields = ['user_name', 'movie', 'rating', 'comment']
         widgets = {
             'user_name': forms.TextInput(
                 attrs={
@@ -175,7 +175,7 @@ class ReviewForm(forms.ModelForm):
                     'placeholder': 'Enter your user name',
                 },
             ),
-            'mid': forms.Select(
+            'movie': forms.Select(
                 attrs={'class': 'form-control'},
             ),
             'rating': forms.NumberInput(

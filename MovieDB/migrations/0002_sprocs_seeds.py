@@ -16,6 +16,42 @@ def create_stored_procedures():
     return sql
 
 
+def load_static_tables(apps, schema_editor):
+    # load mpaa_ratings
+    MpaaRating = apps.get_model('MovieDB', 'MpaaRating')
+    MpaaRating.objects.bulk_create([
+        MpaaRating(value='G'),
+        MpaaRating(value='PG'),
+        MpaaRating(value='PG-13'),
+        MpaaRating(value='R'),
+        MpaaRating(value='NC-17'),
+        MpaaRating(value='surrendered'),
+    ])
+    # load genres
+    Genre = apps.get_model('MovieDB', 'Genre')
+    Genre.objects.bulk_create([
+        Genre(value='Action'),
+        Genre(value='Adult'),
+        Genre(value='Adventure'),
+        Genre(value='Animation'),
+        Genre(value='Crime'),
+        Genre(value='Comedy'),
+        Genre(value='Documentary'),
+        Genre(value='Drama'),
+        Genre(value='Family'),
+        Genre(value='Fantasy'),
+        Genre(value='Horror'),
+        Genre(value='Musical'),
+        Genre(value='Mystery'),
+        Genre(value='Romance'),
+        Genre(value='Sci-Fi'),
+        Genre(value='Short'),
+        Genre(value='Thriller'),
+        Genre(value='War'),
+        Genre(value='Western'),
+    ])
+
+
 def load_seed_data_sql():
     print 'Loading seed data...'
     sql = open(os.path.join(BASE_DIR, os.path.normpath('MovieDB/sql/scripts/load_csv.sql')), 'r').read()
@@ -28,6 +64,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(create_stored_procedures()),
+        migrations.RunPython(load_static_tables),
         migrations.RunSQL(load_seed_data_sql()),
+        migrations.RunSQL(create_stored_procedures()),
     ]

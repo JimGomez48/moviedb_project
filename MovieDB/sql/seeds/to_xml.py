@@ -6,8 +6,8 @@ import os
 from moviedb_project.settings import BASE_DIR
 
 def main():
-    IN_PATH = os.path.join(BASE_DIR, 'MovieDB/sql/seed_data/csv')
-    OUT_PATH = os.path.join(BASE_DIR, 'MovieDB/sql/seed_data/xml')
+    IN_PATH = os.path.join(BASE_DIR, 'MovieDB/sql/seeds/csv')
+    OUT_PATH = os.path.join(BASE_DIR, 'MovieDB/sql/seeds/xml')
     file_name = 'actor1.csv'
     orig = os.path.join(IN_PATH, file_name)
     with open(orig, 'r') as infile:

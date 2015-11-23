@@ -15,7 +15,6 @@ from django.db import models
 
 class Actor(models.Model):
     """
-    :param: id - Primary key
     :param: last - Last name of the actor
     :param: first - First name of the actor
     :param: sex - Actor's sex
@@ -24,13 +23,14 @@ class Actor(models.Model):
     """
     class ActorManager(models.Manager):
         pass
+
     MALE = 'male'
     FEMALE = 'female'
     SEX_CHOICES = (
         (MALE, 'Male'),
         (FEMALE, 'Female'),
     )
-    id = models.AutoField(primary_key=True, editable=False)
+
     last = models.CharField(max_length=50, blank=False, null=False, verbose_name='Last Name')
     first = models.CharField(max_length=50, blank=False, null=False, verbose_name='First Name')
     sex = models.CharField(max_length=6, choices=SEX_CHOICES, blank=False, null=False, verbose_name='Sex')
@@ -39,7 +39,7 @@ class Actor(models.Model):
     objects = ActorManager()
 
     class Meta:
-        db_table = 'Actors'
+        db_table = 'actors'
         ordering = ['last', 'first']
 
     def __unicode__(self):
@@ -59,7 +59,6 @@ class Actor(models.Model):
 
 class Director(models.Model):
     """
-    :param: id - Primary key
     :param: last - Last name of the director
     :param: first - First name of the director
     :param: dob - Director's date of birth
@@ -68,7 +67,6 @@ class Director(models.Model):
     class DirectorManager(models.Manager):
         pass
 
-    id = models.AutoField(primary_key=True, editable=False)
     last = models.CharField(max_length=20, blank=False, null=False, verbose_name='Last Name')
     first = models.CharField(max_length=20, blank=False, null=False, verbose_name='First Name')
     dob = models.DateField(blank=False, null=False, verbose_name='Date of Birth')
@@ -76,7 +74,7 @@ class Director(models.Model):
     objects = DirectorManager()
 
     class Meta:
-        db_table = 'Directors'
+        db_table = 'directors'
         ordering = ['last', 'first']
 
     def __unicode__(self):
@@ -92,24 +90,14 @@ class Director(models.Model):
         super(Director, self).save(force_insert, force_update, using, update_fields)
 
 
-class Movie(models.Model):
-    """
-    :param: id - Primary key
-    :param: title - The movie title
-    :param: year - The year the movie was released
-    :param: rating - MPAA rating
-    :param: company - Production Company
-    """
-    class MovieManager(models.Manager):
-        pass
-
-    NC_17   = 'NC-17'
-    R       = 'R'
-    PG_13   = 'PG-13'
-    PG      = 'PG'
-    G       = 'G'
-    SURRENDERED = 'surrendere'
-    MPAA_RATINGS = (
+class MpaaRating(models.Model):
+    NC_17       = 'NC-17'
+    R           = 'R'
+    PG_13       = 'PG-13'
+    PG          = 'PG'
+    G           = 'G'
+    SURRENDERED = 'surrendered'
+    RATINGS = (
         (NC_17, 'NC-17'),
         (R, 'R'),
         (PG_13, 'PG-13'),
@@ -117,15 +105,30 @@ class Movie(models.Model):
         (G, 'G'),
         (SURRENDERED, 'Not Rated'),
     )
-    id = models.AutoField(primary_key=True, editable=False)
+
+    value = models.CharField(max_length=20, blank=False, null=False, choices=RATINGS, verbose_name='Mpaa Rating Value')
+
+    class Meta:
+        db_table = 'mpaa_ratings'
+
+
+class Movie(models.Model):
+    """
+    :param: title       - The movie title
+    :param: year        - The year the movie was released
+    :param: mpaa_rating - MPAA rating
+    :param: company     - Production Company
+    """
+    class MovieManager(models.Manager):
+        pass
+
     title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title', unique_for_year='year')
     year = models.IntegerField(blank=False, null=False, default=datetime.date.today().year, verbose_name='Year')
-    rating = models.CharField(max_length=10, choices=MPAA_RATINGS, blank=False, verbose_name='MPAA Rating')
-    company = models.CharField(max_length=50, blank=False, null=False, verbose_name='Production Company')
+    mpaa_rating = models.ForeignKey(MpaaRating, on_delete=models.PROTECT, verbose_name='Mpaa Rating')
     objects = MovieManager()
 
     class Meta:
-        db_table = 'Movies'
+        db_table = 'movies'
         ordering = ['title', 'year']
 
     def __unicode__(self):
@@ -147,9 +150,62 @@ class Movie(models.Model):
         super(Movie, self).save(force_insert, force_update, using, update_fields)
 
 
+class Company(models.Model):
+    name = models.CharField(max_length=50, blank=False, null=False, verbose_name='Company Name')
+
+    class Meta:
+        db_table = 'companies'
+
+
+class Genre(models.Model):
+    ACTION  = 'Action'
+    ADULT   = 'Adult'
+    ADV     = 'Adventure'
+    ANIM    = 'Animation'
+    CRIME   = 'Crime'
+    COMEDY  = 'Comedy'
+    DOC     = 'Documentary'
+    DRAMA   = 'Drama'
+    FAM     = 'Family'
+    FANT    = 'Fantasy'
+    HORROR  = 'Horror'
+    MUS     = 'Musical'
+    MYST    = 'Mystery'
+    ROM     = 'Romance'
+    SCI_FI  = 'Sci-Fi'
+    SHORT   = 'Short'
+    THRILL  = 'Thriller'
+    WAR     = 'War'
+    WEST    ='Western'
+    GENRES = (
+        (ACTION, 'Action'),
+        (ADULT, 'Adult'),
+        (ADV, 'Adventure'),
+        (ANIM, 'Animation'),
+        (CRIME, 'Crime'),
+        (COMEDY, 'Comedy'),
+        (DOC, 'Documentary'),
+        (DRAMA, 'Drama'),
+        (FAM, 'Family'),
+        (FANT, 'Fantasy'),
+        (HORROR, 'Horror'),
+        (MUS, 'Musical'),
+        (MYST, 'Mystery'),
+        (ROM, 'Romance'),
+        (SCI_FI, 'Sci-Fi'),
+        (SHORT, 'Short'),
+        (THRILL, 'Thriller'),
+        (WAR, 'War'),
+        (WEST, 'Western'),
+    )
+    value = models.CharField(max_length=20, choices=GENRES, blank=False, null=False, default='Drama', verbose_name='Genre Value')
+
+    class Meta:
+        db_table = 'genres'
+
+
 class Review(models.Model):
     """
-    :param: id - Primary key
     :param: time - The datetime at which the review was made
     :param: user_name - User name of the person who wrote the review
     :param: movie - Movie foreign key to which this review refers
@@ -158,22 +214,22 @@ class Review(models.Model):
     """
     MIN = 1
     MAX = 5
-    RATING_RANGE = (
+    RATING_CHOICES = (
         (1, '1-star'),
         (2, '2-star'),
         (3, '3-star'),
         (4, '4-star'),
         (5, '5-star'),
     )
-    id = models.AutoField(primary_key=True, editable=False)
+
     time = models.DateTimeField(auto_now=True, editable=False, verbose_name='Time')
     user_name = models.CharField(max_length=20, blank=False, null=False, verbose_name='User Name')
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
-    rating = models.IntegerField(choices=RATING_RANGE, blank=False, null=False, default=5, verbose_name='User Rating')
+    rating = models.IntegerField(choices=RATING_CHOICES, blank=False, null=False, default=5, verbose_name='User Rating')
     comment = models.TextField(max_length=2000, blank=True, default='')
 
     class Meta:
-        db_table = 'Reviews'
+        db_table = 'reviews'
         ordering = ['-time']
 
     def __unicode__(self):
@@ -186,37 +242,47 @@ class Review(models.Model):
         super(Review, self).save(force_insert, force_update, using, update_fields)
 
 
-class MovieActor(models.Model):
-    """
-    :param: id - Primary key
-    :param: movie - Movie foreign key
-    :param: actor - Actor foreign key
-    :param: role - Actor's role in this movie
-    """
-    id = models.AutoField(primary_key=True, editable=False)
+class MovieCompany(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
-    actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name='Actor')
-    role = models.CharField(max_length=50, blank=False, null=False, verbose_name='Role')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name='Company')
 
     class Meta:
-        db_table = 'MovieActors'
+        db_table = 'movie_companies'
+
+
+class MovieActor(models.Model):
+    """
+    :param: movie - Movie foreign key
+    :param: actor - Actor foreign key
+    """
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name='Actor')
+
+    class Meta:
+        db_table = 'movie_actors'
 
     def __unicode__(self):
         return 'id:%s movie:%s actor:%s' % (self.id, self.movie, self.actor)
 
 
+class MovieActorRole(models.Model):
+    movie_actor = models.ForeignKey(MovieActor, on_delete=models.CASCADE)
+    role = models.CharField(max_length=50, blank=False, null=False, verbose_name='Role')
+
+    class Meta:
+        db_table = 'movie_actor_roles'
+
+
 class MovieDirector(models.Model):
     """
-    :param: id - Primary key
     :param: movie - Movie foreign key
     :param: director - Director foreign key
     """
-    id = models.AutoField(primary_key=True, editable=False)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     director = models.ForeignKey(Director, on_delete=models.CASCADE, verbose_name='Director')
 
     class Meta:
-        db_table = 'MovieDirectors'
+        db_table = 'movie_directors'
 
     def __unicode__(self):
         return 'id:%s movie:%s director:%s' % (self.id, self.movie, self.director)
@@ -224,7 +290,6 @@ class MovieDirector(models.Model):
 
 class MovieGenre(models.Model):
     """
-    :param: id - Primary key
     :param: mid - Movie foreign key
     :param: genre - A genre of this movie
     """
@@ -268,12 +333,11 @@ class MovieGenre(models.Model):
         (WAR, 'War'),
         (WEST, 'Western'),
     )
-    id = models.AutoField(primary_key=True, editable=False)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
-    genre = models.CharField(max_length=20, choices=GENRE_CHOICES, blank=False, null=False, default='Drama', verbose_name='Genre')
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, verbose_name='Movie')
 
     class Meta:
-        db_table = 'MovieGenres'
+        db_table = 'movie_genres'
 
     def __unicode__(self):
         return 'id:%s movie:%s genre:%s' % (self.id, self.movie, self.genre)

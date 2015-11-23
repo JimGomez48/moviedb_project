@@ -12,6 +12,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+def validate_dob_dod(dob):
+    pass
 
 class Actor(models.Model):
     """
@@ -43,7 +45,7 @@ class Actor(models.Model):
         ordering = ['last', 'first']
 
     def __unicode__(self):
-        return '%s, %s (%s)' % (self.last, self.first, self.dob)
+        return '[%s] %s, %s (%s)' % (self.id, self.last, self.first, self.dob)
 
     def get_full_name(self):
         return '%s %s' % (self.first, self.last)
@@ -78,7 +80,7 @@ class Director(models.Model):
         ordering = ['last', 'first']
 
     def __unicode__(self):
-        return '%s, %s (%s)' % (self.last, self.first, self.dob)
+        return '[%s] %s, %s (%s)' % (self.id, self.last, self.first, self.dob)
 
     def get_full_name(self):
         return '%s %s' % (self.first, self.last)
@@ -111,50 +113,8 @@ class MpaaRating(models.Model):
     class Meta:
         db_table = 'mpaa_ratings'
 
-
-class Movie(models.Model):
-    """
-    :param: title       - The movie title
-    :param: year        - The year the movie was released
-    :param: mpaa_rating - MPAA rating
-    :param: company     - Production Company
-    """
-    class MovieManager(models.Manager):
-        pass
-
-    title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title', unique_for_year='year')
-    year = models.IntegerField(blank=False, null=False, default=datetime.date.today().year, verbose_name='Year')
-    mpaa_rating = models.ForeignKey(MpaaRating, on_delete=models.PROTECT, verbose_name='Mpaa Rating')
-    objects = MovieManager()
-
-    class Meta:
-        db_table = 'movies'
-        ordering = ['title', 'year']
-
     def __unicode__(self):
-        return '%s (%s)' % (self.title, self.year)
-
-    def get_cleaned_title(self):
-        r = re.compile(r', The$', re.IGNORECASE)
-        if not re.search(r, self.title):
-            return self.title
-        cleaned_title = '%s %s' % ('The', str(re.sub(r, '', self.title)))
-        return cleaned_title
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        if self.year < 1800 or self.year > datetime.datetime.now().year:
-            raise ValidationError('Invalid year value')
-        # if not self.rating in self.MPAA_RATINGS:
-        #     raise ValidationError('Invalid rating value')
-        super(Movie, self).save(force_insert, force_update, using, update_fields)
-
-
-class Company(models.Model):
-    name = models.CharField(max_length=50, blank=False, null=False, verbose_name='Company Name')
-
-    class Meta:
-        db_table = 'companies'
+        return '[%s] %s' % (self.id, self.value)
 
 
 class Genre(models.Model):
@@ -203,6 +163,61 @@ class Genre(models.Model):
     class Meta:
         db_table = 'genres'
 
+    def __unicode__(self):
+        return '[%s] %s' % (self.id, self.value)
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=50, blank=False, null=False, verbose_name='Company Name')
+
+    class Meta:
+        db_table = 'companies'
+
+    def __unicode__(self):
+        return '[%s]: %s' % (self.id, self.name)
+
+
+class Movie(models.Model):
+    """
+    :param: title       - The movie title
+    :param: year        - The year the movie was released
+    :param: mpaa_rating - MPAA rating
+    :param: company     - Production Company
+    """
+    class MovieManager(models.Manager):
+        pass
+
+    title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title', unique_for_year='year')
+    year = models.IntegerField(blank=False, null=False, default=datetime.date.today().year, verbose_name='Year')
+    mpaa_rating = models.ForeignKey(MpaaRating, on_delete=models.PROTECT, verbose_name='Mpaa Rating')
+    cast = models.ManyToManyField(Actor, through='MovieActor')
+    directors = models.ManyToManyField(Director, through='MovieDirector')
+    genres = models.ManyToManyField(Genre, through='MovieGenre')
+    companies = models.ManyToManyField(Company, through='MovieCompany')
+    objects = MovieManager()
+
+    class Meta:
+        db_table = 'movies'
+        ordering = ['title', 'year']
+
+    def __unicode__(self):
+        return '[%s] %s (%s)' % (self.id, self.title, self.year)
+
+    def get_cleaned_title(self):
+        r = re.compile(r', The$', re.IGNORECASE)
+        if not re.search(r, self.title):
+            return self.title
+        cleaned_title = '%s %s' % ('The', str(re.sub(r, '', self.title)))
+        return cleaned_title
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.year < 1800 or self.year > datetime.datetime.now().year:
+            raise ValidationError('Invalid year value')
+        # if not self.rating in self.MPAA_RATINGS:
+        #     raise ValidationError('Invalid rating value')
+        super(Movie, self).save(force_insert, force_update, using, update_fields)
+
 
 class Review(models.Model):
     """
@@ -233,7 +248,7 @@ class Review(models.Model):
         ordering = ['-time']
 
     def __unicode__(self):
-        return 'movie_id:%s user:%s time:%s rating:%s' % (self.movie, self.user_name, self.time, self.rating)
+        return '[%s] movie:%s user:%s time:%s rating:%s' % (self.id, self.movie.id, self.user_name, self.time, self.rating)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -249,20 +264,30 @@ class MovieCompany(models.Model):
     class Meta:
         db_table = 'movie_companies'
 
+    def __unicode__(self):
+        return '[%s] movie=%s company=%s' % (self.id, self.movie.id, self.company.id)
+
 
 class MovieActor(models.Model):
     """
     :param: movie - Movie foreign key
     :param: actor - Actor foreign key
     """
+    class MovieActorManager(models.Manager):
+        pass
+
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name='Actor')
+    objects = MovieActorManager
 
     class Meta:
         db_table = 'movie_actors'
 
     def __unicode__(self):
-        return 'id:%s movie:%s actor:%s' % (self.id, self.movie, self.actor)
+        return '[%s] movie=%s actor=%s' % (self.id, self.movie.id, self.actor.id)
+
+    def roles(self):
+        return self.movieactorrole_set.all().values_list('role', flat=True)
 
 
 class MovieActorRole(models.Model):
@@ -271,6 +296,9 @@ class MovieActorRole(models.Model):
 
     class Meta:
         db_table = 'movie_actor_roles'
+
+    def __unicode__(self):
+        return '[%s] movie=%s role=%s' % (self.id, self.movie_actor.id, self.role)
 
 
 class MovieDirector(models.Model):
@@ -285,7 +313,7 @@ class MovieDirector(models.Model):
         db_table = 'movie_directors'
 
     def __unicode__(self):
-        return 'id:%s movie:%s director:%s' % (self.id, self.movie, self.director)
+        return '[%s] movie=%s director=%s' % (self.id, self.movie.id, self.director.id)
 
 
 class MovieGenre(models.Model):
@@ -340,7 +368,7 @@ class MovieGenre(models.Model):
         db_table = 'movie_genres'
 
     def __unicode__(self):
-        return 'id:%s movie:%s genre:%s' % (self.id, self.movie, self.genre)
+        return '[%s] movie:%s genre:%s' % (self.id, self.movie.id, self.genre.id)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

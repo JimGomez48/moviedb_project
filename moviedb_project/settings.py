@@ -70,10 +70,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+        'DEBUG': True,
     },
 ]
-
-TEMPLATE_DEBUG=True
 
 WSGI_APPLICATION = 'moviedb_project.wsgi.application'
 
@@ -120,8 +119,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR,  'templates'),
-    os.path.join(BASE_DIR, 'MovieDB/templates'),
-)

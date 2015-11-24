@@ -27,6 +27,7 @@ MySQL v5.5
 * MySQL-python
 * sqlparse
 * django-datetime-widget
+* django-rest-framework v3.3.1
 
 ### Browser
 any html5-enabled browser (I hope)

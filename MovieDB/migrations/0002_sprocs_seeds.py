@@ -58,6 +58,20 @@ def load_seed_data_sql():
     return sql
 
 
+def load_seed_reviews(apps, schema_editor):
+    Review = apps.get_model('MovieDB', 'Review')
+    Movie = apps.get_model('MovieDB', 'Movie')
+    Review.objects.bulk_create([
+        Review(time=u'2015-11-23 05:35:35', user_name=u'Jim',
+               movie=Movie.objects.get(id=253), rating=5, comment=u'Great!'),
+        Review(time=u'2015-11-23 05:35:35', user_name=u'James',
+               movie=Movie.objects.get(id=253), rating=2, comment=u'Ehh...'),
+        Review(time=u'2015-11-23 05:35:35', user_name=u'Jimbo',
+               movie=Movie.objects.get(id=253), rating=4,
+               comment=u'Pretty good'),
+    ])
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ('MovieDB', '0001_initial'),
@@ -67,4 +81,5 @@ class Migration(migrations.Migration):
         migrations.RunPython(load_static_tables),
         migrations.RunSQL(load_seed_data_sql()),
         migrations.RunSQL(create_stored_procedures()),
+        migrations.RunPython(load_seed_reviews),
     ]

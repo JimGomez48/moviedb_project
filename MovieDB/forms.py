@@ -27,16 +27,17 @@ class NavBarSearchForm(forms.Form):
 class MovieForm(forms.ModelForm):
     class Meta:
         model=models.Movie
-        fields=['title', 'company', 'year', 'rating']
+        fields = ['title', 'year']
+        # fields=['title', 'company', 'year', 'rating']
         widgets={
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Movie Title',
             }),
-            'company': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Production Company',
-            }),
+            # 'company': forms.TextInput(attrs={
+            #     'class': 'form-control',
+            #     'placeholder': 'Production Company',
+            # }),
             'year': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'maxlength': '4',
@@ -44,9 +45,9 @@ class MovieForm(forms.ModelForm):
                 'max': datetime.date.today().year,
                 'value': datetime.date.today().year
             }),
-            'rating': forms.Select(attrs={
-                'class': 'form-control',
-            }),
+            # 'rating': forms.Select(attrs={
+            #     'class': 'form-control',
+            # }),
         }
 
 
@@ -136,7 +137,8 @@ class DirectorForm(forms.ModelForm):
 class ActorToMovieForm(forms.ModelForm):
     class Meta:
         model = models.MovieActor
-        fields = ['movie', 'actor', 'role']
+        # fields = ['movie', 'actor', 'role']
+        fields = ['movie', 'actor']
         widgets = {
             'movie': forms.Select(
                 attrs={'class': 'form-control'},
@@ -144,9 +146,9 @@ class ActorToMovieForm(forms.ModelForm):
             'actor': forms.Select(
                 attrs={'class': 'form-control'},
             ),
-            'role': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': "Actor's role in the film"},
-            ),
+            # 'role': forms.TextInput(
+            #     attrs={'class': 'form-control', 'placeholder': "Actor's role in the film"},
+            # ),
         }
 
 
@@ -182,7 +184,8 @@ class ReviewForm(forms.ModelForm):
                 attrs={
                     'class': 'rating form-control',
                     'data-min': 0,
-                    'data-max': models.Review.MAX,
+                    'data-max': max(
+                        [x[0] for x in models.Review.RATING_CHOICES]),
                     'data-step': '1',
                     'data-size': 'sm',
                     'data-show-clear': 'false',

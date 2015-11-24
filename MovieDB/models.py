@@ -11,6 +11,8 @@ import re
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Avg
+
 
 def validate_dob_dod(dob):
     pass
@@ -210,6 +212,9 @@ class Movie(models.Model):
         cleaned_title = '%s %s' % ('The', str(re.sub(r, '', self.title)))
         return cleaned_title
 
+    def avg_user_rating(self):
+        return self.review_set.aggregate(Avg('rating'))['rating__avg']
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         if self.year < 1800 or self.year > datetime.datetime.now().year:
@@ -227,8 +232,6 @@ class Review(models.Model):
     :param: rating - Rating (1-5 stars)
     :param: comment - User's review comments
     """
-    MIN = 1
-    MAX = 5
     RATING_CHOICES = (
         (1, '1-star'),
         (2, '2-star'),

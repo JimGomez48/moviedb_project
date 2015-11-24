@@ -142,12 +142,13 @@ class MovieDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         self.bind_context_data(
-            movie= movie_details['movie'],
-            actors = movie_details['actors'],
-            directors = movie_details['directors'],
-            genres = movie_details['genres'],
-            reviews = movie_details['reviews'],
-            avg_user_rating = movie_details['avg_rating'],
+            movie=movie_details['movie'],
+            avg_user_rating=movie_details['avg_rating'],
+            companies=movie_details['companies'],
+            actors=movie_details['actors'],
+            directors=movie_details['directors'],
+            genres=movie_details['genres'],
+            reviews=movie_details['reviews'],
         )
         return render(request, 'views/detail_movie_view.html', self.get_context_data())
 

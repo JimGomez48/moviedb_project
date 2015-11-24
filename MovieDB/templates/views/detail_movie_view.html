@@ -21,22 +21,22 @@
                         </tr>
                         <tr>
                             <td><h4><strong>Company</strong></h4></td>
-                            <td><h4>{{ movie.company }}</h4></td>
+                            <td><h4>{{ companies }}</h4></td>
                         </tr>
                         <tr>
                             <td><h4><strong>MPAA Rating</strong></h4></td>
                             <td><h4>
-                                {% if movie.rating == 'G' %}
+                                {% if movie.mpaa_rating.value == 'G' %}
                                     <img src="{% static 'img/mpaa-icon_g.svg.png' %}" height="20">
-                                {% elif movie.rating == 'PG' %}
+                                {% elif movie.mpaa_rating.value == 'PG' %}
                                     <img src="{% static 'img/mpaa-icon_pg.svg.png' %}" height="20">
-                                {% elif movie.rating == 'PG-13' %}
+                                {% elif movie.mpaa_rating.value == 'PG-13' %}
                                     <img src="{% static 'img/mpaa-icon_pg-13.svg.png' %}" height="20">
-                                {% elif movie.rating == 'R' %}
+                                {% elif movie.mpaa_rating.value == 'R' %}
                                     <img src="{% static 'img/mpaa-icon_r.svg.png' %}" height="20">
-                                {% elif movie.rating == 'NC-17' %}
+                                {% elif movie.mpaa_rating.value == 'NC-17' %}
                                     <img src="{% static 'img/mpaa-icon_nc-17.svg.png' %}" height="20">
-                                {% elif movie.rating == 'surrendered' %}
+                                {% elif movie.mpaa_rating.value == 'surrendered' %}
                                     <h4>Rating surrendered</h4>
                                 {% endif %}
                             </h4></td>
@@ -112,7 +112,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ actor.role }}
+                                {{ actor.roles|join:', ' }}
                             </td>
                         </tr>
                     {% endfor %}

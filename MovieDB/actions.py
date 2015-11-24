@@ -198,32 +198,26 @@ class MovieDetailViewActions(AbstractActions):
         return models.Movie.objects.get(id=movie_id)
 
     def get_movie_genres(self, movie_id):
-        manager = models.MovieGenre.objects
-        return manager.filter(movie_id=movie_id).values_list('genre',
-                                                             flat='True')
+        movie = models.Movie.objects.get(id=movie_id)
+        return movie.genres.values_list('value', flat='True')
 
     def get_movie_actors(self, movie_id):
-        query_set = models.MovieActor.objects
-        query_set = query_set.filter(movie_id=movie_id).select_related(
-            'actor__id',
-            'actor__last',
-            'actor__first',
-            'actor__sex',
-            'actor__dob',
-            'actor__dod',
-        ).order_by('actor__last', 'actor__first')
-        return query_set
+        movie_actors = models.MovieActor.objects \
+            .filter(movie_id=movie_id) \
+            .select_related('actor') \
+            .order_by('actor__last', 'actor__first')
+        return movie_actors
 
     def get_movie_directors(self, movie_id):
         manager = models.MovieDirector.objects
-        results = manager.filter(movie_id=movie_id).select_related(
-            'director__id',
-            'director__last',
-            'director__first',
-            'director__dob',
-            'director__dod',
-        ).order_by('director__last', 'director__first')
+        results = manager.filter(movie_id=movie_id) \
+            .select_related('director') \
+            .order_by('director__last', 'director__first')
         return results
+
+    def get_movie_companies(self, movie_id):
+        movie = models.Movie.objects.get(id=movie_id)
+        return movie.companies.values()
 
     def get_movie_reviews(self, movie_id):
         manager = models.Review.objects
@@ -236,18 +230,32 @@ class MovieDetailViewActions(AbstractActions):
 
     def get_movie_details_full(self, movie_id):
         movie = self.get_movie(movie_id)
-        actors = self.get_movie_actors(movie_id)
-        directors = self.get_movie_directors(movie_id)
-        genres = self.get_movie_genres(movie_id)
-        reviews = self.get_movie_reviews(movie_id)
-        avg_rating = self.get_movie_avg_user_rating(movie_id)
+        avg_rating = movie.avg_user_rating()
+        companies = movie.companies.all()
+        cast = models.MovieActor.objects.filter(
+            movie_id=movie_id).select_related('actor')
+        # cast = []
+        # for movie_actor in models.MovieActor.objects.filter(movie_id=movie_id).select_related('actor'):
+        #     cast.append({
+        #         'id': movie_actor.actor.id,
+        #         'last': movie_actor.actor.last,
+        #         'first': movie_actor.actor.first,
+        #         'sex': movie_actor.actor.sex,
+        #         'dob': movie_actor.actor.dob,
+        #         'dod': movie_actor.actor.dod,
+        #         'roles': movie_actor.roles(),
+        #     })
+        directors = movie.directors.all()
+        genres = movie.genres.all()
+        reviews = movie.review_set.all()
         return {
             'movie': movie,
-            'actors': actors,
+            'avg_rating': avg_rating,
+            'companies': companies,
+            'actors': cast,
             'directors': directors,
             'genres': genres,
             'reviews': reviews,
-            'avg_rating': avg_rating,
         }
 
     def get_movie_details_full_sproc(self, movie_id):

@@ -780,7 +780,7 @@
     <table name="reviews" schema="" catalog="movie_db" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
-      <column name="user_name" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="user" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
       <column name="rating" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="comment" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
       <column name="movie_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>

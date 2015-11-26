@@ -301,7 +301,7 @@ class MovieDetailViewActions(AbstractActions):
                 review = models.Review()
                 review.id =         row[0]
                 review.time =       row[1]
-                review.user_name =  row[2]
+                review.user = row[2]
                 review.rating =     row[3]
                 review.comment =    row[4]
                 reviews.append(review)

@@ -60,6 +60,10 @@ class Actor(models.Model):
         #     raise ValidationError('invalid value for sex')
         super(Actor, self).save(force_insert, force_update, using, update_fields)
 
+    def movie_roles(self, movie_id):
+        return MovieActor.objects.filter(movie_id=movie_id,
+                                         actor_id=self.id).first().roles()
+
 
 class Director(models.Model):
     """
@@ -241,7 +245,8 @@ class Review(models.Model):
     )
 
     time = models.DateTimeField(auto_now=True, editable=False, verbose_name='Time')
-    user_name = models.CharField(max_length=20, blank=False, null=False, verbose_name='User Name')
+    user = models.CharField(max_length=20, blank=False, null=False,
+                            verbose_name='User Name')
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     rating = models.IntegerField(choices=RATING_CHOICES, blank=False, null=False, default=5, verbose_name='User Rating')
     comment = models.TextField(max_length=2000, blank=True, default='')
@@ -251,7 +256,8 @@ class Review(models.Model):
         ordering = ['-time']
 
     def __unicode__(self):
-        return '[%s] movie:%s user:%s time:%s rating:%s' % (self.id, self.movie.id, self.user_name, self.time, self.rating)
+        return '[%s] movie:%s user:%s time:%s rating:%s' % (
+        self.id, self.movie.id, self.user, self.time, self.rating)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -281,6 +287,7 @@ class MovieActor(models.Model):
 
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name='Actor')
+    roles = models.Field
     objects = MovieActorManager
 
     class Meta:
@@ -290,7 +297,7 @@ class MovieActor(models.Model):
         return '[%s] movie=%s actor=%s' % (self.id, self.movie.id, self.actor.id)
 
     def roles(self):
-        return self.movieactorrole_set.all().values_list('role', flat=True)
+        return self.movieactorrole_set.all()
 
 
 class MovieActorRole(models.Model):

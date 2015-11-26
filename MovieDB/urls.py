@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
 import views
+import api_views
+
 
 urlpatterns = [
     # Base
@@ -37,3 +39,6 @@ urlpatterns = [
     url(r'^WriteReview/$', views.WriteReviewView.as_view(), name='WriteReview'),
     url(r'^WriteReview/(?P<mid>\d+)/$', views.WriteReviewView.as_view(), name='WriteReview'),
 ]
+
+# movies
+# views

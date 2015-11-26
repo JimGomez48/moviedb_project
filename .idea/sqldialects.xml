@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/MovieDB/sql/scripts/load_csv.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/MovieDB/sql/scripts/load_xml.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/MovieDB/sql/sprocs/sp_get_movie_details_full.sql" dialect="MySQL" />
+  </component>
+</project>

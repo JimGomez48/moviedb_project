@@ -105,6 +105,13 @@ DATABASES = {
     }
 }
 
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 

@@ -1,2 +1,4 @@
-.idea/
+workspace.xml
+tasks.xml
+dataSources.local.xml
 *.pyc

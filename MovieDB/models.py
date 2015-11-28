@@ -6,6 +6,11 @@ not depend on any other model to carry out the behaviour.
 The Model Layer knows about itself only.
 """
 
+import sys
+reload(sys)
+sys.setdefaultencoding('UTF8')
+
+
 import datetime
 import re
 from django.core.exceptions import ValidationError
@@ -168,6 +173,7 @@ class Genre(models.Model):
 
     class Meta:
         db_table = 'genres'
+        ordering = ['value']
 
     def __unicode__(self):
         return '[%s] %s' % (self.id, self.value)
@@ -209,11 +215,14 @@ class Movie(models.Model):
     def __unicode__(self):
         return '[%s] %s (%s)' % (self.id, self.title, self.year)
 
-    def get_cleaned_title(self):
+    def cleaned_title(self):
         r = re.compile(r', The$', re.IGNORECASE)
         if not re.search(r, self.title):
             return self.title
-        cleaned_title = '%s %s' % ('The', str(re.sub(r, '', self.title)))
+        try:
+            cleaned_title = '%s %s' % ('The', str(re.sub(r, '', self.title)))
+        except UnicodeEncodeError:
+            pass
         return cleaned_title
 
     def avg_user_rating(self):
@@ -272,6 +281,7 @@ class MovieCompany(models.Model):
 
     class Meta:
         db_table = 'movie_companies'
+        ordering = ['movie__title', 'company__name']
 
     def __unicode__(self):
         return '[%s] movie=%s company=%s' % (self.id, self.movie.id, self.company.id)
@@ -292,6 +302,7 @@ class MovieActor(models.Model):
 
     class Meta:
         db_table = 'movie_actors'
+        ordering = ['-movie__year', 'actor__last', 'actor__first']
 
     def __unicode__(self):
         return '[%s] movie=%s actor=%s' % (self.id, self.movie.id, self.actor.id)
@@ -321,6 +332,7 @@ class MovieDirector(models.Model):
 
     class Meta:
         db_table = 'movie_directors'
+        ordering = ['-movie__year', 'director__last', 'director__first']
 
     def __unicode__(self):
         return '[%s] movie=%s director=%s' % (self.id, self.movie.id, self.director.id)
@@ -331,46 +343,6 @@ class MovieGenre(models.Model):
     :param: mid - Movie foreign key
     :param: genre - A genre of this movie
     """
-    ACTION  = 'Action'
-    ADULT   = 'Adult'
-    ADV     = 'Adventure'
-    ANIM    = 'Animation'
-    CRIME   = 'Crime'
-    COMEDY  = 'Comedy'
-    DOC     = 'Documentary'
-    DRAMA   = 'Drama'
-    FAM     = 'Family'
-    FANT    = 'Fantasy'
-    HORROR  = 'Horror'
-    MUS     = 'Musical'
-    MYST    = 'Mystery'
-    ROM     = 'Romance'
-    SCI_FI  = 'Sci-Fi'
-    SHORT   = 'Short'
-    THRILL  = 'Thriller'
-    WAR     = 'War'
-    WEST    ='Western'
-    GENRE_CHOICES = (
-        (ACTION, 'Action'),
-        (ADULT, 'Adult'),
-        (ADV, 'Adventure'),
-        (ANIM, 'Animation'),
-        (CRIME, 'Crime'),
-        (COMEDY, 'Comedy'),
-        (DOC, 'Documentary'),
-        (DRAMA, 'Drama'),
-        (FAM, 'Family'),
-        (FANT, 'Fantasy'),
-        (HORROR, 'Horror'),
-        (MUS, 'Musical'),
-        (MYST, 'Mystery'),
-        (ROM, 'Romance'),
-        (SCI_FI, 'Sci-Fi'),
-        (SHORT, 'Short'),
-        (THRILL, 'Thriller'),
-        (WAR, 'War'),
-        (WEST, 'Western'),
-    )
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE, verbose_name='Movie')
 

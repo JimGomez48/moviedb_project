@@ -1,4 +1,5 @@
 workspace.xml
 tasks.xml
 dataSources.local.xml
+james.xml
 *.pyc

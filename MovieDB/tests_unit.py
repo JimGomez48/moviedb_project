@@ -94,14 +94,14 @@ class TestModels(unittest.TestCase):
         # a movie NOT starting with 'The'
         movie = manager.get(id=2)
         title = movie.title
-        cleaned_title = movie.get_cleaned_title()
+        cleaned_title = movie.cleaned_title()
         # print title
         # print cleaned_title
         self.assertEquals(title, cleaned_title)
         # a movie stating with 'The', thus stored with ', The' at the end
         movie = manager.get(id=9)
         title = movie.title
-        cleaned_title = movie.get_cleaned_title()
+        cleaned_title = movie.cleaned_title()
         # print title
         # print cleaned_title
         self.assertNotEqual(title, cleaned_title)

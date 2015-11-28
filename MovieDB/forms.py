@@ -169,9 +169,9 @@ class DirectorToMovieForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = models.Review
-        fields = ['user_name', 'movie', 'rating', 'comment']
+        fields = ['user', 'movie', 'rating', 'comment']
         widgets = {
-            'user_name': forms.TextInput(
+            'user': forms.TextInput(
                 attrs={
                     'class': 'form-control',
                     'placeholder': 'Enter your user name',

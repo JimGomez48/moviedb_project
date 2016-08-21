@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+USR='jgomez'
+PWD='test'
+
+BASE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 echo "Creating 'movie_db' database..."
-mysql --user=james --password=test --local-infile --execute="CREATE DATABASE movie_db;"
+mysql -u $USR --password=$PWD --local-infile --execute="CREATE DATABASE movie_db;"
 
 echo "Starting migration..."
-cd ~/Documents/django_workspace/moviedb_project/
+cd $BASE_DIR/../..
 python manage.py makemigrations
 python manage.py migrate
 
-cd ~/Documents/django_workspace/moviedb_project/MovieDB/sql/scripts/
+cd ./MovieDB/sql/scripts/
 echo "Loading seed data..."
-mysql --user=james --password=test movie_db --local-infile < load.sql
+mysql -u $USR --password=$PWD movie_db --local-infile < load_csv.sql
 
-cd ~/Documents/django_workspace/moviedb_project
+cd $BASE_DIR
 echo "DONE"

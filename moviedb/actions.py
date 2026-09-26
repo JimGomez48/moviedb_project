@@ -343,12 +343,7 @@ class AddActorDirectorViewActions(AbstractActions):
         actor = models.Actor()
         actor.last = actor_data["last"]
         actor.first = actor_data["first"]
-        if actor_data["sex"] == models.Actor.MALE:
-            actor.sex = models.Actor.MALE
-        elif actor_data["sex"] == models.Actor.FEMALE:
-            actor.sex = models.Actor.FEMALE
-        else:
-            raise ValueError("Invalid value for actor.sex")
+        actor.sex = models.Actor.Sex(actor_data["sex"])  # ValueError if invalid
         actor.dob = actor_data["dob"]
         if actor_data["dod"]:
             actor.dod = actor_data["dod"]

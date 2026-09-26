@@ -12,12 +12,9 @@ def current_year():
 
 
 class Actor(models.Model):
-    MALE = "male"
-    FEMALE = "female"
-    SEX_CHOICES = (
-        (MALE, "Male"),
-        (FEMALE, "Female"),
-    )
+    class Sex(models.TextChoices):
+        MALE = "male", "Male"
+        FEMALE = "female", "Female"
 
     last = models.CharField(
         max_length=50, blank=False, null=False, verbose_name="Last Name"
@@ -26,7 +23,7 @@ class Actor(models.Model):
         max_length=50, blank=False, null=False, verbose_name="First Name"
     )
     sex = models.CharField(
-        max_length=6, choices=SEX_CHOICES, blank=False, null=False, verbose_name="Sex"
+        max_length=6, choices=Sex, blank=False, null=False, verbose_name="Sex"
     )
     dob = models.DateField(verbose_name="Date of Birth")
     dod = models.DateField(null=True, default=None, verbose_name="Date of Death")
@@ -76,26 +73,19 @@ class Director(models.Model):
 
 
 class MpaaRating(models.Model):
-    NC_17 = "NC-17"
-    R = "R"
-    PG_13 = "PG-13"
-    PG = "PG"
-    G = "G"
-    SURRENDERED = "surrendered"
-    RATINGS = (
-        (NC_17, "NC-17"),
-        (R, "R"),
-        (PG_13, "PG-13"),
-        (PG, "PG"),
-        (G, "G"),
-        (SURRENDERED, "Not Rated"),
-    )
+    class Value(models.TextChoices):
+        NC_17 = "NC-17", "NC-17"
+        R = "R", "R"
+        PG_13 = "PG-13", "PG-13"
+        PG = "PG", "PG"
+        G = "G", "G"
+        SURRENDERED = "surrendered", "Not Rated"
 
     value = models.CharField(
         max_length=20,
         blank=False,
         null=False,
-        choices=RATINGS,
+        choices=Value,
         verbose_name="Mpaa Rating Value",
     )
 
@@ -107,52 +97,33 @@ class MpaaRating(models.Model):
 
 
 class Genre(models.Model):
-    ACTION = "Action"
-    ADULT = "Adult"
-    ADV = "Adventure"
-    ANIM = "Animation"
-    CRIME = "Crime"
-    COMEDY = "Comedy"
-    DOC = "Documentary"
-    DRAMA = "Drama"
-    FAM = "Family"
-    FANT = "Fantasy"
-    HORROR = "Horror"
-    MUS = "Musical"
-    MYST = "Mystery"
-    ROM = "Romance"
-    SCI_FI = "Sci-Fi"
-    SHORT = "Short"
-    THRILL = "Thriller"
-    WAR = "War"
-    WEST = "Western"
-    GENRES = (
-        (ACTION, "Action"),
-        (ADULT, "Adult"),
-        (ADV, "Adventure"),
-        (ANIM, "Animation"),
-        (CRIME, "Crime"),
-        (COMEDY, "Comedy"),
-        (DOC, "Documentary"),
-        (DRAMA, "Drama"),
-        (FAM, "Family"),
-        (FANT, "Fantasy"),
-        (HORROR, "Horror"),
-        (MUS, "Musical"),
-        (MYST, "Mystery"),
-        (ROM, "Romance"),
-        (SCI_FI, "Sci-Fi"),
-        (SHORT, "Short"),
-        (THRILL, "Thriller"),
-        (WAR, "War"),
-        (WEST, "Western"),
-    )
+    class Value(models.TextChoices):
+        ACTION = "Action"
+        ADULT = "Adult"
+        ADVENTURE = "Adventure"
+        ANIMATION = "Animation"
+        CRIME = "Crime"
+        COMEDY = "Comedy"
+        DOCUMENTARY = "Documentary"
+        DRAMA = "Drama"
+        FAMILY = "Family"
+        FANTASY = "Fantasy"
+        HORROR = "Horror"
+        MUSICAL = "Musical"
+        MYSTERY = "Mystery"
+        ROMANCE = "Romance"
+        SCI_FI = "Sci-Fi", "Sci-Fi"
+        SHORT = "Short"
+        THRILLER = "Thriller"
+        WAR = "War"
+        WESTERN = "Western"
+
     value = models.CharField(
         max_length=20,
-        choices=GENRES,
+        choices=Value,
         blank=False,
         null=False,
-        default="Drama",
+        default=Value.DRAMA,
         verbose_name="Genre Value",
     )
 
@@ -221,13 +192,12 @@ class Movie(models.Model):
 
 
 class Review(models.Model):
-    RATING_CHOICES = (
-        (1, "1-star"),
-        (2, "2-star"),
-        (3, "3-star"),
-        (4, "4-star"),
-        (5, "5-star"),
-    )
+    class Rating(models.IntegerChoices):
+        ONE = 1, "1-star"
+        TWO = 2, "2-star"
+        THREE = 3, "3-star"
+        FOUR = 4, "4-star"
+        FIVE = 5, "5-star"
 
     time = models.DateTimeField(auto_now=True, editable=False, verbose_name="Time")
     user_name = models.CharField(
@@ -235,10 +205,10 @@ class Review(models.Model):
     )
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
     rating = models.IntegerField(
-        choices=RATING_CHOICES,
+        choices=Rating,
         blank=False,
         null=False,
-        default=5,
+        default=Rating.FIVE,
         verbose_name="User Rating",
     )
     comment = models.TextField(max_length=2000, blank=True, default="")
@@ -308,46 +278,6 @@ class MovieDirector(models.Model):
 
 
 class MovieGenre(models.Model):
-    ACTION = "Action"
-    ADULT = "Adult"
-    ADV = "Adventure"
-    ANIM = "Animation"
-    CRIME = "Crime"
-    COMEDY = "Comedy"
-    DOC = "Documentary"
-    DRAMA = "Drama"
-    FAM = "Family"
-    FANT = "Fantasy"
-    HORROR = "Horror"
-    MUS = "Musical"
-    MYST = "Mystery"
-    ROM = "Romance"
-    SCI_FI = "Sci-Fi"
-    SHORT = "Short"
-    THRILL = "Thriller"
-    WAR = "War"
-    WEST = "Western"
-    GENRE_CHOICES = (
-        (ACTION, "Action"),
-        (ADULT, "Adult"),
-        (ADV, "Adventure"),
-        (ANIM, "Animation"),
-        (CRIME, "Crime"),
-        (COMEDY, "Comedy"),
-        (DOC, "Documentary"),
-        (DRAMA, "Drama"),
-        (FAM, "Family"),
-        (FANT, "Fantasy"),
-        (HORROR, "Horror"),
-        (MUS, "Musical"),
-        (MYST, "Mystery"),
-        (ROM, "Romance"),
-        (SCI_FI, "Sci-Fi"),
-        (SHORT, "Short"),
-        (THRILL, "Thriller"),
-        (WAR, "War"),
-        (WEST, "Western"),
-    )
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE, verbose_name="Movie")
 

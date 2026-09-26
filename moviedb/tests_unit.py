@@ -102,3 +102,26 @@ class TestLinkTables(TestCase):
         self.assertEqual(1119, models.Movie.directors.through.objects.count())
         self.assertEqual(5972, models.Movie.genres.through.objects.count())
         self.assertEqual(3616, models.Movie.companies.through.objects.count())
+
+
+class TestModelCleanups(TestCase):
+    def test_review_time_is_set_once_on_creation(self):
+        review = models.Review.objects.create(user_name="u", movie_id=253, rating=3)
+        created = review.time
+        review.comment = "edited"
+        review.save()
+        review.refresh_from_db()
+        self.assertEqual(created, review.time)
+
+    def test_movie_reviews_related_name(self):
+        movie = models.Movie.objects.get(id=253)
+        self.assertEqual(3, movie.reviews.count())
+
+    def test_str_does_not_load_related_rows(self):
+        movie_actor = models.MovieActor.objects.first()
+        review = models.Review.objects.first()
+        role = models.MovieActorRole.objects.first()
+        with self.assertNumQueries(0):
+            str(movie_actor)
+            str(review)
+            str(role)

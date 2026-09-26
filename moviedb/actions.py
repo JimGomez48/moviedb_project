@@ -237,7 +237,7 @@ class MovieDetailViewActions(AbstractActions):
         #     })
         directors = movie.directors.all()
         genres = movie.genres.all()
-        reviews = movie.review_set.all()
+        reviews = movie.reviews.all()
         return {
             "movie": movie,
             "avg_rating": avg_rating,

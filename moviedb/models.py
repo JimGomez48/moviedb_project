@@ -25,22 +25,15 @@ class Actor(models.Model):
         MALE = "male", "Male"
         FEMALE = "female", "Female"
 
-    last = models.CharField(
-        max_length=50, blank=False, null=False, verbose_name="Last Name"
-    )
-    first = models.CharField(
-        max_length=50, blank=False, null=False, verbose_name="First Name"
-    )
-    sex = models.CharField(
-        max_length=6, choices=Sex, blank=False, null=False, verbose_name="Sex"
-    )
+    last = models.CharField(max_length=50, verbose_name="Last Name")
+    first = models.CharField(max_length=50, verbose_name="First Name")
+    sex = models.CharField(max_length=6, choices=Sex, verbose_name="Sex")
     dob = models.DateField(verbose_name="Date of Birth")
     dod = models.DateField(
         null=True, blank=True, default=None, verbose_name="Date of Death"
     )
 
     class Meta:
-        db_table = "actors"
         ordering: ClassVar[list[str]] = ["last", "first"]
         constraints: ClassVar[list[models.BaseConstraint]] = [
             models.CheckConstraint(
@@ -65,19 +58,14 @@ class Actor(models.Model):
 
 
 class Director(models.Model):
-    last = models.CharField(
-        max_length=20, blank=False, null=False, verbose_name="Last Name"
-    )
-    first = models.CharField(
-        max_length=20, blank=False, null=False, verbose_name="First Name"
-    )
-    dob = models.DateField(blank=False, null=False, verbose_name="Date of Birth")
+    last = models.CharField(max_length=20, verbose_name="Last Name")
+    first = models.CharField(max_length=20, verbose_name="First Name")
+    dob = models.DateField(verbose_name="Date of Birth")
     dod = models.DateField(
         null=True, blank=True, default=None, verbose_name="Date of Death"
     )
 
     class Meta:
-        db_table = "directors"
         ordering: ClassVar[list[str]] = ["last", "first"]
         constraints: ClassVar[list[models.BaseConstraint]] = [
             models.CheckConstraint(
@@ -112,14 +100,9 @@ class MpaaRating(models.Model):
 
     value = models.CharField(
         max_length=20,
-        blank=False,
-        null=False,
         choices=Value,
         verbose_name="Mpaa Rating Value",
     )
-
-    class Meta:
-        db_table = "mpaa_ratings"
 
     def __str__(self):
         return f"[{self.pk}] {self.value}"
@@ -150,38 +133,24 @@ class Genre(models.Model):
     value = models.CharField(
         max_length=20,
         choices=Value,
-        blank=False,
-        null=False,
         default=Value.DRAMA,
         verbose_name="Genre Value",
     )
-
-    class Meta:
-        db_table = "genres"
 
     def __str__(self):
         return f"[{self.pk}] {self.value}"
 
 
 class Company(models.Model):
-    name = models.CharField(
-        max_length=50, blank=False, null=False, verbose_name="Company Name"
-    )
-
-    class Meta:
-        db_table = "companies"
+    name = models.CharField(max_length=50, verbose_name="Company Name")
 
     def __str__(self):
         return f"[{self.pk}]: {self.name}"
 
 
 class Movie(models.Model):
-    title = models.CharField(
-        max_length=100, blank=False, null=False, verbose_name="Movie Title"
-    )
+    title = models.CharField(max_length=100, verbose_name="Movie Title")
     year = models.IntegerField(
-        blank=False,
-        null=False,
         default=current_year,
         validators=[validate_year],
         verbose_name="Year",
@@ -195,7 +164,6 @@ class Movie(models.Model):
     companies = models.ManyToManyField(Company)
 
     class Meta:
-        db_table = "movies"
         ordering: ClassVar[list[str]] = ["title", "year"]
         constraints: ClassVar[list[models.BaseConstraint]] = [
             models.UniqueConstraint(
@@ -210,14 +178,13 @@ class Movie(models.Model):
         return f"[{self.pk}] {self.title} ({self.year})"
 
     def get_cleaned_title(self):
-        r = re.compile(r", The$", re.IGNORECASE)
-        if not re.search(r, self.title):
+        pattern = re.compile(r", The$", re.IGNORECASE)
+        if not pattern.search(self.title):
             return self.title
-        cleaned_title = f"The {re.sub(r, '', self.title)}"
-        return cleaned_title
+        return f"The {pattern.sub('', self.title)}"
 
     def avg_user_rating(self):
-        return self.review_set.aggregate(Avg("rating"))["rating__avg"]
+        return self.reviews.aggregate(Avg("rating"))["rating__avg"]
 
 
 class Review(models.Model):
@@ -228,22 +195,19 @@ class Review(models.Model):
         FOUR = 4, "4-star"
         FIVE = 5, "5-star"
 
-    time = models.DateTimeField(auto_now=True, editable=False, verbose_name="Time")
-    user_name = models.CharField(
-        max_length=20, blank=False, null=False, verbose_name="User Name"
+    time = models.DateTimeField(auto_now_add=True, verbose_name="Time")
+    user_name = models.CharField(max_length=20, verbose_name="User Name")
+    movie = models.ForeignKey(
+        Movie, on_delete=models.CASCADE, related_name="reviews", verbose_name="Movie"
     )
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
     rating = models.IntegerField(
         choices=Rating,
-        blank=False,
-        null=False,
         default=Rating.FIVE,
         verbose_name="User Rating",
     )
     comment = models.TextField(max_length=2000, blank=True, default="")
 
     class Meta:
-        db_table = "reviews"
         ordering: ClassVar[list[str]] = ["-time"]
         constraints: ClassVar[list[models.BaseConstraint]] = [
             models.CheckConstraint(
@@ -252,7 +216,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return f"[{self.pk}] movie:{self.movie.pk} user:{self.user_name} time:{self.time} rating:{self.rating}"
+        return f"[{self.pk}] movie:{self.movie_id} user:{self.user_name} time:{self.time} rating:{self.rating}"
 
 
 class MovieActor(models.Model):
@@ -260,7 +224,6 @@ class MovieActor(models.Model):
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name="Actor")
 
     class Meta:
-        db_table = "movie_actors"
         constraints: ClassVar[list[models.BaseConstraint]] = [
             models.UniqueConstraint(
                 fields=["movie", "actor"], name="unique_movie_actor"
@@ -268,7 +231,7 @@ class MovieActor(models.Model):
         ]
 
     def __str__(self):
-        return f"[{self.pk}] movie={self.movie.pk} actor={self.actor.pk}"
+        return f"[{self.pk}] movie={self.movie_id} actor={self.actor_id}"
 
     def roles(self):
         return self.movieactorrole_set.all().values_list("role", flat=True)
@@ -276,10 +239,7 @@ class MovieActor(models.Model):
 
 class MovieActorRole(models.Model):
     movie_actor = models.ForeignKey(MovieActor, on_delete=models.CASCADE)
-    role = models.CharField(max_length=50, blank=False, null=False, verbose_name="Role")
-
-    class Meta:
-        db_table = "movie_actor_roles"
+    role = models.CharField(max_length=50, verbose_name="Role")
 
     def __str__(self):
-        return f"[{self.pk}] movie={self.movie_actor.pk} role={self.role}"
+        return f"[{self.pk}] movie_actor={self.movie_actor_id} role={self.role}"

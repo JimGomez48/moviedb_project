@@ -4,5 +4,5 @@ from django.urls import re_path as url
 
 urlpatterns = [
     url(r"^admin/", admin.site.urls),
-    url(r"^moviedb/", include("MovieDB.urls")),
+    url(r"^MovieDB/", include("MovieDB.urls")),
 ]

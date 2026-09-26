@@ -25,7 +25,8 @@ RUNNING
 -------------
     uv sync                                # creates .venv and installs locked dependencies
     uv run manage.py migrate               # creates db.sqlite3 and loads the seed data
-    uv run manage.py runserver             # http://localhost:8000/MovieDB/
+    uv run manage.py runserver             # dev server, http://localhost:8000/MovieDB/
+    uv run uvicorn moviedb_project.asgi:application   # ASGI server (does not serve /static/)
     uv run manage.py test
 
 

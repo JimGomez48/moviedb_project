@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "moviedb_project.wsgi.application"
+ASGI_APPLICATION = "moviedb_project.asgi.application"
 
 
 # Database

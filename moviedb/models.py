@@ -1,9 +1,14 @@
 import re
 from datetime import UTC, datetime
+from typing import ClassVar
 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
+
+
+def current_year():
+    return datetime.now(UTC).year
 
 
 class Actor(models.Model):
@@ -28,7 +33,7 @@ class Actor(models.Model):
 
     class Meta:
         db_table = "actors"
-        ordering = ["last", "first"]
+        ordering: ClassVar[list[str]] = ["last", "first"]
 
     def __str__(self):
         return f"[{self.pk}] {self.last}, {self.first} ({self.dob})"
@@ -56,7 +61,7 @@ class Director(models.Model):
 
     class Meta:
         db_table = "directors"
-        ordering = ["last", "first"]
+        ordering: ClassVar[list[str]] = ["last", "first"]
 
     def __str__(self):
         return f"[{self.pk}] {self.last}, {self.first} ({self.dob})"
@@ -175,7 +180,7 @@ class Movie(models.Model):
         max_length=100, blank=False, null=False, verbose_name="Movie Title"
     )
     year = models.IntegerField(
-        blank=False, null=False, default=datetime.now(UTC).year, verbose_name="Year"
+        blank=False, null=False, default=current_year, verbose_name="Year"
     )
     mpaa_rating = models.ForeignKey(
         MpaaRating, on_delete=models.PROTECT, verbose_name="Mpaa Rating"
@@ -187,8 +192,8 @@ class Movie(models.Model):
 
     class Meta:
         db_table = "movies"
-        ordering = ["title", "year"]
-        constraints = [
+        ordering: ClassVar[list[str]] = ["title", "year"]
+        constraints: ClassVar[list[models.BaseConstraint]] = [
             models.UniqueConstraint(
                 fields=["title", "year"], name="unique_movie_title_year"
             ),
@@ -240,7 +245,7 @@ class Review(models.Model):
 
     class Meta:
         db_table = "reviews"
-        ordering = ["-time"]
+        ordering: ClassVar[list[str]] = ["-time"]
 
     def __str__(self):
         return f"[{self.pk}] movie:{self.movie.pk} user:{self.user_name} time:{self.time} rating:{self.rating}"

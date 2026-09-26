@@ -12,15 +12,13 @@ The Action Layer only knows about the following other system layers
 """
 
 import abc
-import os
-import xml.etree.ElementTree as ET
 
 from django.core import paginator
 from django.db.models import Avg, Q
 from django.urls import NoReverseMatch, reverse
 
 from moviedb import models
-from moviedb_project.settings import BASE_DIR
+from moviedb.navbar import NAVBAR
 
 
 class AbstractActions(metaclass=abc.ABCMeta):
@@ -45,33 +43,24 @@ class BaseViewActions(AbstractActions):
                 self.children.append(child)
 
     def get_navbar_data(self):
-        # parse navbar.xml to get the navbar information
         navbar = []
-        path = os.path.join(BASE_DIR, "moviedb/static/data/navbar.xml")
-        tree = ET.parse(path)
-        root = tree.getroot()
-        for element in root:
-            if element.tag == "dropdown":
+        for entry in NAVBAR:
+            if entry["type"] == self.NavElement.DROPDOWN:
                 dropdown = self.NavElement(type=self.NavElement.DROPDOWN)
-                dropdown.text = element.attrib["name"]
-                for sub_element in element:
+                dropdown.text = entry["text"]
+                for item in entry["items"]:
                     nav_item = self.NavElement(type=self.NavElement.ITEM)
-                    nav_item.text = sub_element.find("text").text
+                    nav_item.text = item["text"]
                     try:
-                        nav_item.url = reverse(
-                            str(sub_element.find("viewname").text),
-                            # kwargs={'search_term':None, 'page_num': 1}
-                        )
+                        nav_item.url = reverse(item["viewname"])
                     except NoReverseMatch:
                         nav_item.url = "#"
                     dropdown.add_child(nav_item)
                 navbar.append(dropdown)
-            elif element.tag == "item":
+            elif entry["type"] == self.NavElement.ITEM:
                 nav_item = self.NavElement(type=self.NavElement.ITEM)
-                nav_item.text = element.find("text").text
-                nav_item.url = reverse(
-                    str(element.find("viewname").text),
-                )
+                nav_item.text = entry["text"]
+                nav_item.url = reverse(entry["viewname"])
                 navbar.append(nav_item)
         return navbar
 

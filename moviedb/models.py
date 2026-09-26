@@ -190,9 +190,9 @@ class Movie(models.Model):
         MpaaRating, on_delete=models.PROTECT, verbose_name="Mpaa Rating"
     )
     cast = models.ManyToManyField(Actor, through="MovieActor")
-    directors = models.ManyToManyField(Director, through="MovieDirector")
-    genres = models.ManyToManyField(Genre, through="MovieGenre")
-    companies = models.ManyToManyField(Company, through="MovieCompany")
+    directors = models.ManyToManyField(Director)
+    genres = models.ManyToManyField(Genre)
+    companies = models.ManyToManyField(Company)
 
     class Meta:
         db_table = "movies"
@@ -255,24 +255,6 @@ class Review(models.Model):
         return f"[{self.pk}] movie:{self.movie.pk} user:{self.user_name} time:{self.time} rating:{self.rating}"
 
 
-class MovieCompany(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
-    company = models.ForeignKey(
-        Company, on_delete=models.CASCADE, verbose_name="Company"
-    )
-
-    class Meta:
-        db_table = "movie_companies"
-        constraints: ClassVar[list[models.BaseConstraint]] = [
-            models.UniqueConstraint(
-                fields=["movie", "company"], name="unique_movie_company"
-            ),
-        ]
-
-    def __str__(self):
-        return f"[{self.pk}] movie={self.movie.pk} company={self.company.pk}"
-
-
 class MovieActor(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name="Actor")
@@ -301,37 +283,3 @@ class MovieActorRole(models.Model):
 
     def __str__(self):
         return f"[{self.pk}] movie={self.movie_actor.pk} role={self.role}"
-
-
-class MovieDirector(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
-    director = models.ForeignKey(
-        Director, on_delete=models.CASCADE, verbose_name="Director"
-    )
-
-    class Meta:
-        db_table = "movie_directors"
-        constraints: ClassVar[list[models.BaseConstraint]] = [
-            models.UniqueConstraint(
-                fields=["movie", "director"], name="unique_movie_director"
-            ),
-        ]
-
-    def __str__(self):
-        return f"[{self.pk}] movie={self.movie.pk} director={self.director.pk}"
-
-
-class MovieGenre(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, verbose_name="Movie")
-
-    class Meta:
-        db_table = "movie_genres"
-        constraints: ClassVar[list[models.BaseConstraint]] = [
-            models.UniqueConstraint(
-                fields=["movie", "genre"], name="unique_movie_genre"
-            ),
-        ]
-
-    def __str__(self):
-        return f"[{self.pk}] movie={self.movie.pk} genre={self.genre.pk}"

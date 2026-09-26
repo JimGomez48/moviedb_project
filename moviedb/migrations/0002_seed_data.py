@@ -118,17 +118,17 @@ def load_seed_data(apps, schema_editor):
         [("movie_actor_id", int), ("role", None)],
     )
     _load(
-        m("moviedb", "MovieCompany"),
+        m("moviedb", "Movie").companies.through,
         ["moviecompany.csv"],
         [("movie_id", int), ("company_id", int)],
     )
     _load(
-        m("moviedb", "MovieDirector"),
+        m("moviedb", "Movie").directors.through,
         ["moviedirector.csv"],
         [(None, None), ("movie_id", int), ("director_id", int)],
     )
     _load(
-        m("moviedb", "MovieGenre"),
+        m("moviedb", "Movie").genres.through,
         ["moviegenre.csv"],
         [(None, None), ("movie_id", int), ("genre_id", int)],
     )

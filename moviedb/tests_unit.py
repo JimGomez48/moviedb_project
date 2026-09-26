@@ -80,22 +80,25 @@ class TestValidation(TestCase):
             review.save()
 
 
-class TestLinkTableUniqueness(TestCase):
-    def assert_duplicate_rejected(self, model, **kwargs):
-        model.objects.create(**kwargs)
+class TestLinkTables(TestCase):
+    def test_movie_actor_duplicate_rejected(self):
+        models.MovieActor.objects.create(movie_id=253, actor_id=1)
         with self.assertRaises(IntegrityError), transaction.atomic():
-            model.objects.create(**kwargs)
+            models.MovieActor.objects.create(movie_id=253, actor_id=1)
 
-    def test_movie_actor(self):
-        self.assert_duplicate_rejected(models.MovieActor, movie_id=253, actor_id=1)
+    def test_plain_many_to_many_adds_are_idempotent(self):
+        movie = models.Movie.objects.get(id=253)
+        for field, related in (
+            ("directors", models.Director.objects.first()),
+            ("genres", models.Genre.objects.first()),
+            ("companies", models.Company.objects.first()),
+        ):
+            manager = getattr(movie, field)
+            manager.add(related)
+            manager.add(related)
+            self.assertEqual(1, manager.filter(pk=related.pk).count(), field)
 
-    def test_movie_director(self):
-        self.assert_duplicate_rejected(
-            models.MovieDirector, movie_id=253, director_id=37146
-        )
-
-    def test_movie_genre(self):
-        self.assert_duplicate_rejected(models.MovieGenre, movie_id=253, genre_id=1)
-
-    def test_movie_company(self):
-        self.assert_duplicate_rejected(models.MovieCompany, movie_id=253, company_id=1)
+    def test_seed_data_loads_link_tables(self):
+        self.assertEqual(1119, models.Movie.directors.through.objects.count())
+        self.assertEqual(5972, models.Movie.genres.through.objects.count())
+        self.assertEqual(3616, models.Movie.companies.through.objects.count())

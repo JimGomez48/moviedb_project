@@ -171,18 +171,25 @@ class ActorToMovieForm(forms.ModelForm):
         }
 
 
-class DirectorToMovieForm(forms.ModelForm):
-    class Meta:
-        model = models.MovieDirector
-        fields = ["movie", "director"]
-        widgets = {
-            "movie": forms.Select(
-                attrs={"class": "form-control"},
-            ),
-            "director": forms.Select(
-                attrs={"class": "form-control"},
-            ),
-        }
+class DirectorToMovieForm(forms.Form):
+    movie = forms.ModelChoiceField(
+        queryset=models.Movie.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+    director = forms.ModelChoiceField(
+        queryset=models.Director.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        movie = cleaned_data.get("movie")
+        director = cleaned_data.get("director")
+        if movie and director and movie.directors.filter(pk=director.pk).exists():
+            raise forms.ValidationError(
+                f"{director.get_full_name()} is already a director of {movie.title}."
+            )
+        return cleaned_data
 
 
 class ReviewForm(forms.ModelForm):

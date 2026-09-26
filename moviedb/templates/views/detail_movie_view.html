@@ -83,9 +83,9 @@
                         <tr>
                             <td>
                                 <a class="text-primary text-capitalize"
-                                   href="{% url 'DirectorDetail' director.director_id %}">
+                                   href="{% url 'DirectorDetail' director.id %}">
                                     <img class="img-circle" src="{% static 'img/default_person.png' %}" width="24">
-                                    {{ director.director.get_full_name }}
+                                    {{ director.get_full_name }}
                                 </a>
                             </td>
                         </tr>

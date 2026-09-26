@@ -203,13 +203,7 @@ class MovieDetailViewActions(AbstractActions):
         return movie_actors
 
     def get_movie_directors(self, movie_id):
-        manager = models.MovieDirector.objects
-        results = (
-            manager.filter(movie_id=movie_id)
-            .select_related("director")
-            .order_by("director__last", "director__first")
-        )
-        return results
+        return models.Director.objects.filter(movie=movie_id).order_by("last", "first")
 
     def get_movie_companies(self, movie_id):
         movie = models.Movie.objects.get(id=movie_id)
@@ -304,15 +298,9 @@ class DirectorDetailsViewActions(AbstractActions):
         return models.Director.objects.get(id=director_id)
 
     def get_director_movies(self, director_id):
-        manager = models.MovieDirector.objects
-        results = (
-            manager.filter(director_id=director_id)
-            .select_related(
-                "movie",
-            )
-            .order_by("-movie__year", "movie__title")
+        return models.Movie.objects.filter(directors=director_id).order_by(
+            "-year", "title"
         )
-        return results
 
 
 class AddMovieViewActions(AbstractActions):
@@ -331,11 +319,7 @@ class AddMovieViewActions(AbstractActions):
         return movie
 
     def __save_movie_genre_models(self, movie, genres):
-        for genre in genres:
-            movie_genre = models.MovieGenre()
-            movie_genre.movie = movie
-            movie_genre.genre = models.Genre.objects.get(value=genre)
-            movie_genre.save()
+        movie.genres.add(*models.Genre.objects.filter(value__in=genres))
 
 
 class AddActorDirectorViewActions(AbstractActions):
@@ -374,11 +358,7 @@ class AddActorToMovieViewActions(AbstractActions):
 
 class AddDirectorToMovieViewActions(AbstractActions):
     def add_director_to_movie(self, data):
-        movie_directors = models.MovieDirector.objects
-        movie_directors.create(
-            movie=data["movie"],
-            director=data["director"],
-        )
+        data["movie"].directors.add(data["director"])
 
 
 class WriteReviewViewActions(AbstractActions):

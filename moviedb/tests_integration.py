@@ -17,13 +17,25 @@ class TestPages(TestCase):
         for name in ("BrowseMovie", "BrowseActor", "BrowseDirector"):
             self.assert_ok(name)
 
+    def test_movie_detail_with_directors(self):
+        movie = models.Movie.objects.filter(directors__isnull=False).first()
+        director = movie.directors.first()
+        response = self.client.get(reverse("MovieDetail", args=[movie.pk]))
+        self.assertEqual(200, response.status_code)
+        self.assertContains(response, director.get_full_name())
+
+    def test_director_detail_lists_movies(self):
+        movie = models.Movie.objects.filter(directors__isnull=False).first()
+        director = movie.directors.first()
+        response = self.client.get(reverse("DirectorDetail", args=[director.pk]))
+        self.assertEqual(200, response.status_code)
+        self.assertContains(response, movie.get_cleaned_title())
+
     def test_detail_pages(self):
         movie_actor = models.MovieActor.objects.first()
         self.assert_ok("MovieDetail", 253)
         self.assert_ok("ActorDetail", movie_actor.actor_id)
-        self.assert_ok(
-            "DirectorDetail", models.MovieDirector.objects.first().director_id
-        )
+        self.assert_ok("DirectorDetail", models.Director.objects.first().pk)
 
     def test_add_forms(self):
         for name in (
@@ -92,4 +104,19 @@ class TestWrites(TestCase):
         )
         self.assertEqual(
             200, self.client.post(reverse("AddDirectorMovie"), data).status_code
+        )
+        self.assertEqual(1, models.Movie.objects.get(pk=253).directors.count())
+
+    def test_add_movie_saves_genres(self):
+        data = {
+            "submit": "movie",
+            "title": "Zed",
+            "year": 2000,
+            "mpaa_rating": 1,
+            "genres": ["Sci-Fi", "Drama"],
+        }
+        self.assertEqual(302, self.client.post(reverse("AddMovie"), data).status_code)
+        genres = models.Movie.objects.get(title="Zed").genres
+        self.assertEqual(
+            ["Drama", "Sci-Fi"], sorted(genres.values_list("value", flat=True))
         )

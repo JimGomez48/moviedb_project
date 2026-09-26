@@ -41,13 +41,13 @@
                     {% for movie in movies %}
                         <tr>
                             <td>
-                                <a class="text-primary text-capitalize" href="{% url 'MovieDetail' movie.movie.id %}">
+                                <a class="text-primary text-capitalize" href="{% url 'MovieDetail' movie.id %}">
                                     <img class="" src="{% static 'img/default_movie.png' %}" height="36">
-                                    {{ movie.movie.get_cleaned_title }}
+                                    {{ movie.get_cleaned_title }}
                                 </a>
                             </td>
                             <td>
-                                {{ movie.movie.year }}
+                                {{ movie.year }}
                             </td>
                         </tr>
                     {% endfor %}

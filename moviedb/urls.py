@@ -1,106 +1,94 @@
-from django.urls import re_path as url
+from django.urls import path
 
 from moviedb import views
 
 urlpatterns = [
     # Base
-    url(r"^$", views.IndexView.as_view(), name="Index"),
-    url(r"^SearchResults/$", views.SearchResultsView.as_view(), name="SearchResults"),
-    url(
-        r"^SearchResults/(?P<search_term>[\w+\s+]+)/$",
+    path("", views.IndexView.as_view(), name="Index"),
+    path("SearchResults/", views.SearchResultsView.as_view(), name="SearchResults"),
+    path(
+        "SearchResults/<str:search_term>/",
         views.SearchResultsView.as_view(),
         name="SearchResults",
     ),
     # Browse Movie
-    url(r"^BrowseMovie/$", views.BrowseMovieView.as_view(), name="BrowseMovie"),
-    url(
-        r"^BrowseMovie/search_term=(?P<search_term>[\w+\s+]+)/$",
+    path("BrowseMovie/", views.BrowseMovieView.as_view(), name="BrowseMovie"),
+    path(
+        "BrowseMovie/search_term=<str:search_term>/",
         views.BrowseMovieView.as_view(),
         name="BrowseMovie",
     ),
-    url(
-        r"^BrowseMovie/page=(?P<page_num>\d+)/$",
+    path(
+        "BrowseMovie/page=<int:page_num>/",
         views.BrowseMovieView.as_view(),
         name="BrowseMovie",
     ),
-    url(
-        r"^BrowseMovie/search_term=(?P<search_term>[\w+\s+]+)/page=(?P<page_num>\d+)/$",
+    path(
+        "BrowseMovie/search_term=<str:search_term>/page=<int:page_num>/",
         views.BrowseMovieView.as_view(),
         name="BrowseMovie",
     ),
     # Browse Actor
-    url(r"^BrowseActor/$", views.BrowseActorView.as_view(), name="BrowseActor"),
-    url(
-        r"^BrowseActor/search_term=(?P<search_term>[\w+\s+]+)/$",
+    path("BrowseActor/", views.BrowseActorView.as_view(), name="BrowseActor"),
+    path(
+        "BrowseActor/search_term=<str:search_term>/",
         views.BrowseActorView.as_view(),
         name="BrowseActor",
     ),
-    url(
-        r"^BrowseActor/page=(?P<page_num>\d+)/$",
+    path(
+        "BrowseActor/page=<int:page_num>/",
         views.BrowseActorView.as_view(),
         name="BrowseActor",
     ),
-    url(
-        r"^BrowseActor/search_term=(?P<search_term>[\w+\s+]+)/page=(?P<page_num>\d+)/$",
+    path(
+        "BrowseActor/search_term=<str:search_term>/page=<int:page_num>/",
         views.BrowseActorView.as_view(),
         name="BrowseActor",
     ),
     # Browse Director
-    url(
-        r"^BrowseDirector/$", views.BrowseDirectorView.as_view(), name="BrowseDirector"
-    ),
-    url(
-        r"^BrowseDirector/search_term=(?P<search_term>[\w+\s+]+)/$",
+    path("BrowseDirector/", views.BrowseDirectorView.as_view(), name="BrowseDirector"),
+    path(
+        "BrowseDirector/search_term=<str:search_term>/",
         views.BrowseDirectorView.as_view(),
         name="BrowseDirector",
     ),
-    url(
-        r"^BrowseDirector/page=(?P<page_num>\d+)/$",
+    path(
+        "BrowseDirector/page=<int:page_num>/",
         views.BrowseDirectorView.as_view(),
         name="BrowseDirector",
     ),
-    url(
-        r"^BrowseDirector/search_term=(?P<search_term>[\w+\s+]+)/page=(?P<page_num>\d+)/$",
+    path(
+        "BrowseDirector/search_term=<str:search_term>/page=<int:page_num>/",
         views.BrowseDirectorView.as_view(),
         name="BrowseDirector",
     ),
     # Detail
-    url(
-        r"^MovieDetail/(?P<mid>\d+)/$",
-        views.MovieDetailView.as_view(),
-        name="MovieDetail",
-    ),
-    url(
-        r"^ActorDetail/(?P<aid>\d+)/$",
-        views.ActorDetailView.as_view(),
-        name="ActorDetail",
-    ),
-    url(
-        r"^DirectorDetail/(?P<did>\d+)/$",
+    path("MovieDetail/<int:mid>/", views.MovieDetailView.as_view(), name="MovieDetail"),
+    path("ActorDetail/<int:aid>/", views.ActorDetailView.as_view(), name="ActorDetail"),
+    path(
+        "DirectorDetail/<int:did>/",
         views.DirectorDetailView.as_view(),
         name="DirectorDetail",
     ),
     # Add
-    url(r"^AddMovie/$", views.AddMovieView.as_view(), name="AddMovie"),
-    url(
-        r"^AddActorDirector/$",
+    path("AddMovie/", views.AddMovieView.as_view(), name="AddMovie"),
+    path(
+        "AddActorDirector/",
         views.AddActorDirectorView.as_view(),
         name="AddActorDirector",
     ),
-    url(r"^AddActorMovie/$", views.AddActorToMovieView.as_view(), name="AddActorMovie"),
-    url(
-        r"^AddDirectorMovie/$",
+    path("AddActorMovie/", views.AddActorToMovieView.as_view(), name="AddActorMovie"),
+    path(
+        "AddDirectorMovie/",
         views.AddDirectorToMovieView.as_view(),
         name="AddDirectorMovie",
     ),
     # Review
-    url(r"^BrowseReview/$", views.BrowseReviewView.as_view(), name="BrowseReview"),
-    url(
-        r"^ViewReview/(?P<mid>\d+)/$", views.ViewReviewView.as_view(), name="ViewReview"
-    ),
-    url(r"^WriteReview/$", views.WriteReviewView.as_view(), name="WriteReview"),
-    url(
-        r"^WriteReview/(?P<mid>\d+)/$",
+    path("BrowseReview/", views.BrowseReviewView.as_view(), name="BrowseReview"),
+    path("ViewReview/<int:mid>/", views.ViewReviewView.as_view(), name="ViewReview"),
+    path("WriteReview/", views.WriteReviewView.as_view(), name="WriteReview"),
+    path(
+        "WriteReview/<int:mid>/",
         views.WriteReviewView.as_view(),
         name="WriteReview",
     ),

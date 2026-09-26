@@ -6,14 +6,6 @@ from django.db import models
 from django.db.models import Avg
 
 
-def validate_dob_dod(dob):
-    pass
-
-
-def current_year():
-    return datetime.now(UTC).year
-
-
 class Actor(models.Model):
     MALE = "male"
     FEMALE = "female"
@@ -183,7 +175,7 @@ class Movie(models.Model):
         max_length=100, blank=False, null=False, verbose_name="Movie Title"
     )
     year = models.IntegerField(
-        blank=False, null=False, default=current_year, verbose_name="Year"
+        blank=False, null=False, default=datetime.now(UTC).year, verbose_name="Year"
     )
     mpaa_rating = models.ForeignKey(
         MpaaRating, on_delete=models.PROTECT, verbose_name="Mpaa Rating"

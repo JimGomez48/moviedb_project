@@ -6,9 +6,18 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
 
+MIN_YEAR = 1800
+
 
 def current_year():
     return datetime.now(UTC).year
+
+
+def validate_year(value):
+    if not MIN_YEAR <= value <= current_year():
+        raise ValidationError(
+            f"Year must be between {MIN_YEAR} and {current_year()}.", code="invalid"
+        )
 
 
 class Actor(models.Model):
@@ -26,11 +35,21 @@ class Actor(models.Model):
         max_length=6, choices=Sex, blank=False, null=False, verbose_name="Sex"
     )
     dob = models.DateField(verbose_name="Date of Birth")
-    dod = models.DateField(null=True, default=None, verbose_name="Date of Death")
+    dod = models.DateField(
+        null=True, blank=True, default=None, verbose_name="Date of Death"
+    )
 
     class Meta:
         db_table = "actors"
         ordering: ClassVar[list[str]] = ["last", "first"]
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.CheckConstraint(
+                condition=models.Q(dod__isnull=True)
+                | models.Q(dod__gte=models.F("dob")),
+                name="actor_dod_gte_dob",
+                violation_error_message="Date of death cannot be before date of birth.",
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] {self.last}, {self.first} ({self.dob})"
@@ -38,12 +57,11 @@ class Actor(models.Model):
     def get_full_name(self):
         return f"{self.first} {self.last}"
 
-    def save(self, *args, **kwargs):
-        if self.dod and (self.dod < self.dob):
-            raise ValidationError("Actor dod cannot be less than dob")
-        # if not self.sex in self.SEX_CHOICES:
-        #     raise ValidationError('invalid value for sex')
-        super().save(*args, **kwargs)
+    def clean(self):
+        if self.dod and self.dob and self.dod < self.dob:
+            raise ValidationError(
+                {"dod": "Date of death cannot be before date of birth."}
+            )
 
 
 class Director(models.Model):
@@ -54,11 +72,21 @@ class Director(models.Model):
         max_length=20, blank=False, null=False, verbose_name="First Name"
     )
     dob = models.DateField(blank=False, null=False, verbose_name="Date of Birth")
-    dod = models.DateField(null=True, default=None, verbose_name="Date of Death")
+    dod = models.DateField(
+        null=True, blank=True, default=None, verbose_name="Date of Death"
+    )
 
     class Meta:
         db_table = "directors"
         ordering: ClassVar[list[str]] = ["last", "first"]
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.CheckConstraint(
+                condition=models.Q(dod__isnull=True)
+                | models.Q(dod__gte=models.F("dob")),
+                name="director_dod_gte_dob",
+                violation_error_message="Date of death cannot be before date of birth.",
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] {self.last}, {self.first} ({self.dob})"
@@ -66,10 +94,11 @@ class Director(models.Model):
     def get_full_name(self):
         return f"{self.first} {self.last}"
 
-    def save(self, *args, **kwargs):
-        if self.dod and (self.dod < self.dob):
-            raise ValidationError("Director dod cannot be less than dob")
-        super().save(*args, **kwargs)
+    def clean(self):
+        if self.dod and self.dob and self.dod < self.dob:
+            raise ValidationError(
+                {"dod": "Date of death cannot be before date of birth."}
+            )
 
 
 class MpaaRating(models.Model):
@@ -151,7 +180,11 @@ class Movie(models.Model):
         max_length=100, blank=False, null=False, verbose_name="Movie Title"
     )
     year = models.IntegerField(
-        blank=False, null=False, default=current_year, verbose_name="Year"
+        blank=False,
+        null=False,
+        default=current_year,
+        validators=[validate_year],
+        verbose_name="Year",
     )
     mpaa_rating = models.ForeignKey(
         MpaaRating, on_delete=models.PROTECT, verbose_name="Mpaa Rating"
@@ -168,6 +201,9 @@ class Movie(models.Model):
             models.UniqueConstraint(
                 fields=["title", "year"], name="unique_movie_title_year"
             ),
+            models.CheckConstraint(
+                condition=models.Q(year__gte=MIN_YEAR), name="movie_year_gte_min"
+            ),
         ]
 
     def __str__(self):
@@ -182,13 +218,6 @@ class Movie(models.Model):
 
     def avg_user_rating(self):
         return self.review_set.aggregate(Avg("rating"))["rating__avg"]
-
-    def save(self, *args, **kwargs):
-        if self.year < 1800 or self.year > datetime.now(UTC).year:
-            raise ValidationError("Invalid year value")
-        # if not self.rating in self.MPAA_RATINGS:
-        #     raise ValidationError('Invalid rating value')
-        super().save(*args, **kwargs)
 
 
 class Review(models.Model):
@@ -216,14 +245,14 @@ class Review(models.Model):
     class Meta:
         db_table = "reviews"
         ordering: ClassVar[list[str]] = ["-time"]
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.CheckConstraint(
+                condition=models.Q(rating__range=(1, 5)), name="review_rating_1_to_5"
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] movie:{self.movie.pk} user:{self.user_name} time:{self.time} rating:{self.rating}"
-
-    def save(self, *args, **kwargs):
-        if self.rating < 1 or self.rating > 5:
-            raise ValidationError("Review.rating cannot be outside the range [1,5]")
-        super().save(*args, **kwargs)
 
 
 class MovieCompany(models.Model):
@@ -286,8 +315,3 @@ class MovieGenre(models.Model):
 
     def __str__(self):
         return f"[{self.pk}] movie={self.movie.pk} genre={self.genre.pk}"
-
-    def save(self, *args, **kwargs):
-        # if not self.genre in self.GENRE_CHOICES:
-        #     raise ValidationError('Invalid genre value')
-        super().save(*args, **kwargs)

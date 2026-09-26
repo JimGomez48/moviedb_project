@@ -57,3 +57,18 @@ class TestWrites(TestCase):
         self.assertEqual(302, self.client.post(reverse("AddMovie"), data).status_code)
         self.assertEqual(200, self.client.post(reverse("AddMovie"), data).status_code)
         self.assertEqual(1, models.Movie.objects.filter(title="Zed").count())
+
+    def test_add_actor_with_death_before_birth_shows_form_error(self):
+        response = self.client.post(
+            reverse("AddActorDirector"),
+            {
+                "submit": "actor",
+                "last": "Zzqx",
+                "first": "Q",
+                "sex": "male",
+                "dob": "01/02/1980",
+                "dod": "01/02/1970",
+            },
+        )
+        self.assertEqual(200, response.status_code)
+        self.assertFalse(models.Actor.objects.filter(last="Zzqx").exists())

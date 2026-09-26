@@ -1,3 +1,7 @@
+from datetime import date
+
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
 from django.test import TestCase
 
 from moviedb import models
@@ -23,3 +27,54 @@ class TestModels(TestCase):
         self.assertAlmostEqual(
             11 / 3.0, models.Movie.objects.get(id=253).avg_user_rating()
         )
+
+
+class TestValidation(TestCase):
+    def test_actor_death_before_birth_is_a_field_error(self):
+        actor = models.Actor(
+            last="A", first="B", sex="male", dob=date(2000, 1, 1), dod=date(1999, 1, 1)
+        )
+        with self.assertRaises(ValidationError) as ctx:
+            actor.full_clean()
+        self.assertEqual(["dod"], list(ctx.exception.error_dict))
+
+    def test_actor_death_before_birth_rejected_by_db(self):
+        actor = models.Actor(
+            last="A", first="B", sex="male", dob=date(2000, 1, 1), dod=date(1999, 1, 1)
+        )
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            actor.save()
+
+    def test_actor_without_death_date_is_valid(self):
+        actor = models.Actor(last="A", first="B", sex="male", dob=date(2000, 1, 1))
+        actor.full_clean()
+        actor.save()
+
+    def test_director_death_before_birth_rejected_by_db(self):
+        director = models.Director(
+            last="A", first="B", dob=date(2000, 1, 1), dod=date(1999, 1, 1)
+        )
+        with self.assertRaises(ValidationError):
+            director.full_clean()
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            director.save()
+
+    def test_movie_year_bounds(self):
+        for year in (models.MIN_YEAR - 1, models.current_year() + 1):
+            movie = models.Movie(title="X", year=year, mpaa_rating_id=1)
+            with self.assertRaises(ValidationError) as ctx:
+                movie.full_clean()
+            self.assertIn("year", ctx.exception.error_dict)
+
+    def test_movie_year_floor_rejected_by_db(self):
+        movie = models.Movie(title="X", year=models.MIN_YEAR - 1, mpaa_rating_id=1)
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            movie.save()
+
+    def test_review_rating_range(self):
+        review = models.Review(user_name="u", movie_id=253, rating=6)
+        with self.assertRaises(ValidationError) as ctx:
+            review.full_clean()
+        self.assertIn("rating", ctx.exception.error_dict)
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            review.save()

@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('MovieDB', '0005_movie_year_callable_default'),
+        ("MovieDB", "0005_movie_year_callable_default"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='movie',
-            name='title',
-            field=models.CharField(max_length=100, verbose_name='Movie Title'),
+            model_name="movie",
+            name="title",
+            field=models.CharField(max_length=100, verbose_name="Movie Title"),
         ),
         migrations.AddConstraint(
-            model_name='movie',
-            constraint=models.UniqueConstraint(fields=('title', 'year'), name='unique_movie_title_year'),
+            model_name="movie",
+            constraint=models.UniqueConstraint(
+                fields=("title", "year"), name="unique_movie_title_year"
+            ),
         ),
     ]

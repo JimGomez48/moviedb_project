@@ -8,27 +8,25 @@ The View Layer only knows about the following other system layers
 - Template Layer
 """
 
-from django.urls import reverse, NoReverseMatch
-from django.http import HttpResponse, Http404
 from django.core import exceptions
-from django.shortcuts import render, redirect
+from django.http import Http404
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic.base import TemplateView
 
+from MovieDB import actions, forms
 from moviedb_project.settings import BASE_DIR
-from MovieDB import actions
-from MovieDB import forms
-
 
 PROJECT_ROOT = BASE_DIR
 
 
 class BaseView(TemplateView):
     def __init__(self):
-        super(BaseView, self).__init__()
-        self.__context = super(BaseView, self).get_context_data()
+        super().__init__()
+        self.__context = super().get_context_data()
         view_actions = actions.BaseViewActions()
         self.bind_context_data(
-            title='MovieDB',
+            title="MovieDB",
             nav_items=view_actions.get_navbar_data(),
             search_form=forms.NavBarSearchForm(),
         )
@@ -43,16 +41,16 @@ class BaseView(TemplateView):
 
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
-        view_actions = actions.IndexViewActions()
-        self.bind_context_data(page_header='MovieDB Landing Page')
-        return render(request, 'views/index.html', self.get_context_data())
+        actions.IndexViewActions()
+        self.bind_context_data(page_header="MovieDB Landing Page")
+        return render(request, "views/index.html", self.get_context_data())
 
 
 class SearchResultsView(BaseView):
     def post(self, request):
         search_form = forms.NavBarSearchForm(request.POST)
         if search_form.is_valid():
-            return redirect('SearchResults', search_form.cleaned_data['search_term'])
+            return redirect("SearchResults", search_form.cleaned_data["search_term"])
         else:
             raise Http404()
 
@@ -62,13 +60,15 @@ class SearchResultsView(BaseView):
         view_actions = actions.SearchResultsViewActions()
         search_results = view_actions.get_search_results_all(search_term)
         self.bind_context_data(
-            page_header='Search Results for "%s"' % (search_term),
+            page_header=f'Search Results for "{search_term}"',
             search_term=search_term,
-            movie_results=search_results['movies'],
-            actor_results=search_results['actors'],
-            director_results=search_results['directors'],
+            movie_results=search_results["movies"],
+            actor_results=search_results["actors"],
+            director_results=search_results["directors"],
         )
-        return render(request, 'views/search_results_view.html', self.get_context_data())
+        return render(
+            request, "views/search_results_view.html", self.get_context_data()
+        )
 
 
 class BrowseBaseView(BaseView):
@@ -84,16 +84,16 @@ class BrowseMovieView(BrowseBaseView):
             raise Http404()
         page = view_actions.get_page(movies_queryset, page_num, self.RESULTS_PER_PAGE)
         page_range = view_actions.get_visible_page_range(page, self.MAX_SHOWN_PAGES)
-        base_url = reverse('BrowseMovie')
+        base_url = reverse("BrowseMovie")
         self.bind_context_data(
             search_term=search_term,
             # page_header='Browse Movies',
-            results_header='Movies',
+            results_header="Movies",
             page_range=page_range,
             page=page,
             base_url=base_url,
         )
-        return render(request, 'views/browse_movie_view.html', self.get_context_data())
+        return render(request, "views/browse_movie_view.html", self.get_context_data())
 
 
 class BrowseActorView(BrowseBaseView):
@@ -104,15 +104,15 @@ class BrowseActorView(BrowseBaseView):
             raise Http404()
         page = view_actions.get_page(actors_queryset, page_num, self.RESULTS_PER_PAGE)
         page_range = view_actions.get_visible_page_range(page, self.MAX_SHOWN_PAGES)
-        base_url = reverse('BrowseActor')
+        base_url = reverse("BrowseActor")
         self.bind_context_data(
             search_term=search_term,
-            results_header='Actors',
+            results_header="Actors",
             page_range=page_range,
             page=page,
             base_url=base_url,
         )
-        return render(request, 'views/browse_actor_view.html', self.get_context_data())
+        return render(request, "views/browse_actor_view.html", self.get_context_data())
 
 
 class BrowseDirectorView(BrowseBaseView):
@@ -121,17 +121,21 @@ class BrowseDirectorView(BrowseBaseView):
         directors_queryset = view_actions.get_director_query_set(search_term)
         if not directors_queryset.exists():
             raise Http404()
-        page = view_actions.get_page(directors_queryset, page_num, self.RESULTS_PER_PAGE)
+        page = view_actions.get_page(
+            directors_queryset, page_num, self.RESULTS_PER_PAGE
+        )
         page_range = view_actions.get_visible_page_range(page, self.MAX_SHOWN_PAGES)
-        base_url = reverse('BrowseDirector')
+        base_url = reverse("BrowseDirector")
         self.bind_context_data(
             search_term=search_term,
-            results_header='Directors',
+            results_header="Directors",
             page_range=page_range,
             page=page,
             base_url=base_url,
         )
-        return render(request, 'views/browse_director_view.html', self.get_context_data())
+        return render(
+            request, "views/browse_director_view.html", self.get_context_data()
+        )
 
 
 class MovieDetailView(BaseView):
@@ -142,15 +146,15 @@ class MovieDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         self.bind_context_data(
-            movie=movie_details['movie'],
-            avg_user_rating=movie_details['avg_rating'],
-            companies=movie_details['companies'],
-            actors=movie_details['actors'],
-            directors=movie_details['directors'],
-            genres=movie_details['genres'],
-            reviews=movie_details['reviews'],
+            movie=movie_details["movie"],
+            avg_user_rating=movie_details["avg_rating"],
+            companies=movie_details["companies"],
+            actors=movie_details["actors"],
+            directors=movie_details["directors"],
+            genres=movie_details["genres"],
+            reviews=movie_details["reviews"],
         )
-        return render(request, 'views/detail_movie_view.html', self.get_context_data())
+        return render(request, "views/detail_movie_view.html", self.get_context_data())
 
 
 class ActorDetailView(BaseView):
@@ -161,10 +165,10 @@ class ActorDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         self.bind_context_data(
-            actor=actor_details['actor'],
-            movies=actor_details['movies'],
+            actor=actor_details["actor"],
+            movies=actor_details["movies"],
         )
-        return render(request, 'views/detail_actor_view.html', self.get_context_data())
+        return render(request, "views/detail_actor_view.html", self.get_context_data())
 
 
 class DirectorDetailView(BaseView):
@@ -175,10 +179,12 @@ class DirectorDetailView(BaseView):
         except exceptions.ObjectDoesNotExist:
             raise Http404()
         self.bind_context_data(
-            director=director_details['director'],
-            movies=director_details['movies'],
+            director=director_details["director"],
+            movies=director_details["movies"],
         )
-        return render(request, 'views/detail_director_view.html', self.get_context_data())
+        return render(
+            request, "views/detail_director_view.html", self.get_context_data()
+        )
 
 
 class AddMovieView(BaseView):
@@ -191,12 +197,12 @@ class AddMovieView(BaseView):
                 movie_data=movie_form.cleaned_data,
                 genre_data=genre_form.cleaned_data,
             )
-            return redirect('Index')
+            return redirect("Index")
         self.bind_context_data(
             movie_form=movie_form,
             genre_form=genre_form,
         )
-        return render(request, 'views/add_movie_view.html', self.get_context_data())
+        return render(request, "views/add_movie_view.html", self.get_context_data())
 
     def get(self, request, *args, **kwargs):
         movie_form = forms.MovieForm()
@@ -205,48 +211,50 @@ class AddMovieView(BaseView):
             movie_form=movie_form,
             genre_form=genre_form,
         )
-        return render(request, 'views/add_movie_view.html', self.get_context_data())
+        return render(request, "views/add_movie_view.html", self.get_context_data())
 
 
 class AddActorDirectorView(BaseView):
-    ACTOR_FORM = 'actor'
-    DIRECTOR_FORM = 'director'
+    ACTOR_FORM = "actor"
+    DIRECTOR_FORM = "director"
 
     def post(self, request):
         actor_form = forms.ActorForm()
         director_form = forms.DirectorForm()
         current_form = self.ACTOR_FORM
-        if request.POST['submit'] == 'actor':
+        if request.POST["submit"] == "actor":
             actor_form = forms.ActorForm(request.POST)
             current_form = self.ACTOR_FORM
             if actor_form.is_valid():
                 view_actions = actions.AddActorDirectorViewActions()
                 view_actions.save_new_actor(actor_form.cleaned_data)
-                return redirect('Index')
-        elif request.POST['submit'] == 'director':
+                return redirect("Index")
+        elif request.POST["submit"] == "director":
             director_form = forms.DirectorForm(request.POST)
             current_form = self.DIRECTOR_FORM
             if director_form.is_valid():
                 view_actions = actions.AddActorDirectorViewActions()
                 view_actions.save_new_director(director_form.cleaned_data)
-                return redirect('Index')
+                return redirect("Index")
         # There were errors. Bind form contexts and render
         self.bind_context_data(
-            actor_form = actor_form,
-            director_form = director_form,
-            active_form = current_form
+            actor_form=actor_form, director_form=director_form, active_form=current_form
         )
-        return render(request, 'views/add_actor_director_view.html', self.get_context_data())
+        return render(
+            request, "views/add_actor_director_view.html", self.get_context_data()
+        )
 
     def get(self, request, *args, **kwargs):
         actor_form = forms.ActorForm()
         director_form = forms.DirectorForm()
         self.bind_context_data(
-            actor_form = actor_form,
-            director_form = director_form,
-            active_form = self.ACTOR_FORM,
+            actor_form=actor_form,
+            director_form=director_form,
+            active_form=self.ACTOR_FORM,
         )
-        return render(request, 'views/add_actor_director_view.html', self.get_context_data())
+        return render(
+            request, "views/add_actor_director_view.html", self.get_context_data()
+        )
 
 
 class AddActorToMovieView(BaseView):
@@ -255,18 +263,18 @@ class AddActorToMovieView(BaseView):
         if form.is_valid():
             view_actions = actions.AddActorToMovieViewActions()
             view_actions.add_actor_to_movie(form.cleaned_data)
-            return redirect('Index')
-        self.bind_context_data(
-            movieactor_form=form
+            return redirect("Index")
+        self.bind_context_data(movieactor_form=form)
+        return render(
+            request, "views/add_actor_to_movie_view.html", self.get_context_data()
         )
-        return render(request, 'views/add_actor_to_movie_view.html', self.get_context_data())
 
     def get(self, request, *args, **kwargs):
         form = forms.ActorToMovieForm()
-        self.bind_context_data(
-            movieactor_form=form
+        self.bind_context_data(movieactor_form=form)
+        return render(
+            request, "views/add_actor_to_movie_view.html", self.get_context_data()
         )
-        return render(request, 'views/add_actor_to_movie_view.html', self.get_context_data())
 
 
 class AddDirectorToMovieView(BaseView):
@@ -275,18 +283,19 @@ class AddDirectorToMovieView(BaseView):
         if form.is_valid():
             view_actions = actions.AddDirectorToMovieViewActions()
             view_actions.add_director_to_movie(form.cleaned_data)
-            return redirect('Index')
-        self.bind_context_data(
-            moviedirector_form=form
+            return redirect("Index")
+        self.bind_context_data(moviedirector_form=form)
+        return render(
+            request, "views/add_director_to_movie_view.html", self.get_context_data()
         )
-        return render(request, 'views/add_director_to_movie_view.html', self.get_context_data())
 
     def get(self, request, *args, **kwargs):
         form = forms.DirectorToMovieForm()
-        self.bind_context_data(
-            moviedirector_form=form
+        self.bind_context_data(moviedirector_form=form)
+        return render(
+            request, "views/add_director_to_movie_view.html", self.get_context_data()
         )
-        return render(request, 'views/add_director_to_movie_view.html', self.get_context_data())
+
 
 class BrowseReviewView(BaseView):
     def get(self, request):
@@ -300,21 +309,17 @@ class WriteReviewView(BaseView):
         if review_form.is_valid():
             view_actions = actions.WriteReviewViewActions()
             view_actions.add_movie_review(review_form.cleaned_data)
-            return redirect('Index')
-        self.bind_context_data(
-            review_form = review_form
-        )
-        return render(request, 'views/add_review_view.html', self.get_context_data())
+            return redirect("Index")
+        self.bind_context_data(review_form=review_form)
+        return render(request, "views/add_review_view.html", self.get_context_data())
 
     def get(self, request, mid=None):
         initial = {}
         if mid:
-            initial['movie'] = mid
+            initial["movie"] = mid
         review_form = forms.ReviewForm(initial=initial)
-        self.bind_context_data(
-            review_form = review_form
-        )
-        return render(request, 'views/add_review_view.html', self.get_context_data())
+        self.bind_context_data(review_form=review_form)
+        return render(request, "views/add_review_view.html", self.get_context_data())
 
 
 class ViewReviewView(BaseView):

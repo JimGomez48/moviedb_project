@@ -11,28 +11,26 @@ The Action Layer only knows about the following other system layers
 - Services Layer
 """
 
-import xml.etree.ElementTree as ET
-import os
 import abc
-from django.urls import reverse, NoReverseMatch
-from django.db.models import Q, Avg
-from django.core import paginator
-from django.core import exceptions
+import os
+import xml.etree.ElementTree as ET
 
-from moviedb_project.settings import BASE_DIR
+from django.core import paginator
+from django.db.models import Avg, Q
+from django.urls import NoReverseMatch, reverse
+
 from MovieDB import models
-from MovieDB import services
+from moviedb_project.settings import BASE_DIR
 
 
 class AbstractActions(metaclass=abc.ABCMeta):
     pass
 
 
-
 class BaseViewActions(AbstractActions):
-    class NavElement(object):
-        DROPDOWN = 'dropdown'
-        ITEM = 'item'
+    class NavElement:
+        DROPDOWN = "dropdown"
+        ITEM = "item"
 
         def __init__(self, type):
             self.type = type
@@ -49,30 +47,30 @@ class BaseViewActions(AbstractActions):
     def get_navbar_data(self):
         # parse navbar.xml to get the navbar information
         navbar = []
-        path = os.path.join(BASE_DIR, 'MovieDB/static/data/navbar.xml')
+        path = os.path.join(BASE_DIR, "MovieDB/static/data/navbar.xml")
         tree = ET.parse(path)
         root = tree.getroot()
         for element in root:
-            if element.tag == 'dropdown':
+            if element.tag == "dropdown":
                 dropdown = self.NavElement(type=self.NavElement.DROPDOWN)
-                dropdown.text = element.attrib['name']
+                dropdown.text = element.attrib["name"]
                 for sub_element in element:
                     nav_item = self.NavElement(type=self.NavElement.ITEM)
-                    nav_item.text = sub_element.find('text').text
+                    nav_item.text = sub_element.find("text").text
                     try:
                         nav_item.url = reverse(
-                            str(sub_element.find('viewname').text),
+                            str(sub_element.find("viewname").text),
                             # kwargs={'search_term':None, 'page_num': 1}
                         )
                     except NoReverseMatch:
-                        nav_item.url = '#'
+                        nav_item.url = "#"
                     dropdown.add_child(nav_item)
                 navbar.append(dropdown)
-            elif element.tag == 'item':
+            elif element.tag == "item":
                 nav_item = self.NavElement(type=self.NavElement.ITEM)
-                nav_item.text = element.find('text').text
+                nav_item.text = element.find("text").text
                 nav_item.url = reverse(
-                    str(element.find('viewname').text),
+                    str(element.find("viewname").text),
                 )
                 navbar.append(nav_item)
         return navbar
@@ -90,9 +88,9 @@ class SearchResultsViewActions(AbstractActions):
         actors = self.get_search_results_actors(search_term)
         directors = self.get_search_results_directors(search_term)
         results = {
-            'movies': movies,
-            'actors': actors,
-            'directors': directors,
+            "movies": movies,
+            "actors": actors,
+            "directors": directors,
         }
         return results
 
@@ -103,7 +101,9 @@ class SearchResultsViewActions(AbstractActions):
         for term in search_terms:
             q_objects &= Q(title__icontains=term)
         movie_manager = models.Movie.objects
-        return movie_manager.filter(q_objects).order_by('title', 'year')[:self.RESULTS_PER_PAGE]
+        return movie_manager.filter(q_objects).order_by("title", "year")[
+            : self.RESULTS_PER_PAGE
+        ]
 
     def get_search_results_actors(self, search_term):
         search_terms = str(search_term).split()
@@ -114,7 +114,7 @@ class SearchResultsViewActions(AbstractActions):
             q_objects = Q(last__icontains=term)
             q_objects |= Q(first__icontains=term)
             actor_manager = actor_manager.filter(q_objects)
-        return actor_manager[:self.RESULTS_PER_PAGE]
+        return actor_manager[: self.RESULTS_PER_PAGE]
 
     def get_search_results_directors(self, search_term):
         search_terms = str(search_term).split()
@@ -125,17 +125,22 @@ class SearchResultsViewActions(AbstractActions):
             q_objects = Q(last__icontains=term)
             q_objects |= Q(first__icontains=term)
             director_manager = director_manager.filter(q_objects)
-        return director_manager[:self.RESULTS_PER_PAGE]
+        return director_manager[: self.RESULTS_PER_PAGE]
 
 
 class AbstractPaginatedViewActions(AbstractActions):
-
     def get_visible_page_range(self, page, max_shown_pages=9):
         paginator = page.paginator
         if paginator.num_pages < max_shown_pages:
             pages = range(1, paginator.num_pages + 1)
         else:
-            start = max(1, min(paginator.num_pages - max_shown_pages + 1, page.number - (max_shown_pages // 2)))
+            start = max(
+                1,
+                min(
+                    paginator.num_pages - max_shown_pages + 1,
+                    page.number - (max_shown_pages // 2),
+                ),
+            )
             end = min(paginator.num_pages, start + max_shown_pages - 1)
             pages = range(start, end + 1)
         return pages
@@ -154,19 +159,19 @@ class AbstractPaginatedViewActions(AbstractActions):
 class BrowseMovieViewActions(AbstractPaginatedViewActions):
     def get_movie_query_set(self, search_term):
         if not search_term:
-            return models.Movie.objects.order_by('title', 'year')
+            return models.Movie.objects.order_by("title", "year")
         search_terms = str(search_term).split()
         q_objects = Q()
         for term in search_terms:
             q_objects &= Q(title__icontains=term)
-        return models.Movie.objects.filter(q_objects).order_by('title', 'year')
+        return models.Movie.objects.filter(q_objects).order_by("title", "year")
 
 
 class BrowseActorViewActions(AbstractPaginatedViewActions):
     def get_actor_query_set(self, search_term):
         actor_manager = models.Actor.objects
         if not search_term:
-            return actor_manager.order_by('last', 'first')
+            return actor_manager.order_by("last", "first")
         search_terms = str(search_term).split()
         # AND the below Q objects together
         for term in search_terms:
@@ -174,14 +179,14 @@ class BrowseActorViewActions(AbstractPaginatedViewActions):
             q_objects = Q(last__icontains=term)
             q_objects |= Q(first__icontains=term)
             actor_manager = actor_manager.filter(q_objects)
-        return actor_manager.order_by('last', 'first')
+        return actor_manager.order_by("last", "first")
 
 
 class BrowseDirectorViewActions(AbstractPaginatedViewActions):
     def get_director_query_set(self, search_term):
         director_manager = models.Director.objects
         if not search_term:
-            return director_manager.order_by('last', 'first')
+            return director_manager.order_by("last", "first")
         search_terms = str(search_term).split()
         # AND the below Q objects together
         for term in search_terms:
@@ -189,7 +194,7 @@ class BrowseDirectorViewActions(AbstractPaginatedViewActions):
             q_objects = Q(last__icontains=term)
             q_objects |= Q(first__icontains=term)
             director_manager = director_manager.filter(q_objects)
-        return director_manager.order_by('last', 'first')
+        return director_manager.order_by("last", "first")
 
 
 class MovieDetailViewActions(AbstractActions):
@@ -198,20 +203,23 @@ class MovieDetailViewActions(AbstractActions):
 
     def get_movie_genres(self, movie_id):
         movie = models.Movie.objects.get(id=movie_id)
-        return movie.genres.values_list('value', flat='True')
+        return movie.genres.values_list("value", flat="True")
 
     def get_movie_actors(self, movie_id):
-        movie_actors = models.MovieActor.objects \
-            .filter(movie_id=movie_id) \
-            .select_related('actor') \
-            .order_by('actor__last', 'actor__first')
+        movie_actors = (
+            models.MovieActor.objects.filter(movie_id=movie_id)
+            .select_related("actor")
+            .order_by("actor__last", "actor__first")
+        )
         return movie_actors
 
     def get_movie_directors(self, movie_id):
         manager = models.MovieDirector.objects
-        results = manager.filter(movie_id=movie_id) \
-            .select_related('director') \
-            .order_by('director__last', 'director__first')
+        results = (
+            manager.filter(movie_id=movie_id)
+            .select_related("director")
+            .order_by("director__last", "director__first")
+        )
         return results
 
     def get_movie_companies(self, movie_id):
@@ -220,19 +228,19 @@ class MovieDetailViewActions(AbstractActions):
 
     def get_movie_reviews(self, movie_id):
         manager = models.Review.objects
-        return manager.filter(movie_id=movie_id).order_by('-time')[0:3]
+        return manager.filter(movie_id=movie_id).order_by("-time")[0:3]
 
     def get_movie_avg_user_rating(self, movie_id):
         manager = models.Review.objects
-        return manager.filter(movie_id=movie_id).aggregate(Avg('rating'))[
-            'rating__avg']
+        return manager.filter(movie_id=movie_id).aggregate(Avg("rating"))["rating__avg"]
 
     def get_movie_details_full(self, movie_id):
         movie = self.get_movie(movie_id)
         avg_rating = movie.avg_user_rating()
         companies = movie.companies.all()
-        cast = models.MovieActor.objects.filter(
-            movie_id=movie_id).select_related('actor')
+        cast = models.MovieActor.objects.filter(movie_id=movie_id).select_related(
+            "actor"
+        )
         # cast = []
         # for movie_actor in models.MovieActor.objects.filter(movie_id=movie_id).select_related('actor'):
         #     cast.append({
@@ -248,13 +256,13 @@ class MovieDetailViewActions(AbstractActions):
         genres = movie.genres.all()
         reviews = movie.review_set.all()
         return {
-            'movie': movie,
-            'avg_rating': avg_rating,
-            'companies': companies,
-            'actors': cast,
-            'directors': directors,
-            'genres': genres,
-            'reviews': reviews,
+            "movie": movie,
+            "avg_rating": avg_rating,
+            "companies": companies,
+            "actors": cast,
+            "directors": directors,
+            "genres": genres,
+            "reviews": reviews,
         }
 
     def add_actor_to_movie(self, data):
@@ -269,13 +277,14 @@ class MovieDetailViewActions(AbstractActions):
         # TODO
         pass
 
+
 class ActorDetailsViewActions(AbstractActions):
     def get_actor_details_full(self, actor_id):
         actor = self.get_actor(actor_id)
         movies = self.get_actor_movies(actor_id)
         return {
-            'actor': actor,
-            'movies': movies,
+            "actor": actor,
+            "movies": movies,
         }
 
     def get_actor(self, actor_id):
@@ -283,9 +292,13 @@ class ActorDetailsViewActions(AbstractActions):
 
     def get_actor_movies(self, actor_id):
         manager = models.MovieActor.objects
-        results = manager.filter(actor_id=actor_id).select_related(
-            'movie',
-        ).order_by('-movie__year', 'movie__title')
+        results = (
+            manager.filter(actor_id=actor_id)
+            .select_related(
+                "movie",
+            )
+            .order_by("-movie__year", "movie__title")
+        )
         return results
 
 
@@ -294,8 +307,8 @@ class DirectorDetailsViewActions(AbstractActions):
         director = self.get_director(director_id)
         movies = self.get_director_movies(director_id)
         return {
-            'director': director,
-            'movies': movies,
+            "director": director,
+            "movies": movies,
         }
 
     def get_director(self, director_id):
@@ -303,24 +316,28 @@ class DirectorDetailsViewActions(AbstractActions):
 
     def get_director_movies(self, director_id):
         manager = models.MovieDirector.objects
-        results = manager.filter(director_id=director_id).select_related(
-            'movie',
-        ).order_by('-movie__year', 'movie__title')
+        results = (
+            manager.filter(director_id=director_id)
+            .select_related(
+                "movie",
+            )
+            .order_by("-movie__year", "movie__title")
+        )
         return results
 
 
 class AddMovieViewActions(AbstractActions):
     def save_new_movie(self, **kwargs):
-        movie_data = kwargs['movie_data']
-        genre_data = kwargs['genre_data']
+        movie_data = kwargs["movie_data"]
+        genre_data = kwargs["genre_data"]
         movie = self.__save_movie_model(movie_data)
-        self.__save_movie_genre_models(movie, genre_data['genres'])
+        self.__save_movie_genre_models(movie, genre_data["genres"])
 
     def __save_movie_model(self, movie_data):
         movie = models.Movie()
-        movie.title = movie_data['title']
-        movie.year = movie_data['year']
-        movie.mpaa_rating = movie_data['mpaa_rating']
+        movie.title = movie_data["title"]
+        movie.year = movie_data["year"]
+        movie.mpaa_rating = movie_data["mpaa_rating"]
         movie.save()
         return movie
 
@@ -335,28 +352,28 @@ class AddMovieViewActions(AbstractActions):
 class AddActorDirectorViewActions(AbstractActions):
     def save_new_actor(self, actor_data):
         actor = models.Actor()
-        actor.last = actor_data['last']
-        actor.first = actor_data['first']
-        if actor_data['sex'] == models.Actor.MALE:
+        actor.last = actor_data["last"]
+        actor.first = actor_data["first"]
+        if actor_data["sex"] == models.Actor.MALE:
             actor.sex = models.Actor.MALE
-        elif actor_data['sex'] == models.Actor.FEMALE:
+        elif actor_data["sex"] == models.Actor.FEMALE:
             actor.sex = models.Actor.FEMALE
         else:
-            raise ValueError('Invalid value for actor.sex')
-        actor.dob = actor_data['dob']
-        if actor_data['dod']:
-            actor.dod = actor_data['dod']
+            raise ValueError("Invalid value for actor.sex")
+        actor.dob = actor_data["dob"]
+        if actor_data["dod"]:
+            actor.dod = actor_data["dod"]
         else:
             actor.dod = None
         actor.save()
 
     def save_new_director(self, director_data):
         director = models.Director()
-        director.last = director_data['last']
-        director.first = director_data['first']
-        director.dob = director_data['dob']
-        if director_data['dod']:
-            director.dod = director_data['dod']
+        director.last = director_data["last"]
+        director.first = director_data["first"]
+        director.dob = director_data["dob"]
+        if director_data["dod"]:
+            director.dod = director_data["dod"]
         else:
             director.dod = None
         director.save()
@@ -366,8 +383,8 @@ class AddActorToMovieViewActions(AbstractActions):
     def add_actor_to_movie(self, data):
         movie_actors = models.MovieActor.objects
         movie_actors.create(
-            movie=data['movie'],
-            actor=data['actor'],
+            movie=data["movie"],
+            actor=data["actor"],
         )
 
 
@@ -375,8 +392,8 @@ class AddDirectorToMovieViewActions(AbstractActions):
     def add_director_to_movie(self, data):
         movie_directors = models.MovieDirector.objects
         movie_directors.create(
-            movie=data['movie'],
-            director=data['director'],
+            movie=data["movie"],
+            director=data["director"],
         )
 
 
@@ -384,8 +401,8 @@ class WriteReviewViewActions(AbstractActions):
     def add_movie_review(self, data):
         reviews = models.Review.objects
         reviews.create(
-            user_name=data['user_name'],
-            movie=data['movie'],
-            rating=data['rating'],
-            comment=data['comment'],
+            user_name=data["user_name"],
+            movie=data["movie"],
+            rating=data["rating"],
+            comment=data["comment"],
         )

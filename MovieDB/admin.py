@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from MovieDB import models
 
 admin.site.register(models.Actor)

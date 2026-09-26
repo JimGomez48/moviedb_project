@@ -16,8 +16,8 @@ James Gomez
 
 REQUIREMENTS
 -------------
-* Python 3.10+
-* Django 5.2 LTS (see requirements.txt)
+* Python 3.12+
+* Django 6.1 (see requirements.txt)
 
 
 RUNNING

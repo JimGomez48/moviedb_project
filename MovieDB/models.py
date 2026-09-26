@@ -64,20 +64,12 @@ class Actor(models.Model):
     def get_full_name(self):
         return f"{self.first} {self.last}"
 
-    def save(
-        self,
-        *args,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
-        **kwargs,
-    ):
+    def save(self, *args, **kwargs):
         if self.dod and (self.dod < self.dob):
             raise ValidationError("Actor dod cannot be less than dob")
         # if not self.sex in self.SEX_CHOICES:
         #     raise ValidationError('invalid value for sex')
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)
 
 
 class Director(models.Model):
@@ -100,17 +92,10 @@ class Director(models.Model):
     def get_full_name(self):
         return f"{self.first} {self.last}"
 
-    def save(
-        self,
-        *args,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
-    ):
+    def save(self, *args, **kwargs):
         if self.dod and (self.dod < self.dob):
             raise ValidationError("Director dod cannot be less than dob")
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)
 
 
 class MpaaRating(models.Model):
@@ -257,14 +242,7 @@ class Movie(models.Model):
     def avg_user_rating(self):
         return self.review_set.aggregate(Avg("rating"))["rating__avg"]
 
-    def save(
-        self,
-        *args,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
-    ):
+    def save(self, *args, **kwargs):
         if (
             self.year < 1800
             or self.year > datetime.datetime.now(datetime.timezone.utc).year
@@ -272,7 +250,7 @@ class Movie(models.Model):
             raise ValidationError("Invalid year value")
         # if not self.rating in self.MPAA_RATINGS:
         #     raise ValidationError('Invalid rating value')
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)
 
 
 class Review(models.Model):
@@ -313,17 +291,10 @@ class Review(models.Model):
     def __str__(self):
         return f"[{self.pk}] movie:{self.movie.pk} user:{self.user_name} time:{self.time} rating:{self.rating}"
 
-    def save(
-        self,
-        *args,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
-    ):
+    def save(self, *args, **kwargs):
         if self.rating < 1 or self.rating > 5:
             raise ValidationError("Review.rating cannot be outside the range [1,5]")
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)
 
 
 class MovieCompany(models.Model):
@@ -441,14 +412,7 @@ class MovieGenre(models.Model):
     def __str__(self):
         return f"[{self.pk}] movie={self.movie.pk} genre={self.genre.pk}"
 
-    def save(
-        self,
-        *args,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
-    ):
+    def save(self, *args, **kwargs):
         # if not self.genre in self.GENRE_CHOICES:
         #     raise ValidationError('Invalid genre value')
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)

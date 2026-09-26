@@ -263,6 +263,11 @@ class MovieCompany(models.Model):
 
     class Meta:
         db_table = "movie_companies"
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=["movie", "company"], name="unique_movie_company"
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] movie={self.movie.pk} company={self.company.pk}"
@@ -274,6 +279,11 @@ class MovieActor(models.Model):
 
     class Meta:
         db_table = "movie_actors"
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=["movie", "actor"], name="unique_movie_actor"
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] movie={self.movie.pk} actor={self.actor.pk}"
@@ -301,6 +311,11 @@ class MovieDirector(models.Model):
 
     class Meta:
         db_table = "movie_directors"
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=["movie", "director"], name="unique_movie_director"
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] movie={self.movie.pk} director={self.director.pk}"
@@ -312,6 +327,11 @@ class MovieGenre(models.Model):
 
     class Meta:
         db_table = "movie_genres"
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=["movie", "genre"], name="unique_movie_genre"
+            ),
+        ]
 
     def __str__(self):
         return f"[{self.pk}] movie={self.movie.pk} genre={self.genre.pk}"

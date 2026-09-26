@@ -78,3 +78,24 @@ class TestValidation(TestCase):
         self.assertIn("rating", ctx.exception.error_dict)
         with self.assertRaises(IntegrityError), transaction.atomic():
             review.save()
+
+
+class TestLinkTableUniqueness(TestCase):
+    def assert_duplicate_rejected(self, model, **kwargs):
+        model.objects.create(**kwargs)
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            model.objects.create(**kwargs)
+
+    def test_movie_actor(self):
+        self.assert_duplicate_rejected(models.MovieActor, movie_id=253, actor_id=1)
+
+    def test_movie_director(self):
+        self.assert_duplicate_rejected(
+            models.MovieDirector, movie_id=253, director_id=37146
+        )
+
+    def test_movie_genre(self):
+        self.assert_duplicate_rejected(models.MovieGenre, movie_id=253, genre_id=1)
+
+    def test_movie_company(self):
+        self.assert_duplicate_rejected(models.MovieCompany, movie_id=253, company_id=1)

@@ -72,3 +72,24 @@ class TestWrites(TestCase):
         )
         self.assertEqual(200, response.status_code)
         self.assertFalse(models.Actor.objects.filter(last="Zzqx").exists())
+
+    def test_add_same_actor_to_movie_twice_shows_form_error(self):
+        data = {"movie": 253, "actor": 1}
+        self.assertEqual(
+            302, self.client.post(reverse("AddActorMovie"), data).status_code
+        )
+        self.assertEqual(
+            200, self.client.post(reverse("AddActorMovie"), data).status_code
+        )
+        self.assertEqual(
+            1, models.MovieActor.objects.filter(movie_id=253, actor_id=1).count()
+        )
+
+    def test_add_same_director_to_movie_twice_shows_form_error(self):
+        data = {"movie": 253, "director": 37146}
+        self.assertEqual(
+            302, self.client.post(reverse("AddDirectorMovie"), data).status_code
+        )
+        self.assertEqual(
+            200, self.client.post(reverse("AddDirectorMovie"), data).status_code
+        )

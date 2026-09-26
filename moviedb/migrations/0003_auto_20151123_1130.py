@@ -3,7 +3,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("MovieDB", "0002_sprocs_seeds"),
+        ("moviedb", "0002_sprocs_seeds"),
     ]
 
     operations = [
@@ -11,28 +11,28 @@ class Migration(migrations.Migration):
             model_name="movie",
             name="cast",
             field=models.ManyToManyField(
-                to="MovieDB.Actor", through="MovieDB.MovieActor"
+                to="moviedb.Actor", through="moviedb.MovieActor"
             ),
         ),
         migrations.AddField(
             model_name="movie",
             name="companies",
             field=models.ManyToManyField(
-                to="MovieDB.Company", through="MovieDB.MovieCompany"
+                to="moviedb.Company", through="moviedb.MovieCompany"
             ),
         ),
         migrations.AddField(
             model_name="movie",
             name="directors",
             field=models.ManyToManyField(
-                to="MovieDB.Director", through="MovieDB.MovieDirector"
+                to="moviedb.Director", through="moviedb.MovieDirector"
             ),
         ),
         migrations.AddField(
             model_name="movie",
             name="genres",
             field=models.ManyToManyField(
-                to="MovieDB.Genre", through="MovieDB.MovieGenre"
+                to="moviedb.Genre", through="moviedb.MovieGenre"
             ),
         ),
     ]

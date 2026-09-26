@@ -9,7 +9,7 @@ from moviedb_project.settings import BASE_DIR
 
 def load_static_tables(apps, schema_editor):
     # load mpaa_ratings
-    MpaaRating = apps.get_model("MovieDB", "MpaaRating")
+    MpaaRating = apps.get_model("moviedb", "MpaaRating")
     MpaaRating.objects.bulk_create(
         [
             MpaaRating(value="G"),
@@ -21,7 +21,7 @@ def load_static_tables(apps, schema_editor):
         ]
     )
     # load genres
-    Genre = apps.get_model("MovieDB", "Genre")
+    Genre = apps.get_model("moviedb", "Genre")
     Genre.objects.bulk_create(
         [
             Genre(value="Action"),
@@ -47,7 +47,7 @@ def load_static_tables(apps, schema_editor):
     )
 
 
-SEED_DIR = os.path.join(BASE_DIR, "MovieDB", "sql", "seeds", "csv")
+SEED_DIR = os.path.join(BASE_DIR, "moviedb", "sql", "seeds", "csv")
 BATCH_SIZE = 2000
 
 
@@ -84,7 +84,7 @@ def load_seed_data(apps, schema_editor):
     print("Loading seed data...")
     m = apps.get_model
     _load(
-        m("MovieDB", "Actor"),
+        m("moviedb", "Actor"),
         ["actor1.csv", "actor2.csv", "actor3.csv"],
         [
             ("id", int),
@@ -95,48 +95,48 @@ def load_seed_data(apps, schema_editor):
             ("dod", _date),
         ],
     )
-    _load(m("MovieDB", "Company"), ["company.csv"], [("id", int), ("name", None)])
+    _load(m("moviedb", "Company"), ["company.csv"], [("id", int), ("name", None)])
     _load(
-        m("MovieDB", "Director"),
+        m("moviedb", "Director"),
         ["director.csv"],
         [("id", int), ("last", None), ("first", None), ("dob", _date), ("dod", _date)],
     )
     _load(
-        m("MovieDB", "Movie"),
+        m("moviedb", "Movie"),
         ["movie.csv"],
         [("id", int), ("title", None), ("year", int), ("mpaa_rating_id", int)],
     )
     # link tables: ids are auto-assigned, so the row order defines them (as with LOAD DATA)
     _load(
-        m("MovieDB", "MovieActor"),
+        m("moviedb", "MovieActor"),
         ["movieactor1.csv", "movieactor2.csv"],
         [("movie_id", int), ("actor_id", int)],
     )
     _load(
-        m("MovieDB", "MovieActorRole"),
+        m("moviedb", "MovieActorRole"),
         ["movieactorrole1.csv", "movieactorrole2.csv"],
         [("movie_actor_id", int), ("role", None)],
     )
     _load(
-        m("MovieDB", "MovieCompany"),
+        m("moviedb", "MovieCompany"),
         ["moviecompany.csv"],
         [("movie_id", int), ("company_id", int)],
     )
     _load(
-        m("MovieDB", "MovieDirector"),
+        m("moviedb", "MovieDirector"),
         ["moviedirector.csv"],
         [(None, None), ("movie_id", int), ("director_id", int)],
     )
     _load(
-        m("MovieDB", "MovieGenre"),
+        m("moviedb", "MovieGenre"),
         ["moviegenre.csv"],
         [(None, None), ("movie_id", int), ("genre_id", int)],
     )
 
 
 def load_seed_reviews(apps, schema_editor):
-    Review = apps.get_model("MovieDB", "Review")
-    Movie = apps.get_model("MovieDB", "Movie")
+    Review = apps.get_model("moviedb", "Review")
+    Movie = apps.get_model("moviedb", "Movie")
     Review.objects.bulk_create(
         [
             Review(
@@ -166,7 +166,7 @@ def load_seed_reviews(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("MovieDB", "0001_initial"),
+        ("moviedb", "0001_initial"),
     ]
 
     operations = [

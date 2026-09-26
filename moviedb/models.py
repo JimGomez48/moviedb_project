@@ -1,13 +1,5 @@
-"""
-This file constitutes the Model Layer. It is responsible for data retrieval and
-persistence of model instances. Models can contain behavior logic, but should
-not depend on any other model to carry out the behaviour.
-
-The Model Layer knows about itself only.
-"""
-
-import datetime
 import re
+from datetime import UTC, datetime
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -19,21 +11,10 @@ def validate_dob_dod(dob):
 
 
 def current_year():
-    return datetime.datetime.now(datetime.timezone.utc).year
+    return datetime.now(UTC).year
 
 
 class Actor(models.Model):
-    """
-    :param: last - Last name of the actor
-    :param: first - First name of the actor
-    :param: sex - Actor's sex
-    :param: dob - Actor's date of birth
-    :param: dod - Actor's date of death. None if still alive
-    """
-
-    class ActorManager(models.Manager):
-        pass
-
     MALE = "male"
     FEMALE = "female"
     SEX_CHOICES = (
@@ -52,7 +33,6 @@ class Actor(models.Model):
     )
     dob = models.DateField(verbose_name="Date of Birth")
     dod = models.DateField(null=True, default=None, verbose_name="Date of Death")
-    objects = ActorManager()
 
     class Meta:
         db_table = "actors"
@@ -199,13 +179,6 @@ class Company(models.Model):
 
 
 class Movie(models.Model):
-    """
-    :param: title       - The movie title
-    :param: year        - The year the movie was released
-    :param: mpaa_rating - MPAA rating
-    :param: company     - Production Company
-    """
-
     title = models.CharField(
         max_length=100, blank=False, null=False, verbose_name="Movie Title"
     )
@@ -243,10 +216,7 @@ class Movie(models.Model):
         return self.review_set.aggregate(Avg("rating"))["rating__avg"]
 
     def save(self, *args, **kwargs):
-        if (
-            self.year < 1800
-            or self.year > datetime.datetime.now(datetime.timezone.utc).year
-        ):
+        if self.year < 1800 or self.year > datetime.now(UTC).year:
             raise ValidationError("Invalid year value")
         # if not self.rating in self.MPAA_RATINGS:
         #     raise ValidationError('Invalid rating value')
@@ -254,14 +224,6 @@ class Movie(models.Model):
 
 
 class Review(models.Model):
-    """
-    :param: time - The datetime at which the review was made
-    :param: user_name - User name of the person who wrote the review
-    :param: movie - Movie foreign key to which this review refers
-    :param: rating - Rating (1-5 stars)
-    :param: comment - User's review comments
-    """
-
     RATING_CHOICES = (
         (1, "1-star"),
         (2, "2-star"),
@@ -311,17 +273,8 @@ class MovieCompany(models.Model):
 
 
 class MovieActor(models.Model):
-    """
-    :param: movie - Movie foreign key
-    :param: actor - Actor foreign key
-    """
-
-    class MovieActorManager(models.Manager):
-        pass
-
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name="Actor")
-    objects = MovieActorManager()
 
     class Meta:
         db_table = "movie_actors"
@@ -345,11 +298,6 @@ class MovieActorRole(models.Model):
 
 
 class MovieDirector(models.Model):
-    """
-    :param: movie - Movie foreign key
-    :param: director - Director foreign key
-    """
-
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
     director = models.ForeignKey(
         Director, on_delete=models.CASCADE, verbose_name="Director"

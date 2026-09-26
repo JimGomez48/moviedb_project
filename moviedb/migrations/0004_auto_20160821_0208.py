@@ -3,7 +3,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("MovieDB", "0003_auto_20151123_1130"),
+        ("moviedb", "0003_auto_20151123_1130"),
     ]
 
     operations = [

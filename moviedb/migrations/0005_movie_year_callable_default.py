@@ -2,12 +2,12 @@
 
 from django.db import migrations, models
 
-import MovieDB.models
+import moviedb.models
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("MovieDB", "0004_auto_20160821_0208"),
+        ("moviedb", "0004_auto_20160821_0208"),
     ]
 
     operations = [
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             model_name="movie",
             name="year",
             field=models.IntegerField(
-                default=MovieDB.models.current_year, verbose_name="Year"
+                default=moviedb.models.current_year, verbose_name="Year"
             ),
         ),
     ]

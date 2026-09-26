@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from MovieDB import models
+from moviedb import models
 
 
 class TestModels(TestCase):

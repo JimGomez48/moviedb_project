@@ -19,7 +19,7 @@ from django.core import paginator
 from django.db.models import Avg, Q
 from django.urls import NoReverseMatch, reverse
 
-from MovieDB import models
+from moviedb import models
 from moviedb_project.settings import BASE_DIR
 
 
@@ -47,7 +47,7 @@ class BaseViewActions(AbstractActions):
     def get_navbar_data(self):
         # parse navbar.xml to get the navbar information
         navbar = []
-        path = os.path.join(BASE_DIR, "MovieDB/static/data/navbar.xml")
+        path = os.path.join(BASE_DIR, "moviedb/static/data/navbar.xml")
         tree = ET.parse(path)
         root = tree.getroot()
         for element in root:

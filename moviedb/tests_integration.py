@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from MovieDB import models
+from moviedb import models
 
 
 class TestPages(TestCase):

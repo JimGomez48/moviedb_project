@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "MovieDB",
+    "moviedb",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ ROOT_URLCONF = "moviedb_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["templates", "MovieDB/templates"],
+        "DIRS": ["templates", "moviedb/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from MovieDB import models
+from moviedb import models
 
 admin.site.register(models.Actor)
 admin.site.register(models.Director)

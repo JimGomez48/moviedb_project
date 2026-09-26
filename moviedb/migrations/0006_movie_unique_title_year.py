@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("MovieDB", "0005_movie_year_callable_default"),
+        ("moviedb", "0005_movie_year_callable_default"),
     ]
 
     operations = [

@@ -190,7 +190,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         verbose_name="Mpaa Rating",
-                        to="MovieDB.MpaaRating",
+                        to="moviedb.MpaaRating",
                     ),
                 ),
             ],
@@ -216,7 +216,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Actor",
-                        to="MovieDB.Actor",
+                        to="moviedb.Actor",
                     ),
                 ),
                 (
@@ -224,7 +224,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Movie",
-                        to="MovieDB.Movie",
+                        to="moviedb.Movie",
                     ),
                 ),
             ],
@@ -249,7 +249,7 @@ class Migration(migrations.Migration):
                     "movie_actor",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="MovieDB.MovieActor",
+                        to="moviedb.MovieActor",
                     ),
                 ),
             ],
@@ -274,7 +274,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Company",
-                        to="MovieDB.Company",
+                        to="moviedb.Company",
                     ),
                 ),
                 (
@@ -282,7 +282,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Movie",
-                        to="MovieDB.Movie",
+                        to="moviedb.Movie",
                     ),
                 ),
             ],
@@ -307,7 +307,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Director",
-                        to="MovieDB.Director",
+                        to="moviedb.Director",
                     ),
                 ),
                 (
@@ -315,7 +315,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Movie",
-                        to="MovieDB.Movie",
+                        to="moviedb.Movie",
                     ),
                 ),
             ],
@@ -340,7 +340,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Movie",
-                        to="MovieDB.Genre",
+                        to="moviedb.Genre",
                     ),
                 ),
                 (
@@ -348,7 +348,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Movie",
-                        to="MovieDB.Movie",
+                        to="moviedb.Movie",
                     ),
                 ),
             ],
@@ -393,7 +393,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         verbose_name="Movie",
-                        to="MovieDB.Movie",
+                        to="moviedb.Movie",
                     ),
                 ),
             ],

@@ -5,12 +5,12 @@ validating forms and their fields and any other forms behavior logic.
 The Forms Layer knows about itself only.
 """
 
-import datetime
+from datetime import date
 
 from django import forms
 from django.forms import widgets
 
-from MovieDB import models
+from moviedb import models
 
 
 class NavBarSearchForm(forms.Form):
@@ -47,8 +47,8 @@ class MovieForm(forms.ModelForm):
                     "class": "form-control",
                     "maxlength": "4",
                     "min": "1870",
-                    "max": datetime.date.today().year,
-                    "value": datetime.date.today().year,
+                    "max": date.today().year,
+                    "value": date.today().year,
                 }
             ),
             "mpaa_rating": forms.Select(

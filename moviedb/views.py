@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 
-from MovieDB import actions, forms
+from moviedb import actions, forms
 from moviedb_project.settings import BASE_DIR
 
 PROJECT_ROOT = BASE_DIR

@@ -6,9 +6,8 @@
         {% include 'controls/form_alert_error.html' with form=movieactor_form %}
     {% endif %}
     {# form fields #}
-    {% include 'controls/form_field_horizontal.html' with field=movieactor_form.mid %}
-    {% include 'controls/form_field_horizontal.html' with field=movieactor_form.aid %}
-    {% include 'controls/form_field_horizontal.html' with field=movieactor_form.role %}
+    {% include 'controls/form_field_horizontal.html' with field=movieactor_form.movie %}
+    {% include 'controls/form_field_horizontal.html' with field=movieactor_form.actor %}
     {# form submit #}
     {% include 'controls/submit_button_horizontal.html' with submit_name='movieactor' %}
 </form>

@@ -17,6 +17,10 @@ from django.db.models import Avg
 def validate_dob_dod(dob):
     pass
 
+
+def current_year():
+    return datetime.date.today().year
+
 class Actor(models.Model):
     """
     :param: last - Last name of the actor
@@ -46,7 +50,7 @@ class Actor(models.Model):
         db_table = 'actors'
         ordering = ['last', 'first']
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] %s, %s (%s)' % (self.id, self.last, self.first, self.dob)
 
     def get_full_name(self):
@@ -81,7 +85,7 @@ class Director(models.Model):
         db_table = 'directors'
         ordering = ['last', 'first']
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] %s, %s (%s)' % (self.id, self.last, self.first, self.dob)
 
     def get_full_name(self):
@@ -115,7 +119,7 @@ class MpaaRating(models.Model):
     class Meta:
         db_table = 'mpaa_ratings'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] %s' % (self.id, self.value)
 
 
@@ -165,7 +169,7 @@ class Genre(models.Model):
     class Meta:
         db_table = 'genres'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] %s' % (self.id, self.value)
 
 
@@ -175,7 +179,7 @@ class Company(models.Model):
     class Meta:
         db_table = 'companies'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s]: %s' % (self.id, self.name)
 
 
@@ -189,8 +193,8 @@ class Movie(models.Model):
     class MovieManager(models.Manager):
         pass
 
-    title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title', unique_for_year='year')
-    year = models.IntegerField(blank=False, null=False, default=datetime.date.today().year, verbose_name='Year')
+    title = models.CharField(max_length=100, blank=False, null=False, verbose_name='Movie Title')
+    year = models.IntegerField(blank=False, null=False, default=current_year, verbose_name='Year')
     mpaa_rating = models.ForeignKey(MpaaRating, on_delete=models.PROTECT, verbose_name='Mpaa Rating')
     cast = models.ManyToManyField(Actor, through='MovieActor')
     directors = models.ManyToManyField(Director, through='MovieDirector')
@@ -201,8 +205,11 @@ class Movie(models.Model):
     class Meta:
         db_table = 'movies'
         ordering = ['title', 'year']
+        constraints = [
+            models.UniqueConstraint(fields=['title', 'year'], name='unique_movie_title_year'),
+        ]
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] %s (%s)' % (self.id, self.title, self.year)
 
     def get_cleaned_title(self):
@@ -250,7 +257,7 @@ class Review(models.Model):
         db_table = 'reviews'
         ordering = ['-time']
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] movie:%s user:%s time:%s rating:%s' % (self.id, self.movie.id, self.user_name, self.time, self.rating)
 
     def save(self, force_insert=False, force_update=False, using=None,
@@ -267,7 +274,7 @@ class MovieCompany(models.Model):
     class Meta:
         db_table = 'movie_companies'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] movie=%s company=%s' % (self.id, self.movie.id, self.company.id)
 
 
@@ -281,12 +288,12 @@ class MovieActor(models.Model):
 
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Movie')
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, verbose_name='Actor')
-    objects = MovieActorManager
+    objects = MovieActorManager()
 
     class Meta:
         db_table = 'movie_actors'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] movie=%s actor=%s' % (self.id, self.movie.id, self.actor.id)
 
     def roles(self):
@@ -300,7 +307,7 @@ class MovieActorRole(models.Model):
     class Meta:
         db_table = 'movie_actor_roles'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] movie=%s role=%s' % (self.id, self.movie_actor.id, self.role)
 
 
@@ -315,7 +322,7 @@ class MovieDirector(models.Model):
     class Meta:
         db_table = 'movie_directors'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] movie=%s director=%s' % (self.id, self.movie.id, self.director.id)
 
 
@@ -370,7 +377,7 @@ class MovieGenre(models.Model):
     class Meta:
         db_table = 'movie_genres'
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] movie:%s genre:%s' % (self.id, self.movie.id, self.genre.id)
 
     def save(self, force_insert=False, force_update=False, using=None,

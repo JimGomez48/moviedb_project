@@ -8,8 +8,6 @@ import datetime
 
 from django import forms
 from django.forms import widgets
-from django.forms import extras
-from datetimewidget.widgets import DateWidget
 
 from MovieDB import models
 
@@ -27,7 +25,7 @@ class NavBarSearchForm(forms.Form):
 class MovieForm(forms.ModelForm):
     class Meta:
         model=models.Movie
-        fields = ['title', 'year']
+        fields = ['title', 'year', 'mpaa_rating']
         # fields=['title', 'company', 'year', 'rating']
         widgets={
             'title': forms.TextInput(attrs={
@@ -45,9 +43,9 @@ class MovieForm(forms.ModelForm):
                 'max': datetime.date.today().year,
                 'value': datetime.date.today().year
             }),
-            # 'rating': forms.Select(attrs={
-            #     'class': 'form-control',
-            # }),
+            'mpaa_rating': forms.Select(attrs={
+                'class': 'form-control',
+            }),
         }
 
 
@@ -56,6 +54,12 @@ class MovieGenreForm(forms.Form):
         choices=models.MovieGenre.GENRE_CHOICES,
         widget=forms.CheckboxSelectMultiple(),
     )
+
+
+class DateWidget(widgets.DateInput):
+    """Plain HTML date input; replaces the unmaintained django-datetime-widget."""
+    def __init__(self, bootstrap_version=None, options=None, attrs=None):
+        super(DateWidget, self).__init__(attrs=attrs, format='%m/%d/%Y')
 
 
 class DateOptions(object):

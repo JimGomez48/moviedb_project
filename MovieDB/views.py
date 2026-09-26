@@ -8,7 +8,7 @@ The View Layer only knows about the following other system layers
 - Template Layer
 """
 
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from django.http import HttpResponse, Http404
 from django.core import exceptions
 from django.shortcuts import render, redirect
@@ -34,7 +34,7 @@ class BaseView(TemplateView):
         )
 
     def bind_context_data(self, **kwargs):
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             self.__context[key] = value
 
     def get_context_data(self, **kwargs):
@@ -309,7 +309,7 @@ class WriteReviewView(BaseView):
     def get(self, request, mid=None):
         initial = {}
         if mid:
-            initial['mid'] = mid
+            initial['movie'] = mid
         review_form = forms.ReviewForm(initial=initial)
         self.bind_context_data(
             review_form = review_form

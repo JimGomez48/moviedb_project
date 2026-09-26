@@ -1,6 +1,6 @@
-from django.conf.urls import url
+from django.urls import re_path as url
 
-import views
+from MovieDB import views
 
 urlpatterns = [
     # Base

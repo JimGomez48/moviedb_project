@@ -1,5 +1,5 @@
 {% extends 'views/detail_base_view.html' %}
-{% load staticfiles %}
+{% load static %}
 
 {% block panel_heading %}
     {{ director.get_full_name }} <em>(Director)</em>
@@ -41,13 +41,13 @@
                     {% for movie in movies %}
                         <tr>
                             <td>
-                                <a class="text-primary text-capitalize" href="{% url 'MovieDetail' movie.mid.id %}">
+                                <a class="text-primary text-capitalize" href="{% url 'MovieDetail' movie.movie.id %}">
                                     <img class="" src="{% static 'img/default_movie.png' %}" height="36">
-                                    {{ movie.mid.get_cleaned_title }}
+                                    {{ movie.movie.get_cleaned_title }}
                                 </a>
                             </td>
                             <td>
-                                {{ movie.mid.year }}
+                                {{ movie.movie.year }}
                             </td>
                         </tr>
                     {% endfor %}

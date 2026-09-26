@@ -11,11 +11,10 @@ The Action Layer only knows about the following other system layers
 - Services Layer
 """
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import os
 import abc
-from django.core.urlresolvers import reverse, NoReverseMatch
-from django.db import connection
+from django.urls import reverse, NoReverseMatch
 from django.db.models import Q, Avg
 from django.core import paginator
 from django.core import exceptions
@@ -25,8 +24,9 @@ from MovieDB import models
 from MovieDB import services
 
 
-class AbstractActions(object):
-    __metaclass__ = abc.ABCMeta
+class AbstractActions(metaclass=abc.ABCMeta):
+    pass
+
 
 
 class BaseViewActions(AbstractActions):
@@ -129,7 +129,6 @@ class SearchResultsViewActions(AbstractActions):
 
 
 class AbstractPaginatedViewActions(AbstractActions):
-    __metaclass__ = abc.ABCMeta
 
     def get_visible_page_range(self, page, max_shown_pages=9):
         paginator = page.paginator
@@ -258,59 +257,6 @@ class MovieDetailViewActions(AbstractActions):
             'reviews': reviews,
         }
 
-    def get_movie_details_full_sproc(self, movie_id):
-        proc_name = 'movie_db.sp_get_movie_details_full'
-        with connection.cursor() as cursor:
-            cursor.callproc(proc_name, [movie_id])
-            results = {}
-            # get actors
-            actors = []
-            for row in cursor:
-                actor = models.Actor()
-                actor.id =      row[0]
-                actor.last =    row[1]
-                actor.first =   row[2]
-                actor.sex =     row[3]
-                actor.dob =     row[4]
-                actor.dod =     row[5]
-                actor.role =    row[6]
-                actors.append(actor)
-            results['actors'] = actors
-            # get directors
-            cursor.nextset()
-            directors = []
-            for row in cursor:
-                director = models.Director()
-                director.id =       row[0]
-                director.last =     row[1]
-                director.first =    row[2]
-                director.dob =      row[3]
-                director.dod =      row[4]
-                directors.append(director)
-            results['directors'] = directors
-            # get genres
-            cursor.nextset()
-            genres = []
-            for row in cursor:
-                genres.append(row[0])
-            results['genres'] = genres
-            # get reviews
-            cursor.nextset()
-            reviews = []
-            for row in cursor:
-                review = models.Review()
-                review.id =         row[0]
-                review.time =       row[1]
-                review.user_name =  row[2]
-                review.rating =     row[3]
-                review.comment =    row[4]
-                reviews.append(review)
-            results['reviews'] = reviews
-            # get average review rating
-            cursor.nextset()
-            results['avg_rating'] = cursor.fetchone()[0]
-        return results
-
     def add_actor_to_movie(self, data):
         # TODO
         pass
@@ -337,13 +283,9 @@ class ActorDetailsViewActions(AbstractActions):
 
     def get_actor_movies(self, actor_id):
         manager = models.MovieActor.objects
-        results = manager.filter(aid=actor_id).select_related(
-            'mid__id',
-            'mid__title',
-            'mid__year',
-            'mid__rating',
-            'mid__company',
-        ).order_by('-mid__year', 'mid__title')
+        results = manager.filter(actor_id=actor_id).select_related(
+            'movie',
+        ).order_by('-movie__year', 'movie__title')
         return results
 
 
@@ -361,13 +303,9 @@ class DirectorDetailsViewActions(AbstractActions):
 
     def get_director_movies(self, director_id):
         manager = models.MovieDirector.objects
-        results = manager.filter(did=director_id).select_related(
-            'mid__id',
-            'mid__title',
-            'mid__year',
-            'mid__rating',
-            'mid__company',
-        ).order_by('-mid__year', 'mid__title')
+        results = manager.filter(director_id=director_id).select_related(
+            'movie',
+        ).order_by('-movie__year', 'movie__title')
         return results
 
 
@@ -376,14 +314,13 @@ class AddMovieViewActions(AbstractActions):
         movie_data = kwargs['movie_data']
         genre_data = kwargs['genre_data']
         movie = self.__save_movie_model(movie_data)
-        self.__save_movie_genre_models(movie, genre_data.values()[0])
+        self.__save_movie_genre_models(movie, genre_data['genres'])
 
     def __save_movie_model(self, movie_data):
         movie = models.Movie()
         movie.title = movie_data['title']
-        movie.company = movie_data['company']
         movie.year = movie_data['year']
-        movie.rating = movie_data['rating']
+        movie.mpaa_rating = movie_data['mpaa_rating']
         movie.save()
         return movie
 
@@ -391,7 +328,7 @@ class AddMovieViewActions(AbstractActions):
         for genre in genres:
             movie_genre = models.MovieGenre()
             movie_genre.movie = movie
-            movie_genre.genre = genre
+            movie_genre.genre = models.Genre.objects.get(value=genre)
             movie_genre.save()
 
 
@@ -429,9 +366,8 @@ class AddActorToMovieViewActions(AbstractActions):
     def add_actor_to_movie(self, data):
         movie_actors = models.MovieActor.objects
         movie_actors.create(
-            mid=data['mid'],
-            aid=data['aid'],
-            role=data['role'],
+            movie=data['movie'],
+            actor=data['actor'],
         )
 
 
@@ -439,8 +375,8 @@ class AddDirectorToMovieViewActions(AbstractActions):
     def add_director_to_movie(self, data):
         movie_directors = models.MovieDirector.objects
         movie_directors.create(
-            mid=data['mid'],
-            did=data['did'],
+            movie=data['movie'],
+            director=data['director'],
         )
 
 
@@ -449,7 +385,7 @@ class WriteReviewViewActions(AbstractActions):
         reviews = models.Review.objects
         reviews.create(
             user_name=data['user_name'],
-            mid=data['mid'],
+            movie=data['movie'],
             rating=data['rating'],
             comment=data['comment'],
         )

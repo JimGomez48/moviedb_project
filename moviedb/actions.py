@@ -15,54 +15,12 @@ import abc
 
 from django.core import paginator
 from django.db.models import Avg, Q
-from django.urls import NoReverseMatch, reverse
 
 from moviedb import models
-from moviedb.navbar import NAVBAR
 
 
 class AbstractActions(metaclass=abc.ABCMeta):
     pass
-
-
-class BaseViewActions(AbstractActions):
-    class NavElement:
-        DROPDOWN = "dropdown"
-        ITEM = "item"
-
-        def __init__(self, type):
-            self.type = type
-            self.children = None
-            self.text = None
-            self.url = None
-
-        def add_child(self, child):
-            if child:
-                if not self.children:
-                    self.children = []
-                self.children.append(child)
-
-    def get_navbar_data(self):
-        navbar = []
-        for entry in NAVBAR:
-            if entry["type"] == self.NavElement.DROPDOWN:
-                dropdown = self.NavElement(type=self.NavElement.DROPDOWN)
-                dropdown.text = entry["text"]
-                for item in entry["items"]:
-                    nav_item = self.NavElement(type=self.NavElement.ITEM)
-                    nav_item.text = item["text"]
-                    try:
-                        nav_item.url = reverse(item["viewname"])
-                    except NoReverseMatch:
-                        nav_item.url = "#"
-                    dropdown.add_child(nav_item)
-                navbar.append(dropdown)
-            elif entry["type"] == self.NavElement.ITEM:
-                nav_item = self.NavElement(type=self.NavElement.ITEM)
-                nav_item.text = entry["text"]
-                nav_item.url = reverse(entry["viewname"])
-                navbar.append(nav_item)
-        return navbar
 
 
 class IndexViewActions(AbstractActions):

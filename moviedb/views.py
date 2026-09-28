@@ -24,12 +24,6 @@ class BaseView(TemplateView):
     def __init__(self):
         super().__init__()
         self.__context = super().get_context_data()
-        view_actions = actions.BaseViewActions()
-        self.bind_context_data(
-            title="MovieDB",
-            nav_items=view_actions.get_navbar_data(),
-            search_form=forms.NavBarSearchForm(),
-        )
 
     def bind_context_data(self, **kwargs):
         for key, value in kwargs.items():

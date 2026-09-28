@@ -35,7 +35,6 @@ class BaseView(TemplateView):
 
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
-        actions.IndexViewActions()
         self.bind_context_data(page_header="MovieDB Landing Page")
         return render(request, "views/index.html", self.get_context_data())
 

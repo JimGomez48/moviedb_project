@@ -11,23 +11,13 @@ The Action Layer only knows about the following other system layers
 - Services Layer
 """
 
-import abc
-
 from django.core import paginator
 from django.db.models import Avg, Q
 
 from moviedb import models
 
 
-class AbstractActions(metaclass=abc.ABCMeta):
-    pass
-
-
-class IndexViewActions(AbstractActions):
-    pass
-
-
-class SearchResultsViewActions(AbstractActions):
+class SearchResultsViewActions:
     RESULTS_PER_PAGE = 15
 
     def get_search_results_all(self, search_term):
@@ -75,7 +65,7 @@ class SearchResultsViewActions(AbstractActions):
         return director_manager[: self.RESULTS_PER_PAGE]
 
 
-class AbstractPaginatedViewActions(AbstractActions):
+class AbstractPaginatedViewActions:
     def get_visible_page_range(self, page, max_shown_pages=9):
         paginator = page.paginator
         if paginator.num_pages < max_shown_pages:
@@ -144,7 +134,7 @@ class BrowseDirectorViewActions(AbstractPaginatedViewActions):
         return director_manager.order_by("last", "first")
 
 
-class MovieDetailViewActions(AbstractActions):
+class MovieDetailViewActions:
     def get_movie(self, movie_id):
         return models.Movie.objects.get(id=movie_id)
 
@@ -219,7 +209,7 @@ class MovieDetailViewActions(AbstractActions):
         pass
 
 
-class ActorDetailsViewActions(AbstractActions):
+class ActorDetailsViewActions:
     def get_actor_details_full(self, actor_id):
         actor = self.get_actor(actor_id)
         movies = self.get_actor_movies(actor_id)
@@ -243,7 +233,7 @@ class ActorDetailsViewActions(AbstractActions):
         return results
 
 
-class DirectorDetailsViewActions(AbstractActions):
+class DirectorDetailsViewActions:
     def get_director_details_full(self, director_id):
         director = self.get_director(director_id)
         movies = self.get_director_movies(director_id)
@@ -261,7 +251,7 @@ class DirectorDetailsViewActions(AbstractActions):
         )
 
 
-class AddMovieViewActions(AbstractActions):
+class AddMovieViewActions:
     def save_new_movie(self, **kwargs):
         movie_data = kwargs["movie_data"]
         genre_data = kwargs["genre_data"]
@@ -280,7 +270,7 @@ class AddMovieViewActions(AbstractActions):
         movie.genres.add(*models.Genre.objects.filter(value__in=genres))
 
 
-class AddActorDirectorViewActions(AbstractActions):
+class AddActorDirectorViewActions:
     def save_new_actor(self, actor_data):
         actor = models.Actor()
         actor.last = actor_data["last"]
@@ -305,7 +295,7 @@ class AddActorDirectorViewActions(AbstractActions):
         director.save()
 
 
-class AddActorToMovieViewActions(AbstractActions):
+class AddActorToMovieViewActions:
     def add_actor_to_movie(self, data):
         movie_actors = models.MovieActor.objects
         movie_actors.create(
@@ -314,12 +304,12 @@ class AddActorToMovieViewActions(AbstractActions):
         )
 
 
-class AddDirectorToMovieViewActions(AbstractActions):
+class AddDirectorToMovieViewActions:
     def add_director_to_movie(self, data):
         data["movie"].directors.add(data["director"])
 
 
-class WriteReviewViewActions(AbstractActions):
+class WriteReviewViewActions:
     def add_movie_review(self, data):
         reviews = models.Review.objects
         reviews.create(

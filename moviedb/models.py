@@ -90,7 +90,7 @@ class Director(models.Model):
 
 
 class MpaaRating(models.Model):
-    class Value(models.TextChoices):
+    class MpaaRatings(models.TextChoices):
         NC_17 = "NC-17", "NC-17"
         R = "R", "R"
         PG_13 = "PG-13", "PG-13"
@@ -100,7 +100,7 @@ class MpaaRating(models.Model):
 
     value = models.CharField(
         max_length=20,
-        choices=Value,
+        choices=MpaaRatings,
         verbose_name="Mpaa Rating Value",
     )
 
@@ -109,7 +109,7 @@ class MpaaRating(models.Model):
 
 
 class Genre(models.Model):
-    class Value(models.TextChoices):
+    class Genres(models.TextChoices):
         ACTION = "Action"
         ADULT = "Adult"
         ADVENTURE = "Adventure"
@@ -132,8 +132,8 @@ class Genre(models.Model):
 
     value = models.CharField(
         max_length=20,
-        choices=Value,
-        default=Value.DRAMA,
+        choices=Genres,
+        default=Genres.DRAMA,
         verbose_name="Genre Value",
     )
 
@@ -188,7 +188,7 @@ class Movie(models.Model):
 
 
 class Review(models.Model):
-    class Rating(models.IntegerChoices):
+    class StarRatings(models.IntegerChoices):
         ONE = 1, "1-star"
         TWO = 2, "2-star"
         THREE = 3, "3-star"
@@ -201,8 +201,8 @@ class Review(models.Model):
         Movie, on_delete=models.CASCADE, related_name="reviews", verbose_name="Movie"
     )
     rating = models.IntegerField(
-        choices=Rating,
-        default=Rating.FIVE,
+        choices=StarRatings,
+        default=StarRatings.FIVE,
         verbose_name="User Rating",
     )
     comment = models.TextField(max_length=2000, blank=True, default="")

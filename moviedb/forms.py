@@ -61,7 +61,7 @@ class MovieForm(forms.ModelForm):
 
 class MovieGenreForm(forms.Form):
     genres = forms.MultipleChoiceField(
-        choices=models.Genre.Value.choices,
+        choices=models.Genre.Genres.choices,
         widget=forms.CheckboxSelectMultiple(),
     )
 
@@ -210,7 +210,7 @@ class ReviewForm(forms.ModelForm):
                 attrs={
                     "class": "rating form-control",
                     "data-min": 0,
-                    "data-max": max(models.Review.Rating.values),
+                    "data-max": max(models.Review.StarRatings.values),
                     "data-step": "1",
                     "data-size": "sm",
                     "data-show-clear": "false",
